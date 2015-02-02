@@ -218,24 +218,24 @@ public class MSA {
     }
     // compute correlation matrix
 
-    public double[][] Compute_C(double[][][][] Pij, double[][] Pi) {
-        double[][] C = new double[N * (q - 1)][N * (q - 1)];
-//        Matrix rd = Matrix.random(N*(q-1), N*(q-1));
-//        rd = StaticMethod.Normalize(rd);
-//        double[][] C = rd.getArray();
-        
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                for (int AA1 = 0; AA1 < q - 1; AA1++) {
-                    for (int AA2 = 0; AA2 < q - 1; AA2++) {
-                        C[StaticMethod_DCA.Mapkey(i, AA1, q - 1)][StaticMethod_DCA.Mapkey(j, AA2, q - 1)] = Pij[i][j][AA1][AA2] - Pi[i][AA1] * Pi[j][AA2];
-
-                    }
-                }
-            }
-        }
-        return C;
-    }
+//    public double[][] Compute_C(double[][][][] Pij, double[][] Pi) {
+//        double[][] C = new double[N * (q - 1)][N * (q - 1)];
+////        Matrix rd = Matrix.random(N*(q-1), N*(q-1));
+////        rd = StaticMethod.Normalize(rd);
+////        double[][] C = rd.getArray();
+//        
+//        for (int i = 0; i < N; i++) {
+//            for (int j = 0; j < N; j++) {
+//                for (int AA1 = 0; AA1 < q - 1; AA1++) {
+//                    for (int AA2 = 0; AA2 < q - 1; AA2++) {
+//                        C[StaticMethod_DCA.Mapkey(i, AA1, q - 1)][StaticMethod_DCA.Mapkey(j, AA2, q - 1)] = Pij[i][j][AA1][AA2] - Pi[i][AA1] * Pi[j][AA2];
+//
+//                    }
+//                }
+//            }
+//        }
+//        return C;
+//    }
     // another computation of Matrix C
     public MyOwnMatrix Compute_C(SuperMatrix Pij, MyOwnMatrix Pi){
         MyOwnMatrix C = MyOwnMatrix.Ones(N*(q-1), N*(q-1));
@@ -254,16 +254,16 @@ public class MSA {
         return C;
     }
 
-    public double[][] Return_W(double[][] C, int i, int j) {
-
-        double[][] m = new double[q][q];
-        for (int offset1 = 0; offset1 < q - 1; offset1++) {
-            for (int offset2 = 0; offset2 < q - 1; offset2++) {
-                m[offset1][offset2] = C[i * (q - 1) + offset1][j * (q - 1) + offset2];
-            }
-        }
-        return m;
-    }
+//    public double[][] Return_W(double[][] C, int i, int j) {
+//
+//        double[][] m = new double[q][q];
+//        for (int offset1 = 0; offset1 < q - 1; offset1++) {
+//            for (int offset2 = 0; offset2 < q - 1; offset2++) {
+//                m[offset1][offset2] = C[i * (q - 1) + offset1][j * (q - 1) + offset2];
+//            }
+//        }
+//        return m;
+//    }
     public MyOwnMatrix Return_W(MyOwnMatrix C, int i, int j){
         MyOwnMatrix W = MyOwnMatrix.Ones(q, q);
         for (int offset1 = 0; offset1 < q - 1; offset1++) {
@@ -278,54 +278,54 @@ public class MSA {
     }
     // return Matrix 2 x q, which contain two vectors mu1 and mu2
 
-    public double[][] Compute_mu(int i, int j, double[][] W, double[][] Pi) {
-        double[][] Exp_W = StaticMethod_DCA.ExpMatrix_Component(StaticMethod_DCA.Negative_Matrix(W));
-        double[][] mu = new double[2][q];
-        // init
-        for (int ii = 0; ii < q; ii++) {
-            mu[1][ii] = 1.0 / q;
-            mu[2][ii] = 1.0 / q;
-        }
-        MyOwnMatrix m_mu = new MyOwnMatrix(mu);
-        MyOwnMatrix m_mu1 = m_mu.getMyOwnMatrix(0, 0, 0, q - 1);
-        MyOwnMatrix m_mu2 = m_mu.getMyOwnMatrix(1, 1, 0, q - 1);
-        MyOwnMatrix m_W = new MyOwnMatrix(Exp_W);
-        MyOwnMatrix m_Pi = new MyOwnMatrix(Pi);
-        MyOwnMatrix m_p1 = m_Pi.getMyOwnMatrix(i, i, 0, q - 1);
-        MyOwnMatrix m_p2 = m_Pi.getMyOwnMatrix(j, j, 0, q - 1);
-        double epsilon = 1e-4;
-        double diff = 1.0;
-        while (diff > epsilon) {
-            MyOwnMatrix scar1 = m_mu2.times(m_W.transpose());
-            MyOwnMatrix scar2 = m_mu1.times(m_W);
-
-//            MyOwnMatrix new1 = StaticMethod.DivideComponentWise(m_p1, scar1);
-//            MyMatrix new2 = StaticMethod.DivideComponentWise(m_p2, scar2);
-            
-            MyOwnMatrix new1 = m_p1.divideElementWise(scar1);
-            MyOwnMatrix new2 = m_p2.divideElementWise(scar2);
-            
-//            new1 = StaticMethod.Normalize(new1);
-//            new2 = StaticMethod.Normalize(new2);
-            new1 = new1.times(1.0/new1.Sum());
-            new2 = new2.times(1.0/new2.Sum());
-
-//            double d1 = StaticMethod.Diff(new1, m_mu1);
-//            double d2 = StaticMethod.Diff(new2, m_mu2);
-            double d1 = (new1.minus(m_mu1)).findMaxAbs();
-            double d2 = (new2.minus(m_mu2)).findMaxAbs();
-            
-            diff = Math.max(d1, d2);
-
-            m_mu1 = new1;
-            m_mu2 = new2;
-        }
-        for (int ii = 0; ii < q; ii++) {
-            mu[0][ii] = m_mu1.get(0, ii);
-            mu[1][ii] = m_mu2.get(0, ii);
-        }
-        return mu;
-    }
+//    public double[][] Compute_mu(int i, int j, double[][] W, double[][] Pi) {
+//        double[][] Exp_W = StaticMethod_DCA.ExpMatrix_Component(StaticMethod_DCA.Negative_Matrix(W));
+//        double[][] mu = new double[2][q];
+//        // init
+//        for (int ii = 0; ii < q; ii++) {
+//            mu[1][ii] = 1.0 / q;
+//            mu[2][ii] = 1.0 / q;
+//        }
+//        MyOwnMatrix m_mu = new MyOwnMatrix(mu);
+//        MyOwnMatrix m_mu1 = m_mu.getMyOwnMatrix(0, 0, 0, q - 1);
+//        MyOwnMatrix m_mu2 = m_mu.getMyOwnMatrix(1, 1, 0, q - 1);
+//        MyOwnMatrix m_W = new MyOwnMatrix(Exp_W);
+//        MyOwnMatrix m_Pi = new MyOwnMatrix(Pi);
+//        MyOwnMatrix m_p1 = m_Pi.getMyOwnMatrix(i, i, 0, q - 1);
+//        MyOwnMatrix m_p2 = m_Pi.getMyOwnMatrix(j, j, 0, q - 1);
+//        double epsilon = 1e-4;
+//        double diff = 1.0;
+//        while (diff > epsilon) {
+//            MyOwnMatrix scar1 = m_mu2.times(m_W.transpose());
+//            MyOwnMatrix scar2 = m_mu1.times(m_W);
+//
+////            MyOwnMatrix new1 = StaticMethod.DivideComponentWise(m_p1, scar1);
+////            MyMatrix new2 = StaticMethod.DivideComponentWise(m_p2, scar2);
+//            
+//            MyOwnMatrix new1 = m_p1.divideElementWise(scar1);
+//            MyOwnMatrix new2 = m_p2.divideElementWise(scar2);
+//            
+////            new1 = StaticMethod.Normalize(new1);
+////            new2 = StaticMethod.Normalize(new2);
+//            new1 = new1.times(1.0/new1.Sum());
+//            new2 = new2.times(1.0/new2.Sum());
+//
+////            double d1 = StaticMethod.Diff(new1, m_mu1);
+////            double d2 = StaticMethod.Diff(new2, m_mu2);
+//            double d1 = (new1.minus(m_mu1)).findMaxAbs();
+//            double d2 = (new2.minus(m_mu2)).findMaxAbs();
+//            
+//            diff = Math.max(d1, d2);
+//
+//            m_mu1 = new1;
+//            m_mu2 = new2;
+//        }
+//        for (int ii = 0; ii < q; ii++) {
+//            mu[0][ii] = m_mu1.get(0, ii);
+//            mu[1][ii] = m_mu2.get(0, ii);
+//        }
+//        return mu;
+//    }
     public ArrayList<MyOwnMatrix> Compute_mu(int i, int j, MyOwnMatrix W, MyOwnMatrix P1){
         ArrayList<MyOwnMatrix> res = new ArrayList<MyOwnMatrix>();
         double epsilon = 1e-4;
@@ -361,32 +361,32 @@ public class MSA {
         return res;
     }
     // compute Direct Information
-    public double CalculateDI(int i, int j, double[][] W, double[][]mu, double[][] Pi){
-//        double tiny = 1.0e-20;
-        double[][] Exp_W = StaticMethod_DCA.ExpMatrix_Component(StaticMethod_DCA.Negative_Matrix(W));
-        MyOwnMatrix m_W = new MyOwnMatrix(Exp_W);
-        MyOwnMatrix m_mu = new MyOwnMatrix(mu);
-        MyOwnMatrix m_mu1 = m_mu.getMyOwnMatrix(0, 0, 0, q-1);
-        MyOwnMatrix m_mu2 = m_mu.getMyOwnMatrix(1, 1, 0, q-1);
-        
-        MyOwnMatrix tmp = m_mu1.transpose().times(m_mu2);
-//        MyMatrix Pdir = StaticMethod.Multiply_ComponentWise(m_W, tmp);
-        MyOwnMatrix Pdir = m_W.timesElementWise(tmp);
-        
-//        Pdir = StaticMethod.Normalize(Pdir);
-        Pdir = Pdir.normalize();
-        
-        MyOwnMatrix m_Pi = new MyOwnMatrix(Pi);
-        MyOwnMatrix m_p1 = m_Pi.getMyOwnMatrix(i, i, 0, q - 1);
-        MyOwnMatrix m_p2 = m_Pi.getMyOwnMatrix(j, j, 0, q - 1);
-        MyOwnMatrix Pfac = m_p1.transpose().times(m_p2);
-        
-//        MyOwnMatrix log = StaticMethod.Log_ComponentWise(StaticMethod.DivideComponentWise(Pdir, Pfac));
-//        MyMatrix res = Pdir.transpose().times(log);
-        MyOwnMatrix res = Pdir.transpose().times(Pdir.divideElementWise(Pfac).logElementWise());
-        return res.trace();
-        
-    }
+//    public double CalculateDI(int i, int j, double[][] W, double[][]mu, double[][] Pi){
+////        double tiny = 1.0e-20;
+//        double[][] Exp_W = StaticMethod_DCA.ExpMatrix_Component(StaticMethod_DCA.Negative_Matrix(W));
+//        MyOwnMatrix m_W = new MyOwnMatrix(Exp_W);
+//        MyOwnMatrix m_mu = new MyOwnMatrix(mu);
+//        MyOwnMatrix m_mu1 = m_mu.getMyOwnMatrix(0, 0, 0, q-1);
+//        MyOwnMatrix m_mu2 = m_mu.getMyOwnMatrix(1, 1, 0, q-1);
+//        
+//        MyOwnMatrix tmp = m_mu1.transpose().times(m_mu2);
+////        MyMatrix Pdir = StaticMethod.Multiply_ComponentWise(m_W, tmp);
+//        MyOwnMatrix Pdir = m_W.timesElementWise(tmp);
+//        
+////        Pdir = StaticMethod.Normalize(Pdir);
+//        Pdir = Pdir.normalize();
+//        
+//        MyOwnMatrix m_Pi = new MyOwnMatrix(Pi);
+//        MyOwnMatrix m_p1 = m_Pi.getMyOwnMatrix(i, i, 0, q - 1);
+//        MyOwnMatrix m_p2 = m_Pi.getMyOwnMatrix(j, j, 0, q - 1);
+//        MyOwnMatrix Pfac = m_p1.transpose().times(m_p2);
+//        
+////        MyOwnMatrix log = StaticMethod.Log_ComponentWise(StaticMethod.DivideComponentWise(Pdir, Pfac));
+////        MyMatrix res = Pdir.transpose().times(log);
+//        MyOwnMatrix res = Pdir.transpose().times(Pdir.divideElementWise(Pfac).logElementWise());
+//        return res.trace();
+//        
+//    }
     public double CalculateDI(int i, int j, MyOwnMatrix W, MyOwnMatrix mu1, MyOwnMatrix mu2, MyOwnMatrix Pia){
         MyOwnMatrix Pdir = W.timesElementWise(mu1.transpose().times(mu2));
         Pdir = Pdir.times(1.0/Pdir.Sum());
@@ -395,31 +395,31 @@ public class MSA {
         MyOwnMatrix DI = Pdir.transpose().times(Pdir.divideElementWise(Pfac).logElementWise());
         return DI.trace();
     }
-    public double[] GetResult() throws FileNotFoundException, IOException{
-        double[] res = new double[N*(N-1)/2];
-//        int[][] algnmnt = MyIO.ReturnAlignment(filename);
-        int[] W_Km = this.Conpute_W();
-//        MyIO.PrintVector(W_Km);System.exit(0);
-        double[][] fi = this.Compute_ReweightedFreqSingle(W_Km);
-        System.err.println("fi is normalize?: "+ StaticMethod_DCA.CheckNormalizeRow(fi));
-        double[][][][] fij = this.Compute_ReweightedFreqpair(W_Km);
-        double[][] C = this.Compute_C(fij, fi);
-        
-//        MyIO.PrintMatrix(C);
-        
-        double[][] inv_C = StaticMethod_DCA.InvMatrix(C);
-        int count = 0;
-        for(int i=0; i<N-1; i++){
-            for(int j=i+1; j<N; j++){
-                double[][] W = this.Return_W(inv_C, i, j);
-                double[][] mu = this.Compute_mu(i, j, W, fi);
-                double val = this.CalculateDI(i, j, W, mu, fi);
-                res[count] = val;
-                count++;
-            }
-        }
-        return res;
-    }
+//    public double[] GetResult() throws FileNotFoundException, IOException{
+//        double[] res = new double[N*(N-1)/2];
+////        int[][] algnmnt = MyIO.ReturnAlignment(filename);
+//        int[] W_Km = this.Conpute_W();
+////        MyIO.PrintVector(W_Km);System.exit(0);
+//        double[][] fi = this.Compute_ReweightedFreqSingle(W_Km);
+//        System.err.println("fi is normalize?: "+ StaticMethod_DCA.CheckNormalizeRow(fi));
+//        double[][][][] fij = this.Compute_ReweightedFreqpair(W_Km);
+//        double[][] C = this.Compute_C(fij, fi);
+//        
+////        MyIO.PrintMatrix(C);
+//        
+//        double[][] inv_C = StaticMethod_DCA.InvMatrix(C);
+//        int count = 0;
+//        for(int i=0; i<N-1; i++){
+//            for(int j=i+1; j<N; j++){
+//                double[][] W = this.Return_W(inv_C, i, j);
+//                double[][] mu = this.Compute_mu(i, j, W, fi);
+//                double val = this.CalculateDI(i, j, W, mu, fi);
+//                res[count] = val;
+//                count++;
+//            }
+//        }
+//        return res;
+//    }
     public double[][] GetResult2(){
         int[] W_Km = this.Conpute_W();
         double[] dW_Km = StaticMethod_DCA.Int2Double(W_Km);
