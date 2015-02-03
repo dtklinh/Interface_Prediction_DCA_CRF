@@ -5,6 +5,7 @@
 package DCA;
 
 //import MyJama.MyMatrix;
+import Support.FastaSequence;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -26,10 +27,12 @@ public class MyIO_DCA {
     // read MSA and return to matrix of number
 
     public static int[][] ReturnAlignment(String MSA_file) throws FileNotFoundException, IOException {
-        ArrayList<String> lst_str = MyIO_DCA.ReadMSA(MSA_file);
-        ArrayList<String> filter = MyIO_DCA.Filter(lst_str);
+//        ArrayList<String> lst_str = MyIO_DCA.ReadMSA(MSA_file);
+        ArrayList<String> lst_str = (new FastaSequence(MSA_file)).getAllSequence();
+//        ArrayList<String> filter = MyIO_DCA.Filter(lst_str);
 //        System.err.println("Redundant in column: " + StaticMethod.CheckRedundantColumn(filter));
-        int[][] mx = MyIO_DCA.RefineMSA(filter);
+//        int[][] mx = MyIO_DCA.RefineMSA(filter);
+        int[][] mx = MyIO_DCA.RefineMSA(lst_str);
         return mx;
     }
     // read MSA and return list of string of sequence protein,
@@ -90,49 +93,49 @@ public class MyIO_DCA {
     public static int letter2Number(String x) {
         switch (x) {
             case "-":
-                return 20;
+                return 0; //20
             case "A":
-                return 0;
+                return 1; // 0
             case "C":
-                return 1;
-            case "D":
                 return 2;
-            case "E":
+            case "D":
                 return 3;
-            case "F":
+            case "E":
                 return 4;
-            case "G":
+            case "F":
                 return 5;
-            case "H":
+            case "G":
                 return 6;
-            case "I":
+            case "H":
                 return 7;
-            case "K":
+            case "I":
                 return 8;
-            case "L":
+            case "K":
                 return 9;
-            case "M":
+            case "L":
                 return 10;
-            case "N":
+            case "M":
                 return 11;
-            case "P":
+            case "N":
                 return 12;
-            case "Q":
+            case "P":
                 return 13;
-            case "R":
+            case "Q":
                 return 14;
-            case "S":
+            case "R":
                 return 15;
-            case "T":
+            case "S":
                 return 16;
-            case "V":
+            case "T":
                 return 17;
-            case "W":
+            case "V":
                 return 18;
-            case "Y":
+            case "W":
                 return 19;
-            default:
+            case "Y":
                 return 20;
+            default:
+                return 0;
         }
     }
 

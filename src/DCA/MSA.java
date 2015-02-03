@@ -6,6 +6,8 @@ package DCA;
 
 //import MyJama.MyMatrix;
 //import MyJama.SuperMatrix;
+import Support.Configuration;
+import Support.MyIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,18 +52,18 @@ public class MSA {
     }
 
     public int[] Conpute_W() { // vector of Km in the paper
-        int[] mx = new int[M];
+        int[] mx = new int[getM()];
 
-        for (int i = 0; i < M; i++) {
+        for (int i = 0; i < getM(); i++) {
             int dis = 0;
-            for (int j = 0; j < M; j++) {
+            for (int j = 0; j < getM(); j++) {
                 int count = 0;
-                for (int k = 0; k < N; k++) {
-                    if (AlgnMx[i][k] != AlgnMx[j][k]) {
+                for (int k = 0; k < getN(); k++) {
+                    if (getAlgnMx()[i][k] != getAlgnMx()[j][k]) {
                         count++;
                     }
                 }
-                if ((double) count / N < theta) {
+                if ((double) count / getN() < theta) {
                     dis++;
                 }
             }
@@ -74,13 +76,13 @@ public class MSA {
 // calculate frequency after ajusting weight of sequence (Eq(4))
 
     public double[][] Compute_ReweightedFreqSingle(int[] W_Km) {
-        double[][] freq = new double[N][q];
+        double[][] freq = new double[getN()][q];
 
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < getN(); i++) {
             for (int j = 0; j < q; j++) {
                 double d = 0.0;
-                for (int k = 0; k < M; k++) {
-                    if (AlgnMx[k][i] == j) {
+                for (int k = 0; k < getM(); k++) {
+                    if (getAlgnMx()[k][i] == j) {
                         d += 1.0 / W_Km[k];
                     }
                 }
@@ -88,10 +90,10 @@ public class MSA {
             }
         }
         double M_eff = 0.0;
-        for (int i = 0; i < M; i++) {
+        for (int i = 0; i < getM(); i++) {
             M_eff += 1.0 / W_Km[i];
         }
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < getN(); i++) {
             for (int j = 0; j < q; j++) {
                 freq[i][j] = (freq[i][j] + pseudocount_weight / q) / (pseudocount_weight + M_eff);
             }
@@ -101,10 +103,10 @@ public class MSA {
     }
     // compute true frequency Pi_true
     public MyOwnMatrix Compute_TrueFreqSingle(MyOwnMatrix W){
-        MyOwnMatrix Pi_true = MyOwnMatrix.Zeros(N, q);
-        for(int j=0; j<M; j++){
-            for(int i=0; i<N; i++){
-                Pi_true.set(i, AlgnMx[j][i], Pi_true.get(i, AlgnMx[j][i])+W.get(0, j)); 
+        MyOwnMatrix Pi_true = MyOwnMatrix.Zeros(getN(), q);
+        for(int j=0; j<getM(); j++){
+            for(int i=0; i<getN(); i++){
+                Pi_true.set(i, getAlgnMx()[j][i], Pi_true.get(i, getAlgnMx()[j][i])+W.get(0, j)); 
             }
         }
         Pi_true = Pi_true.times(1.0/W.Sum());
@@ -114,19 +116,19 @@ public class MSA {
     // compute Pi with pseudo count
     public MyOwnMatrix Compute_pcSingle(MyOwnMatrix Pi_true){
         MyOwnMatrix tmp1 = Pi_true.times(1-this.pseudocount_weight);
-        MyOwnMatrix tmp2 = MyOwnMatrix.Ones(N, q).times(this.pseudocount_weight/q);
+        MyOwnMatrix tmp2 = MyOwnMatrix.Ones(getN(), q).times(this.pseudocount_weight/q);
         return tmp1.add(tmp2);
     }
     // calculate frequency of pair after adjusting weight (Eq(5))
 
     public double[][][][] Compute_ReweightedFreqpair(int[] W_Km) {
-        double[][][][] freq = new double[N][N][q][q];
-        for (int i1 = 0; i1 < N - 1; i1++) {
-            for (int i2 = i1 + 1; i2 < N; i2++) {
+        double[][][][] freq = new double[getN()][getN()][q][q];
+        for (int i1 = 0; i1 < getN() - 1; i1++) {
+            for (int i2 = i1 + 1; i2 < getN(); i2++) {
                 for (int j1 = 0; j1 < q; j1++) {
                     for (int j2 = 0; j2 < q; j2++) {
-                        for (int k = 0; k < M; k++) {
-                            if (AlgnMx[k][i1] == j1 && AlgnMx[k][i2] == j2) {
+                        for (int k = 0; k < getM(); k++) {
+                            if (getAlgnMx()[k][i1] == j1 && getAlgnMx()[k][i2] == j2) {
                                 freq[i1][i2][j1][j2] += 1.0 / W_Km[k];
                             }
                         }
@@ -135,11 +137,11 @@ public class MSA {
             }
         }
         double M_eff = 0.0;
-        for (int i = 0; i < M; i++) {
+        for (int i = 0; i < getM(); i++) {
             M_eff += 1.0 / W_Km[i];
         }
-        for (int i1 = 0; i1 < N - 1; i1++) {
-            for (int i2 = i1 + 1; i2 < N; i2++) {
+        for (int i1 = 0; i1 < getN() - 1; i1++) {
+            for (int i2 = i1 + 1; i2 < getN(); i2++) {
                 for (int j1 = 0; j1 < q; j1++) {
                     for (int j2 = 0; j2 < q; j2++) {
                         freq[i1][i2][j1][j2] = (freq[i1][i2][j1][j2] + pseudocount_weight / (q * q)) / (pseudocount_weight + M_eff);
@@ -158,6 +160,7 @@ public class MSA {
             for(int i=0; i<N-1; i++){
                 for(int j=i+1; j<N; j++){
                     Pij_true[i][j][AlgnMx[l][i]][AlgnMx[l][j]] += W.get(0, l);
+                    Pij_true[j][i][AlgnMx[l][j]][AlgnMx[l][i]] = Pij_true[i][j][AlgnMx[l][i]][AlgnMx[l][j]];
                 }
             }
         }
@@ -177,12 +180,12 @@ public class MSA {
     public SuperMatrix Compute_pcPair(SuperMatrix Pij_true){
         SuperMatrix tmp = Pij_true.clone();
         tmp.timesScalar(1-this.pseudocount_weight);
-        SuperMatrix tmp1 = SuperMatrix.ones(N, N, q, q);
+        SuperMatrix tmp1 = SuperMatrix.ones(getN(), getN(), q, q);
         tmp1.timesScalar(this.pseudocount_weight/(q*q));
         tmp = tmp.add(tmp1);
         MyOwnMatrix scra = MyOwnMatrix.Eyes(q, q);
         
-        for(int i=0; i<N; i++){
+        for(int i=0; i<getN(); i++){
             for(int alpha=0; alpha<q; alpha++){
                 for(int beta=0; beta<q; beta++){
                     double val=0.0;
@@ -199,8 +202,8 @@ public class MSA {
         int len = fi.length * (fi.length - 1) / 2;
         double[] MI = new double[len];
         int count = 0;
-        for (int i = 0; i < N - 1; i++) {
-            for (int j = i + 1; j < N; j++) {
+        for (int i = 0; i < getN() - 1; i++) {
+            for (int j = i + 1; j < getN(); j++) {
                 double sum = 0.0;
                 for (int k1 = 0; k1 < q; k1++) {
                     for (int k2 = 0; k2 < q; k2++) {
@@ -238,13 +241,16 @@ public class MSA {
 //    }
     // another computation of Matrix C
     public MyOwnMatrix Compute_C(SuperMatrix Pij, MyOwnMatrix Pi){
-        MyOwnMatrix C = MyOwnMatrix.Ones(N*(q-1), N*(q-1));
-        for(int i=0; i<N; i++){
-            for(int j=0; j<N; j++){
+        MyOwnMatrix C = MyOwnMatrix.Ones(getN()*(q-1), getN()*(q-1));
+        for(int i=0; i<getN(); i++){
+            for(int j=0; j<getN(); j++){
                 for(int alpha=0; alpha<q-1; alpha++){
                     for(int beta=0; beta<q-1; beta++){
                         int r = StaticMethod_DCA.Mapkey(i, alpha, q-1);
                         int c = StaticMethod_DCA.Mapkey(j, beta, q-1);
+//                        if(i<=1 && j<=1)
+//                        System.out.println("i: "+i+" j: "+j+" alpha: "+alpha+" beta: "+beta +
+//                                " >> "+r+" : "+c);
                         double val = Pij.get(i, j, alpha, beta) - Pi.get(i, alpha)*Pi.get(j, beta);
                         C.set(r, c, val);
                     }
@@ -420,26 +426,49 @@ public class MSA {
 //        }
 //        return res;
 //    }
-    public double[][] GetResult2(){
+    public double[][] GetResult2() throws IOException{
         int[] W_Km = this.Conpute_W();
+        // Print W_Km
+        String str = Configuration.DirTest_DCA+this.Name.substring(0, 6);
+//        MyIO.WriteToFile(str+".km", W_Km);
+        
         double[] dW_Km = StaticMethod_DCA.Int2Double(W_Km);
         MyOwnMatrix W = new MyOwnMatrix(dW_Km,1);
         W = W.invElementWise();
+//        MyIO.WriteToFile(str+".W", W.getArrayCopy()); 
+//        System.err.println("Meff: "+ W.Sum());
+//        
 //        double Meff = W.Sum();
         MyOwnMatrix Pi_true = this.Compute_TrueFreqSingle(W);
+//        MyIO.WriteToFile(str+".Pi_true", Pi_true.getArrayCopy());
+        
         SuperMatrix Pij_true = this.Compute_TrueFreqPair(Pi_true, W);
+        MyIO.WriteToFile(str+".Pij_true", Pij_true.getArrayCopy());
+       
         
         MyOwnMatrix Pi = this.Compute_pcSingle(Pi_true);
+        MyIO.WriteToFile(str+".Pi", Pi.getArrayCopy());
+        
         SuperMatrix Pij = this.Compute_pcPair(Pij_true);
+        MyIO.WriteToFile(str+".Pij", Pij.getArrayCopy());
         
         MyOwnMatrix C = this.Compute_C(Pij, Pi);
+        System.exit(0);
+        MyIO.WriteToFile(str+".C", C.getArrayCopy());
         
         MyOwnMatrix invC = C.inverse();
-        double[][] res = new double[N*(N-1)/2][3];
+        MyIO.WriteToFile(str+".invC", invC.getArrayCopy());
+        System.exit(0);
+        
+        double[][] res = new double[getN()*(getN()-1)/2][3];
         int count = 0;
-        for(int i=0; i<N -1; i++){
-            for(int j=i+1; j<N; j++){
+        for(int i=0; i<getN() -1; i++){
+            for(int j=i+1; j<getN(); j++){
                 MyOwnMatrix W_mf = this.Return_W(invC, i, j);
+//                if(i==0 && j==1){
+//                    MyIO.WriteToFile(str+".0_1.W_mf", W_mf.getArrayCopy());
+//                }
+                
                 ArrayList<MyOwnMatrix> mu = this.Compute_mu(i, j, W_mf, Pi);
                 double di = this.CalculateDI(i, j, W_mf, mu.get(0), mu.get(1), Pi);
                 res[count][0] = i; 
@@ -479,5 +508,47 @@ public class MSA {
      */
     public void setDir(String Dir) {
         this.Dir = Dir;
+    }
+
+    /**
+     * @return the M
+     */
+    public int getM() {
+        return M;
+    }
+
+    /**
+     * @param M the M to set
+     */
+    public void setM(int M) {
+        this.M = M;
+    }
+
+    /**
+     * @return the N
+     */
+    public int getN() {
+        return N;
+    }
+
+    /**
+     * @param N the N to set
+     */
+    public void setN(int N) {
+        this.N = N;
+    }
+
+    /**
+     * @return the AlgnMx
+     */
+    public int[][] getAlgnMx() {
+        return AlgnMx;
+    }
+
+    /**
+     * @param AlgnMx the AlgnMx to set
+     */
+    public void setAlgnMx(int[][] AlgnMx) {
+        this.AlgnMx = AlgnMx;
     }
 }

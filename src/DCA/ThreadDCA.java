@@ -5,6 +5,7 @@
 package DCA;
 
 import MultipleCore.MyObject;
+import Support.Configuration;
 import Support.MyIO;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ public class ThreadDCA extends MyObject {
         for (MSA m : Lst_MSA) {
             System.out.println("Thread "+Thread.currentThread().getName()+" run on "+m.getName());
             utils.Utils.tic();
+            
+            //print MSA
+            MyIO.WriteToFile(Configuration.DirTest_DCA+m.getName()+".algn", m.getAlgnMx());
+            
             double[][] d = m.GetResult2();
             MyIO.WriteToFile(DirForOut+m.getName()+".dca", d);
             utils.Utils.tac();

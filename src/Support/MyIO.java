@@ -47,20 +47,20 @@ public class MyIO {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
         String tmp = "";
         for (String s : lst) {
-            if(!s.trim().isEmpty()){
-            writer.write(s + "\n");
+            if (!s.trim().isEmpty()) {
+                writer.write(s + "\n");
             }
         }
         writer.flush();
         writer.close();
     }
-    
+
     public static void WriteToFile(String filename, LinkedHashSet<String> lst) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
         String tmp = "";
         for (String s : lst) {
-            if(!s.trim().isEmpty()){
-            writer.write(s + "\n");
+            if (!s.trim().isEmpty()) {
+                writer.write(s + "\n");
             }
         }
         writer.flush();
@@ -77,16 +77,68 @@ public class MyIO {
         writer.flush();
         writer.close();
     }
+
     public static void WriteToFile(String filename, double[][] arr) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
 
 //        for (double s : lst) {
 //            writer.write(s + "\n");
 //        }
-        for(int i =0; i<arr.length; i++){
-            for(int j=0; j<arr[0].length; j++){
-                writer.write(arr[i][j]+ "\t");
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                writer.write(arr[i][j] + "\t");
             }
+            writer.write("\n");
+        }
+        writer.flush();
+        writer.close();
+    }
+
+    public static void WriteToFile(String filename, double[][][][] arr) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
+
+//        for (double s : lst) {
+//            writer.write(s + "\n");
+//        }
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                for (int k = 0; k < arr[0][0].length; k++) {
+                    for (int l = 0; l < arr[0][0][0].length; l++) {
+                        writer.write(arr[i][j][k][l] + "\t");
+                    }
+                    writer.write("\n");
+                }
+            }
+            
+        }
+        writer.flush();
+        writer.close();
+    }
+
+    public static void WriteToFile(String filename, int[][] arr) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
+
+//        for (double s : lst) {
+//            writer.write(s + "\n");
+//        }
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                writer.write(arr[i][j] + "\t");
+            }
+            writer.write("\n");
+        }
+        writer.flush();
+        writer.close();
+    }
+
+    public static void WriteToFile(String filename, int[] arr) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
+
+//        for (double s : lst) {
+//            writer.write(s + "\n");
+//        }
+        for (int i = 0; i < arr.length; i++) {
+            writer.write(arr[i] + "\t");
             writer.write("\n");
         }
         writer.flush();
@@ -165,6 +217,7 @@ public class MyIO {
         }
         return res;
     }
+
     public static ArrayList<Integer> ReadLines2Integer(String filename) throws FileNotFoundException, IOException {
         ArrayList<Integer> res = new ArrayList<Integer>();
         FileInputStream fstream = new FileInputStream(filename);
@@ -196,12 +249,12 @@ public class MyIO {
         }
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        while(true){
+        while (true) {
             String line = br.readLine();
-            if(line==null){
+            if (line == null) {
                 break;
             }
-            if(!line.isEmpty()){
+            if (!line.isEmpty()) {
                 res.add(line);
             }
         }
