@@ -51,10 +51,10 @@ public class TestAlgorithmDCA {
         // Run 1 MSA // end
         
         // Compare 2 Matrixes
-        String filename = "10MH_A.C";
-        String file1 = Configuration.DirTest_MatFile + filename; 
-        String file2 = Configuration.DirTest_DCA + filename;
-        System.out.println("result: "+StaticMethod.CompareFiles(file1, file2));
+//        String filename = "10MH_A.invC";
+//        String file1 = Configuration.DirTest_MatFile + filename; 
+//        String file2 = Configuration.DirTest_DCA + filename;
+//        System.out.println("result: "+StaticMethod.CompareFiles(file1, file2));
         
         
         // hon hop nho nhat
