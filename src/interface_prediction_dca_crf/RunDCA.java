@@ -7,7 +7,7 @@ package interface_prediction_dca_crf;
 import DCA.MSA;
 import DCA.ThreadDCA;
 import MultipleCore.MyThread;
-import Support.StaticMethod;
+import Common.StaticMethod;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;

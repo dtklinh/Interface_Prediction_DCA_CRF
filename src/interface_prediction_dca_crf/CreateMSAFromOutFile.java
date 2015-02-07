@@ -5,7 +5,7 @@
 package interface_prediction_dca_crf;
 
 import BLAST.CreateMSAfromBLAST;
-import Support.MyIO;
+import Common.MyIO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Support;
+package Common;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -73,6 +73,24 @@ public class StaticMethod {
 
         return res;
     }
+    
+    public static <T> ArrayList<ArrayList<T>> Divide(List<T> lst, int n) {
+        ArrayList<ArrayList<T>> res = new ArrayList<>();
+
+        int max = (int) Math.ceil((double) lst.size() / n);
+//        int max = lst.size()/n;
+
+        boolean mknew = true;
+        for (int i = 0; i < n - 1; i++) {
+            List<T> tmp = lst.subList(max*i, max*(i+1));
+            
+            res.add(new ArrayList<>(tmp));
+        }
+        List<T> tmp = lst.subList(max*(n-1), lst.size());
+        res.add(new ArrayList<>(tmp));
+
+        return res;
+    }
     public static boolean CompareFiles(String file1, String file2) throws FileNotFoundException, IOException{
         // Reader 1
         FileInputStream fstream1 = new FileInputStream(file1);
@@ -126,4 +144,6 @@ public class StaticMethod {
         }
         return res;
     }
+    
+   
 }

@@ -5,8 +5,8 @@
 package DCA;
 
 import MultipleCore.MyObject;
-import Support.Configuration;
-import Support.MyIO;
+import Common.Configuration;
+import Common.MyIO;
 import java.io.IOException;
 import java.util.ArrayList;
 

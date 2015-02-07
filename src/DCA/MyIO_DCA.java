@@ -5,7 +5,7 @@
 package DCA;
 
 //import MyJama.MyMatrix;
-import Support.FastaSequence;
+import Common.FastaSequence;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;

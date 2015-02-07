@@ -21,8 +21,9 @@ public class BLAST extends MyObject{
     private String Database;
     private String PathOut;
     private String PathIn;
-    private int NumInterations;
+    private int NumAlignments;
     private String Path2BLAST;
+    private int NumThreads;
     private ArrayList<String> Lst_Query;
 
     /**
@@ -46,23 +47,24 @@ public class BLAST extends MyObject{
      * @return the NumInterations
      */
     public int getNumInterations() {
-        return NumInterations;
+        return NumAlignments;
     }
 
     /**
      * @param NumInterations the NumInterations to set
      */
     public void setNumInterations(int NumInterations) {
-        this.NumInterations = NumInterations;
+        this.NumAlignments = NumInterations;
     }
 
-    public BLAST(String path, ArrayList<String> lst_query, String db, String out, String in, int iter) {
+    public BLAST(String path, ArrayList<String> lst_query, String db, String out, String in, int num_algn, int num_threads) {
         this.Path2BLAST = path;
         this.Lst_Query = lst_query;
         this.Database = db;
         this.PathOut = out;
-        this.NumInterations = iter;
+        this.NumAlignments = num_algn;
         this.PathIn = in;
+        this.NumThreads = num_threads;
     }
 
     public void run() throws IOException, InterruptedException {
@@ -70,9 +72,10 @@ public class BLAST extends MyObject{
             String cmd = Path2BLAST + " -query " +PathIn + "/"+ Query;
             cmd = cmd + " -db " + Database;
             cmd = cmd + " -out " + PathOut + "/"+Query+".out";
-            cmd = cmd + " -num_iterations " + NumInterations;
-            cmd = cmd + " -out_ascii_pssm " + PathOut + "/"+ Query+".pssm";
-            cmd = cmd + " -comp_based_stats 1";
+            cmd = cmd + " -num_alignments " + NumAlignments;
+//            cmd = cmd + " -out_ascii_pssm " + PathOut + "/"+ Query+".pssm";
+            cmd = cmd + " -comp_based_stats 1 -show_gis ";
+            cmd = cmd + " -num_threads " + NumThreads;
 
             System.out.println("Thread "+Thread.currentThread().getName()+" run on "+Query);
             utils.Utils.tic();

@@ -4,7 +4,7 @@
  */
 package test;
 
-import Support.MyIO;
+import Common.MyIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
