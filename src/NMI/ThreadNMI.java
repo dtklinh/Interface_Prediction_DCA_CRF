@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package DCA;
+package NMI;
 
-import MultipleCore.MyObject;
-import Common.Configuration;
 import Common.MyIO;
+import DCA.MSA;
+import MultipleCore.MyObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -14,26 +14,22 @@ import java.util.ArrayList;
  *
  * @author t.dang
  */
-public class ThreadDCA extends MyObject {
-
+public class ThreadNMI extends MyObject{
     private ArrayList<MSA> Lst_MSA;
     private String DirForOut;
-
-    public ThreadDCA(ArrayList<MSA> lst, String dir) {
+    private double[][] DSM;
+    public ThreadNMI(ArrayList<MSA> lst, String dirOut, double[][] dsm){
         Lst_MSA = lst;
-        DirForOut = dir;
+        DirForOut = dirOut;
+        DSM = dsm;
     }
-
-    public void run() throws IOException {
+    public void run() throws IOException{
         for (MSA m : Lst_MSA) {
             System.out.println("Thread "+Thread.currentThread().getName()+" run on "+m.getName());
             utils.Utils.tic();
             
-            //print MSA
-//            MyIO.WriteToFile(Configuration.DirTest_DCA+m.getName()+".algn", m.getAlgnMx());
-            
-            double[][] d = m.GetResult2();
-            MyIO.WriteToFile(DirForOut+m.getName()+".dca", d);
+            double[][] d = m.NormalizedMutualInformation(DSM);
+            MyIO.WriteToFile(DirForOut+m.getName()+".nmi", d);
             utils.Utils.tac();
         }
     }

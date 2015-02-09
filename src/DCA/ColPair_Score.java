@@ -100,8 +100,8 @@ public class ColPair_Score implements Comparable<ColPair_Score> {
     public void Print2Screen(){
         System.out.println(P1+"\t"+P2+":\t"+Score);
     }
-    public boolean IsNeighbor(){
-        if(Math.abs(P1-P2)<=2){
+    public boolean IsNeighbor(int n){
+        if(Math.abs(P1-P2)<=n){
             return true;
         }
         return false;

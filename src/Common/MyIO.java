@@ -4,6 +4,7 @@
  */
 package Common;
 
+import DCA.ColPair_Score;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -45,11 +46,20 @@ public class MyIO {
 
     public static void WriteToFile(String filename, List<String> lst) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-        String tmp = "";
+//        String tmp = "";
         for (String s : lst) {
             if (!s.trim().isEmpty()) {
                 writer.write(s + "\n");
             }
+        }
+        writer.flush();
+        writer.close();
+    }
+    public static void WriteLstToFile(String filename, ArrayList<ColPair_Score> lst) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
+//        String tmp = "";
+        for (ColPair_Score s : lst) {
+            writer.write(s.getP1()+"\t"+ s.getP2()+"\t"+s.getScore()+"\n");
         }
         writer.flush();
         writer.close();
@@ -144,6 +154,7 @@ public class MyIO {
         writer.flush();
         writer.close();
     }
+    
 
     public static ArrayList<String> ReadLines(String filename) throws FileNotFoundException, IOException {
         ArrayList<String> res = new ArrayList<String>();
@@ -259,5 +270,33 @@ public class MyIO {
             }
         }
         return res;
+    }
+    public static double[][] ReadDSM(String filename) throws FileNotFoundException, IOException {
+        FileInputStream fstream = new FileInputStream(filename);
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String line = "";
+        double[][] tmp = new double[400][400];
+        int row = 0, col = 0;
+        while (true) {
+            line = br.readLine();
+            if (line == null) {
+                break;
+            }
+            if (line.equalsIgnoreCase("")) {
+                continue;
+            }
+            if (Character.isLetter(line.charAt(0))) {
+                line = line.substring(7);
+            }
+            double v = Double.parseDouble(line.trim());
+            tmp[row][col] = v;
+            col++;
+            if (col >= 400) {
+                col = 0;
+                row++;
+            }
+        }
+        return tmp;
     }
 }

@@ -6,8 +6,11 @@ package DCA;
 
 //import MyJama.MyMatrix;
 //import MyJama.SuperMatrix;
+import NMI.Compute;
 import Common.Configuration;
+import Common.FastaSequence;
 import Common.MyIO;
+import Common.StaticMethod;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -563,4 +566,34 @@ public class MSA {
     public void setAlgnMx(int[][] AlgnMx) {
         this.AlgnMx = AlgnMx;
     }
+    
+    
+    ////////////////// for Compensatory Mutation Finder
+    public double[][] NormalizedMutualInformation(double[][] dsm){
+        String path = "";
+        if(Name.indexOf(".")<0){
+            path = Dir + Name + StaticMethod.FindEndName(Dir);
+        }
+        else{
+            path = Dir + Name;
+        }
+        FastaSequence f = new FastaSequence(path);
+        ArrayList<String> lst_cols = f.getAllColumn();
+        
+        ArrayList<ColPair_Score> unmodified = Compute.compute(lst_cols);
+        ArrayList<ColPair_Score> modified = Compute.computeModified(lst_cols, dsm);
+        if(unmodified.size()!=modified.size()){
+            System.err.println("WRONG");
+            System.exit(1);
+        }
+        double[][] res = new double[unmodified.size()][4];
+        for(int i=0; i<unmodified.size(); i++){
+            res[i][0] = unmodified.get(i).getP1();
+            res[i][1] = unmodified.get(i).getP2();
+            res[i][2] = unmodified.get(i).getScore();
+            res[i][3] = modified.get(i).getScore();
+        }
+        return res;
+    }
+    
 }

@@ -5,7 +5,7 @@
 package interface_prediction_dca_crf;
 
 import DCA.ColPair_Score;
-import DCA.Protein_DCAScore;
+import Protein.Protein_PairwiseScore;
 import Drawing.ChartPanel;
 import Drawing.MyDraw;
 import Common.StaticMethod;
@@ -46,16 +46,16 @@ public class test {
         // test for divide a list into several sublist // end
         
         // test for DCA
-//        String Path2Folder = "Output/Zellner_BLAST/DCAFile/";
-//        String filename = "1a4i_A";
-//        Protein_DCAScore prot = new Protein_DCAScore(Path2Folder, filename);
-//        prot.EliminateNeighbor();
-//        prot.Sort();
-//        prot.AdjustIndex("Input/Zellner_PDB/");
-//        List<ColPair_Score> lst = prot.TopPercent(0.01);
-//        for(ColPair_Score s: lst){
-//            s.Print2Screen();
-//        }
+        String Path2Folder = "Input/Magnus_DB/Magnus_DCA/";
+        String filename = "1A70_A";
+        Protein_PairwiseScore prot = new Protein_PairwiseScore(Path2Folder, filename, 4);
+        prot.EliminateNeighbor();
+        prot.Sort();
+        prot.AdjustIndex("Input/Magnus_DB/Magnus_PDB_SingleChain/");
+        List<ColPair_Score> lst = prot.TopNumber(20);
+        for(ColPair_Score s: lst){
+            s.Print2Screen();
+        }
         // test for DCA // end
         
         // test Common Math

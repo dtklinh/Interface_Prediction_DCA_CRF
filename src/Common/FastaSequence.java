@@ -124,4 +124,18 @@ public final class FastaSequence {
 //            System.out.println("Sequence: \n" + fsf.getSequence(i));
 //        }
 //    }
+    
+    public ArrayList<String> getAllColumn(){
+        ArrayList<String> seq = getAllSequence();
+        ArrayList<String> cols = new ArrayList<>();
+        int len = getSequence().length();
+        for(int i=0; i<len; i++){
+            String tmp = "";
+            for(int j=0; j<seq.size();j++){
+                tmp = tmp + seq.get(j).substring(i, i+1);
+            }
+            cols.add(tmp);
+        }
+        return cols;
+    }
 }

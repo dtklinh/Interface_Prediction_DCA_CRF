@@ -210,4 +210,21 @@ public class MyIO_DCA {
         }
         return res;
     }
+    public static ArrayList<ColPair_Score> ReadDCA_Score(String path2File, int idx_score) throws IOException{
+        ArrayList<ColPair_Score> res = new ArrayList<ColPair_Score>();
+        List<String> lst = utils.Utils.file2list(path2File);
+        for(String s: lst){
+            s = s.trim();
+            if(s.isEmpty())
+                continue;
+            String[] arr = s.split("\t");
+            int p1 = (int)Double.parseDouble(arr[0]);
+            int p2 = (int)Double.parseDouble(arr[1]);
+            
+            double score = Double.parseDouble(arr[idx_score]);
+            ColPair_Score d = new ColPair_Score( p1, p2, score);
+            res.add(d);
+        }
+        return res;
+    }
 }

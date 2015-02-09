@@ -4,6 +4,7 @@
  */
 package Common;
 
+import Analysis.GeneralResult;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -11,8 +12,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import org.biojava.bio.structure.AminoAcid;
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.StructureException;
 
 /**
  *
@@ -145,5 +151,76 @@ public class StaticMethod {
         return res;
     }
     
-   
+    // suppose all files in this folder share the same extend name such as *.txt, 
+    public static String FindEndName(String Dir){
+        if(utils.Utils.dir2list(Dir).size()==0){
+            return "";
+        }
+        String str = utils.Utils.dir2list(Dir).get(0);
+        str = str.trim();
+        int idx = str.indexOf(".");
+        if(idx>=0){
+            return str.substring(idx);
+        }
+        return "";
+    }
+    public static double DistanceBtwGroups(Group A, Group B) throws StructureException{
+        List<Atom> lst_Atom_A = A.getAtoms();
+        List<Atom> lst_Atom_B = B.getAtoms();
+        double tmp =-1.0;
+        Atom A_CA = ((AminoAcid)A).getCA();
+        Atom B_CA= ((AminoAcid)B).getCA();
+//        for(Atom a: lst_Atom_A){
+//            if(a.getName().equalsIgnoreCase("CA")){
+//                A_CA = a;
+//            }
+//        }
+//        for(Atom b: lst_Atom_B){
+//            if(b.getName().equalsIgnoreCase("CA")){
+//                B_CA = b;
+//            }
+//        }
+        if(A_CA!=null && B_CA!=null){
+            return DistanceBtwAtoms(A_CA, B_CA);
+        }
+        else{
+            System.err.println("Wrong in calculate dis btw two amino acids");
+            System.exit(1);
+            return -1.0d;
+        }
+//        for (Atom a : lst_Atom_A) {
+//            if (A.getType().equalsIgnoreCase("amino")) {
+//                    if (!a.getName().equalsIgnoreCase("CA")) {
+//                        continue;
+//                    }
+//            }
+//            for (Atom b : lst_Atom_B) {
+//                
+//                if (B.getType().equalsIgnoreCase("amino")) {
+//                    if (b.getName().equalsIgnoreCase("CA")) {
+//                        continue;
+//                    }
+//                }
+//                tmp = DistanceBtwAtoms(a, b);
+//                break;
+//
+//            }
+//        }
+//        return tmp;
+    }
+    private static double DistanceBtwAtoms(Atom A, Atom B) {
+        double dis = 0.0;
+        double X1 = A.getX(); //System.out.println("X1: " + X1);
+        double Y1 = A.getY(); //System.out.println("Y1: " + Y1);
+        double Z1 = A.getZ(); //System.out.println("Z1: " + Z1);
+        double X2 = B.getX(); //System.out.println("X2: " + X2);
+        double Y2 = B.getY(); //System.out.println("Y2: " + Y2);
+        double Z2 = B.getZ(); //System.out.println("Z2: " + Z2);
+        dis = Math.pow(X1 - X2, 2) + Math.pow(Y1 - Y2, 2) + Math.pow(Z1 - Z2, 2);
+        dis = Math.sqrt(dis);
+        //System.out.println("Dis: "+ dis);
+        //System.exit(0);
+        return dis;
+    }
+    
 }
