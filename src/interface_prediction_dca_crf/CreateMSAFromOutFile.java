@@ -25,14 +25,14 @@ public class CreateMSAFromOutFile {
      */
     public static void main(String[] args) throws IOException, StructureException {
         // TODO code application logic here
-        String dirMSA = "Output/Zellner_BLAST/MSAFile/";
+        String dirMSA = "Input/Magnus_DB/Magnus_MSA/";
         
-        String dirOutFile = "Output/Zellner_BLAST/OutFile/";
-        String dirPDB = "Input/Zellner_PDB/";
+        String dirOutFile = "Input/Magnus_DB/Magnus_BLAST/";
+        String dirPDB = "Input/Magnus_DB/Magnus_PDB_SingleChain/";
         List<String> lst = utils.Utils.dir2list(dirOutFile);
         for(String s: lst){
             s = s.trim();
-            Structure struc = (new PDBFileReader()).getStructure(dirPDB + s.substring(0, 6)+".txt");
+            Structure struc = (new PDBFileReader()).getStructure(dirPDB + s.substring(0, 6)+".msa");
             Chain c = struc.getChain(0);
             String seq = c.getAtomSequence();
             CreateMSAfromBLAST b = new CreateMSAfromBLAST(dirOutFile, seq, s);

@@ -69,9 +69,9 @@ public class BLAST extends MyObject{
 
     public void run() throws IOException, InterruptedException {
         for (String Query : Lst_Query) {
-            String cmd = Path2BLAST + " -query " +PathIn + "/"+ Query;
+            String cmd = Path2BLAST + " -query " +PathIn + Query;
             cmd = cmd + " -db " + Database;
-            cmd = cmd + " -out " + PathOut + "/"+Query+".out";
+            cmd = cmd + " -out " + PathOut +Query+".out";
             cmd = cmd + " -num_alignments " + NumAlignments;
 //            cmd = cmd + " -out_ascii_pssm " + PathOut + "/"+ Query+".pssm";
             cmd = cmd + " -comp_based_stats 1 -show_gis ";

@@ -28,16 +28,16 @@ public class RunBLAST {
         String db = "/home/t.dang/BLAST/ncbi-blastdb/nr";
         int num_algn = 20000;
         int num_threads = 1;
-        String pathIn = "Input/Zellner_Sequence";
-        String pathOut = "Output/Zellner_BLAST";
+        String pathIn = "Input/Magnus_DB/Magnus_Sequence/";
+        String pathOut = "Input/Magnus_DB/Magnus_BLAST/";
         
-        List<String> lst = utils.Utils.file2list("Input/LstZellnerFile.txt");
+        List<String> lst = utils.Utils.dir2list(pathIn);
         int cpu = 5;
         ArrayList<ArrayList<String>> arr = new ArrayList<ArrayList<String>>();
         arr = StaticMethod.Divide(lst, cpu);
 //        int max = lst.size() / cpu;
 //        int i = 0;
-        boolean mknew = true;
+//        boolean mknew = true;
 //        ArrayList<String> tmp= new ArrayList<String>();
 //        for (String s : lst) {
 //            if (mknew) {

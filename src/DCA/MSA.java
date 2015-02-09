@@ -468,8 +468,8 @@ public class MSA {
 //        System.exit(0);
 
         MyOwnMatrix invC = C.inverse();
-        MyIO.WriteToFile(str + ".invC", invC.getArrayCopy());
-        System.out.println("Finish write to invC");
+//        MyIO.WriteToFile(str + ".invC", invC.getArrayCopy());
+//        System.out.println("Finish write to invC");
 //        System.exit(0);
 
         double[][] res = new double[getN() * (getN() - 1) / 2][3];

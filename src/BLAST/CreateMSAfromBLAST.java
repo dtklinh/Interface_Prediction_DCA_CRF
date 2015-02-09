@@ -165,8 +165,8 @@ public class CreateMSAfromBLAST {
         msa.add(this.ProtSequence);
         int count = 1;
         for (AlignedBlock b : this.Lst_AlignedBlock) {
-            msa.add(">sequence_" + count);
-            count++;
+//            msa.add(">sequence_" + count);
+//            count++;
             String str = "";
             for (int i = 1; i < b.getQuery_start(); i++) {
                 str = str + "-";
@@ -177,7 +177,9 @@ public class CreateMSAfromBLAST {
             }
 //            msa.add(str);
             if (!str.equalsIgnoreCase(this.ProtSequence)) {
+                msa.add(">sequence_" + count);
                 msa.add(str);
+                count++;
             }
         }
         return msa;

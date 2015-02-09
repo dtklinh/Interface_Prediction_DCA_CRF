@@ -24,12 +24,20 @@ public class RunDCA {
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
         // TODO code application logic here
-        int num_cpu = 2;
-        String DirMSAFile = "EVCoupling/MSA/";
-        String DirOut_DCAFile = "EVCoupling/DCA/";
+        int num_cpu = 1;
+        String DirMSAFile = "Input/Magnus_DB/Magnus_MSA/";
+        String DirOut_DCAFile = "Input/Magnus_DB/Magnus_DCA/";
         List<String> lst_tmp = utils.Utils.dir2list(DirMSAFile);
         ArrayList<String> lst_filename = new ArrayList<>();
         lst_filename.addAll(lst_tmp);
+        
+        List<String> Done = utils.Utils.dir2list(DirOut_DCAFile);
+        for(int i=lst_filename.size()-1; i>=0; i--){
+            String s = lst_filename.get(i).substring(0, 6)+".dca";
+            if(Done.contains(s)){
+                lst_filename.remove(i);
+            }
+        }
         
         ArrayList<MSA> lst_MSA = new ArrayList<MSA>();
         for(String s: lst_filename){

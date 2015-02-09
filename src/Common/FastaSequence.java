@@ -88,6 +88,17 @@ public final class FastaSequence {
         }
         return lst;
     }
+    
+    public ArrayList<String> getAllSequence(int max){
+        ArrayList<String> lst = new ArrayList<>();
+        if(max>sequence.length){
+            max = sequence.length;
+        }
+        for(int i=0; i<max;i++){
+            lst.add(sequence[i]);
+        }
+        return lst;
+    }
 
     //return description as String
     public String getDescription(int i) {
