@@ -14,14 +14,14 @@ import java.util.List;
  *
  * @author t.dang
  */
-public class MyResult {
+public class MyResultTest {
     private String Dir2Test;
     private String Dir2Ref;
     private String Dir2PDB;
     private final int NeighborDistance = 4;
     private final int TopNum = 25;
     private int idx_score_ref;
-    public MyResult(String d2test, String d2ref, String d2pdb, int idx){
+    public MyResultTest(String d2test, String d2ref, String d2pdb, int idx){
         this.Dir2Test = d2test;
         this.Dir2Ref = d2ref;
         this.idx_score_ref = idx;
@@ -45,5 +45,6 @@ public class MyResult {
             ref.EliminateNeighbor();
             
         }
+        return null;
     }
 }

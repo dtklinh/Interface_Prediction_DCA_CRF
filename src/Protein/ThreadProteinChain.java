@@ -22,7 +22,7 @@ public class ThreadProteinChain extends MyObject{
         this.Dir2ScoreFile = dir;
         this.LstProteinChain = lst;
     }
-    public void run() throws IOException{
+    public void run() throws IOException, Exception{
         for(ProteinChain s: LstProteinChain){
             System.out.println("Thread "+Thread.currentThread().getName()+" run on "+s.getProteinChainID());
             utils.Utils.tic();

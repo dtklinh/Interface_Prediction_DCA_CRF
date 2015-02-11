@@ -106,4 +106,10 @@ public class ColPair_Score implements Comparable<ColPair_Score> {
         }
         return false;
     }
+    public boolean IsSameIndex(ColPair_Score other){
+        if(other.P1==P1 && other.P2==P2)
+            return true;
+        return false;
+    }
+    
 }

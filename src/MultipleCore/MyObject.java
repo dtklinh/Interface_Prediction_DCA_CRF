@@ -11,7 +11,7 @@ import java.io.IOException;
  * @author t.dang
  */
 public class MyObject {
-    public void run()throws IOException, InterruptedException{
+    public void run()throws IOException, InterruptedException, Exception{
         
     }
     

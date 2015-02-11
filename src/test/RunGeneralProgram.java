@@ -21,8 +21,8 @@ public class RunGeneralProgram {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        int num_cpus = 5;
-        List<String> lst = utils.Utils.dir2list("Input/Magnus_DB/Magnus_PDB_SingleChain");
+        int num_cpus = 1;
+        List<String> lst = utils.Utils.dir2list("Input/Magnus_DB/Magnus_NMI/NotAdjustIndex/");
         ArrayList<ArrayList<String>> arr = StaticMethod.Divide(lst, num_cpus);
         for(int i=0; i<num_cpus;i++){
             GeneralProgram p = new GeneralProgram(arr.get(i));
