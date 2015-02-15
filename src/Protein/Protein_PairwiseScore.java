@@ -7,6 +7,7 @@ package Protein;
 import Common.StaticMethod;
 import DCA.ColPair_Score;
 import DCA.MyIO_DCA;
+import DCA.MyOwnMatrix;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -107,6 +108,20 @@ public class Protein_PairwiseScore {
         this.LstScore = MyIO_DCA.ReadDCA_Score(Path2OpenFile, idx_score);
     }
 
+    public Protein_PairwiseScore(String path, String name, int distance, MyOwnMatrix m){
+        this.Path2File = path;
+        this.ProteinChain = name.substring(0, 6);
+        this.NeighborDistance = distance;
+        this.LstScore = new ArrayList<>();
+        double[][] A = m.getArrayCopy();
+        for(int i=0; i<A.length-1;i++){
+            for(int j=i+1;j<A[0].length;j++){
+                ColPair_Score col = new ColPair_Score(i, j, (A[i][j]+A[j][i])/2);
+//                ColPair_Score col = new ColPair_Score(i, j, Math.min(A[i][j], A[j][i]));
+                LstScore.add(col);
+            }
+        }
+    }
     public void Sort() {
         if (this.getLstScore() != null) {
             Collections.sort(getLstScore());
@@ -129,6 +144,10 @@ public class Protein_PairwiseScore {
     public List<ColPair_Score> TopNumber(int n) {
         int size = getLstScore().size();
         return getLstScore().subList(size - n, size);
+    }
+    public List<ColPair_Score> BottomNumber(int n){
+//        int size = getLstScore().size();
+        return getLstScore().subList(0, n);
     }
 
     public void AdjustIndex(String Path2Folder) throws IOException {
@@ -242,4 +261,8 @@ public class Protein_PairwiseScore {
         }
         return sum;
     }
+    public int getSequenceLength(){
+        return (int)(1+ Math.sqrt(8*LstScore.size()+1))/2;
+    }
+    
 }

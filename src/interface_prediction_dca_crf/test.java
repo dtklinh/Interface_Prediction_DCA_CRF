@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import org.apache.commons.math.stat.StatUtils;
+import org.apache.commons.math.stat.correlation.Covariance;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.PDBFileReader;
@@ -46,16 +47,16 @@ public class test {
         // test for divide a list into several sublist // end
         
         // test for DCA
-        String Path2Folder = "Input/Magnus_DB/Magnus_DCA/";
-        String filename = "1A70_A";
-        Protein_PairwiseScore prot = new Protein_PairwiseScore(Path2Folder, filename, 4);
-        prot.EliminateNeighbor();
-        prot.Sort();
-        prot.AdjustIndex("Input/Magnus_DB/Magnus_PDB_SingleChain/");
-        List<ColPair_Score> lst = prot.TopNumber(20);
-        for(ColPair_Score s: lst){
-            s.Print2Screen();
-        }
+//        String Path2Folder = "Input/Magnus_DB/Magnus_DCA/";
+//        String filename = "1A70_A";
+//        Protein_PairwiseScore prot = new Protein_PairwiseScore(Path2Folder, filename, 4);
+//        prot.EliminateNeighbor();
+//        prot.Sort();
+//        prot.AdjustIndex("Input/Magnus_DB/Magnus_PDB_SingleChain/");
+//        List<ColPair_Score> lst = prot.TopNumber(20);
+//        for(ColPair_Score s: lst){
+//            s.Print2Screen();
+//        }
         // test for DCA // end
         
         // test Common Math
@@ -78,5 +79,7 @@ public class test {
 //            Chain c = struc.getChain(0);
 //            System.out.println(c.getAtomSequence());
 //        }
+        
+        
     }
 }

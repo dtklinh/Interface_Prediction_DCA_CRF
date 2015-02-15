@@ -5,6 +5,11 @@
 package DCA;
 
 import Jama.Matrix;
+import NMI.Dsm;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -18,7 +23,14 @@ public class MyOwnMatrix extends Matrix{
         super(X,i);
     }
     
-    
+    public void print2Screen(){
+        for(int i=0; i<this.getRowDimension(); i++){
+            for(int j=0; j<this.getColumnDimension(); j++){
+                System.out.print(this.get(i, j)+"\t");
+            }
+            System.out.println();
+        }
+    }
     public MyOwnMatrix expElementWise(){
         double[][] X = this.getArrayCopy();
         int m = this.getRowDimension();
@@ -105,6 +117,9 @@ public class MyOwnMatrix extends Matrix{
         }
         return new MyOwnMatrix(d);
     }
+//    public void setArray(double[][] arr){
+//        this = new MyOwnMatrix(arr);
+//    }
     public static MyOwnMatrix Eyes(int m, int n){
         double[][] d = new double[m][n];
         int min = Math.min(m, n);
@@ -113,7 +128,7 @@ public class MyOwnMatrix extends Matrix{
         }
         return new MyOwnMatrix(d);
     }
-    public double Sum(){
+    public double sum(){
         double s =0.0;
         int R = this.getRowDimension();
         int C = this.getColumnDimension();
@@ -121,6 +136,29 @@ public class MyOwnMatrix extends Matrix{
             for(int j=0; j<C; j++){
                 s += this.get(i, j);
             }
+        }
+        return s;
+    }
+    public double[] sumColumn(){
+        int dim_col = this.getColumnDimension();
+        int dim_row = this.getRowDimension();
+        double[] res = new double[dim_col];
+        double[][]A = this.getArrayCopy();
+        for(int c=0; c<dim_col; c++){
+            for(int r=0; r<dim_row; r++){
+                res[c] += A[r][c];
+            }
+        }
+        return res;
+    }
+    public double sumColumn(int idx){
+        double s = 0.0;
+        if(idx<0 || idx>=this.getColumnDimension()){
+            System.err.println("Out of range");
+            System.exit(1);
+        }
+        for(int i=0; i<this.getRowDimension(); i++){
+            s += this.get(i, idx);
         }
         return s;
     }
@@ -162,7 +200,9 @@ public class MyOwnMatrix extends Matrix{
         return new MyOwnMatrix(P.getArrayCopy());
     }
     public MyOwnMatrix minus(MyOwnMatrix X){
-        return this.add(X.times(-1));
+        MyOwnMatrix tmp = new MyOwnMatrix(X.getArrayCopy());
+        MyOwnMatrix P = new MyOwnMatrix(this.getArrayCopy());
+        return P.add(tmp.times(-1));
     }
     @Override
     public MyOwnMatrix inverse(){
@@ -187,6 +227,92 @@ public class MyOwnMatrix extends Matrix{
         return max;
     }
     public MyOwnMatrix normalize(){
-        return this.times(1.0/this.Sum());
+        return this.times(1.0/this.sum());
+    }
+    public static MyOwnMatrix fromPairScore2Matrix(String path2file, double epsilon) throws IOException{
+        List<String> lst = utils.Utils.file2list(path2file);
+        int N = (int) ((Math.sqrt(8*lst.size()+1)+1)/2);
+        if(N*(N-1)/2 != lst.size()){
+            System.err.println("Error: problem with length");
+            System.exit(1);
+        }
+        
+        // find median
+        ArrayList<Double> lst_score = new ArrayList<>();
+        
+        
+        double[][] mtr = new double[N][N];
+        for(String s: lst){
+            String[] arr = s.split("\\s+");
+            int R = (int)Double.parseDouble(arr[0]);
+            int C = (int)Double.parseDouble(arr[1]);
+            if(Math.abs(R-C)<=4) continue;
+            double val = Double.parseDouble(arr[2]);
+            mtr[R][C] = val;
+            mtr[C][R] = val;
+            lst_score.add(val);
+        }
+        Collections.sort(lst_score);
+        double median = lst_score.get(lst_score.size()/2);
+        for(int i=0; i<N-1;i++){
+            for(int j=i+1; j<N; j++){
+                if(mtr[i][j]<median){
+                    mtr[i][j] = 0.0;
+                    mtr[j][i] = 0.0;
+                }
+            }
+        }
+        for(int i=0; i<N;i++){
+            mtr[i][i] = epsilon;
+        }
+        return new MyOwnMatrix(mtr);
+    }
+    public boolean checkSymetric(){
+        if(this.getColumnDimension()!=this.getRowDimension())
+            return false;
+        for(int i=0; i<this.getColumnDimension()-1; i++){
+            for(int j=i+1; j<this.getColumnDimension(); j++){
+                if(this.get(i, j)!=this.get(j, i))
+                    return false;
+            }
+        }
+        return true;
+    }
+    public void makeTransitionMatrix(){
+        double[][] a = this.getArray();
+        for(int i=0; i<a.length;i++){
+            double s = 0.0;
+            for(int j=0; j<a[i].length;j++){
+                s += a[i][j];
+            }
+            for(int j=0; j<a[i].length;j++){
+                a[i][j] = a[i][j]/s;
+            }
+        }
+        
+    }
+    public double absSum(){
+        double s =0.0;
+        int R = this.getRowDimension();
+        int C = this.getColumnDimension();
+        for(int i=0; i<R; i++){
+            for(int j=0; j<C; j++){
+                s += Math.abs(this.get(i, j));
+            }
+        }
+        return s;
+    }
+    public void normalizeColumn(){
+        double[][] A = this.getArray();
+        double[] sum_col = this.sumColumn();
+        for(int i=0; i<A.length; i++){
+            for(int j=0;j<A[0].length;j++){
+                A[i][j] = A[i][j]/sum_col[j];
+            }
+        }
+    }
+    public void makeDSM(){
+        double[][] A = this.getArray();
+        A = Dsm.processMatrix(A);
     }
 }

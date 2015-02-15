@@ -10,6 +10,8 @@ import MultipleCore.MyThread;
 import Common.Configuration;
 import Common.FastaSequence;
 import Common.StaticMethod;
+import DCA.MyOwnMatrix;
+import MarkovCluster.Algorithm;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public class TestAlgorithmDCA {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
         
         
         String DirMSAFile = Configuration.DirTest_MSA;
@@ -60,6 +62,15 @@ public class TestAlgorithmDCA {
         // hon hop nho nhat
 //        FastaSequence f = new FastaSequence(Configuration.DirTest_MSA+"10MH_A.msa");
 //        System.out.println(f.getAllSequence().size());
+        
+        // test MyOwnMatrix
+        double[][] a = new double[][]{{1,1,1,1}, 
+            {1,1,0,1}, 
+            {1,0,1,0},
+            {1,1,0,1}};
+        MyOwnMatrix m = new MyOwnMatrix(a);
+        m = Algorithm.process(m);
+        m.print2Screen();
         
     }
 }

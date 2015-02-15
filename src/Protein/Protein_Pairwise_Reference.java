@@ -40,6 +40,16 @@ public class Protein_Pairwise_Reference extends Protein_PairwiseScore{
         }
         return sum;
     }
+     public int CountTN(List<ColPair_Score> lst){
+        int sum = 0;
+        for(ColPair_Score c: lst){
+            if(getScoreByIndexes(c.getP1(), c.getP2())>ContactDistance){
+                sum++;
+            }
+        }
+        return sum;
+    }
+     
      public int CountNotNeighborProximity(){
          int sum = 0;
          for(ColPair_Score s: this.getLstScore()){
@@ -48,5 +58,36 @@ public class Protein_Pairwise_Reference extends Protein_PairwiseScore{
              }
          }
          return sum;
+     }
+     public int CountNotNeighborNOTProximity(){
+         int sum = 0;
+         for(ColPair_Score s: this.getLstScore()){
+             if(!s.IsNeighbor(this.getNeighborDistance()) && s.getScore()>ContactDistance){
+                 sum++;
+             }
+         }
+         return sum;
+     }
+     public ArrayList<Integer> getNumDistanceContact(){
+         ArrayList<Integer> res = new ArrayList<>();
+         this.EliminateNeighbor();
+         ArrayList<ColPair_Score> lst_score = this.getLstScore();
+         for(ColPair_Score s: lst_score){
+             if(s.getScore()<ContactDistance){
+                 res.add(Math.abs(s.getP1()-s.getP2()));
+             }
+         }
+         return res;
+     }
+     public ArrayList<Double> getRelativeDistanceContact(int len){
+         ArrayList<Double> res = new ArrayList<>();
+         this.EliminateNeighbor();
+         ArrayList<ColPair_Score> lst_score = this.getLstScore();
+         for(ColPair_Score s: lst_score){
+             if(s.getScore()<ContactDistance){
+                 res.add(Math.abs(s.getP1()-s.getP2())/(double)len);
+             }
+         }
+         return res;
      }
 }

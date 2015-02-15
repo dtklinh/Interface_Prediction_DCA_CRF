@@ -113,7 +113,7 @@ public class MSA {
                 Pi_true.set(i, getAlgnMx()[j][i], Pi_true.get(i, getAlgnMx()[j][i]) + W.get(0, j));
             }
         }
-        Pi_true = Pi_true.times(1.0 / W.Sum());
+        Pi_true = Pi_true.times(1.0 / W.sum());
         return Pi_true;
 
     }
@@ -170,7 +170,7 @@ public class MSA {
             }
         }
         SuperMatrix m_Pij_true = new SuperMatrix(Pij_true);
-        m_Pij_true.divideScalar(W.Sum());
+        m_Pij_true.divideScalar(W.sum());
         MyOwnMatrix scra = MyOwnMatrix.Eyes(q, q);
         for (int i = 0; i < N; i++) {
             for (int alpha = 0; alpha < q; alpha++) {
@@ -323,8 +323,8 @@ public class MSA {
 //            
 ////            new1 = StaticMethod.Normalize(new1);
 ////            new2 = StaticMethod.Normalize(new2);
-//            new1 = new1.times(1.0/new1.Sum());
-//            new2 = new2.times(1.0/new2.Sum());
+//            new1 = new1.times(1.0/new1.sum());
+//            new2 = new2.times(1.0/new2.sum());
 //
 ////            double d1 = StaticMethod.Diff(new1, m_mu1);
 ////            double d2 = StaticMethod.Diff(new2, m_mu2);
@@ -357,10 +357,10 @@ public class MSA {
             MyOwnMatrix scra2 = mu1.times(W);
 
             MyOwnMatrix new1 = pi.divideElementWise(scra1);
-            new1 = new1.times(1.0 / new1.Sum());
+            new1 = new1.times(1.0 / new1.sum());
 
             MyOwnMatrix new2 = pj.divideElementWise(scra2);
-            new2 = new2.times(1.0 / new2.Sum());
+            new2 = new2.times(1.0 / new2.sum());
 
             double max1 = (new1.minus(mu1)).findMaxAbs();
             double max2 = (new2.minus(mu2)).findMaxAbs();
@@ -406,7 +406,7 @@ public class MSA {
 
     public double CalculateDI(int i, int j, MyOwnMatrix W, MyOwnMatrix mu1, MyOwnMatrix mu2, MyOwnMatrix Pia) {
         MyOwnMatrix Pdir = W.timesElementWise(mu1.transpose().times(mu2));
-        Pdir = Pdir.times(1.0 / Pdir.Sum());
+        Pdir = Pdir.times(1.0 / Pdir.sum());
 
         MyOwnMatrix Pfac = Pia.getRow(i).transpose().times(Pia.getRow(j));
         MyOwnMatrix DI = Pdir.transpose().times(Pdir.divideElementWise(Pfac).logElementWise());
@@ -448,9 +448,9 @@ public class MSA {
         MyOwnMatrix W = new MyOwnMatrix(dW_Km, 1);
         W = W.invElementWise();
 //        MyIO.WriteToFile(str+".W", W.getArrayCopy()); 
-//        System.err.println("Meff: "+ W.Sum());
+//        System.err.println("Meff: "+ W.sum());
 //        
-//        double Meff = W.Sum();
+//        double Meff = W.sum();
         MyOwnMatrix Pi_true = this.Compute_TrueFreqSingle(W);
 //        MyIO.WriteToFile(str+".Pi_true", Pi_true.getArrayCopy());
 

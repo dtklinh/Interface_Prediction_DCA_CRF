@@ -53,7 +53,9 @@ public class Utils {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String s;
 		while ((s = br.readLine()) != null) {
+                    if(!s.trim().isEmpty()){
 			list.add(s);
+                    }
 		}
 		return list;
 	}

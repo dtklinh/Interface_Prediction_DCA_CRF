@@ -22,17 +22,20 @@ public class GetResult {
         // TODO code application logic here
         
         String Dir23D = "Input/Magnus_DB/Magnus_3D/AdjustIndex/";
-        String Dir2DCA = "Input/Magnus_DB/Magnus_DCA/AdjustIndex/";
+        String Dir2DCA = "Input/Magnus_DB/Magnus_DCA/SelfMultiple/";
         String Dir2NMI1 = "Input/Magnus_DB/Magnus_NMI/AdjustIndex/WithoutDSM/";
         String Dir2NMI2 = "Input/Magnus_DB/Magnus_NMI/AdjustIndex/WithDSM/";
         int neighbor = 4;
         int top = 100;
+//        int bottom =50;
         List<String> lst = utils.Utils.dir2list(Dir23D);
         int TP_DCA =0, TP_NMI1=0, TP_NMI2=0, Overlap_NMI1 =0, Overlap_NMI2 =0, total=0;
         for(String s: lst){
             // make reference
             Protein_Pairwise_Reference reference = new Protein_Pairwise_Reference(Dir23D, s, neighbor, 8.5);
             top = reference.CountNotNeighborProximity();
+//            bottom = reference.CountNotNeighborNOTProximity();
+//            bottom = reference.getLstScore().size()/2;
             total += reference.CountNotNeighborProximity();
             
             // make for DCA
@@ -52,6 +55,11 @@ public class GetResult {
             TP_DCA += reference.CountTP(dca.TopNumber(top));
             TP_NMI1 += reference.CountTP(nmi1.TopNumber(top));
             TP_NMI2 += reference.CountTP(nmi2.TopNumber(top));
+            
+//            TP_DCA += reference.CountTN(dca.TopNumber(bottom));
+//            TP_NMI1 += reference.CountTN(nmi1.TopNumber(bottom));
+//            TP_NMI2 += reference.CountTN(nmi2.TopNumber(bottom));
+            
             Overlap_NMI1 += Protein_PairwiseScore.CountOverlapIdx(dca.TopNumber(top), nmi1.TopNumber(top));
             Overlap_NMI2 += Protein_PairwiseScore.CountOverlapIdx(dca.TopNumber(top), nmi2.TopNumber(top));
 //            Overlap_NMI2 = dca.CountOverlap(nmi2);

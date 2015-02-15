@@ -299,4 +299,9 @@ public class MyIO {
         }
         return tmp;
     }
+    
+//    public static void Write
+//    public static ArrayList<ColPair_Score> Read2ColPair(String path2file){
+//        
+//    }
 }

@@ -5,6 +5,7 @@
 package Statistic;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 
 /**
@@ -50,6 +51,18 @@ public class Distribution {
     
     // draw histogram of this distribution
     public void DrawHistogram(int numBin){
+         double max = Collections.max(DValue);
+        double min = Collections.min(DValue);
+        double step = (max-min)/numBin;
+        double[] arr = new double[numBin+1];
+        arr[0] = min;
+        for(int i=1; i<arr.length; i++){
+            arr[i] = arr[i-1] + step;
+        }
+        for(int i=0; i<arr.length-1;i++){
+            int count = 0;
+        }
+//        ArrayList<Double> Histogram = new ArrayList<>();
         
     }
     

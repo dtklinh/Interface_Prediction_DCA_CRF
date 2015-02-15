@@ -14,21 +14,28 @@ import java.util.logging.Logger;
  * @author t.dang
  */
 public class MyThread extends Thread {
+
     private MyObject bls;
-    public MyThread(MyObject b){
+
+    public MyThread(MyObject b) {
         bls = b;
-        
+
     }
 
     public void run() {
-        try {
+
+//        try {
             try {
                 bls.run();
-            } catch (InterruptedException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(MyThread.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(MyThread.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        } 
+//        catch (InterruptedException ex) {
+//            Logger.getLogger(MyThread.class.getName()).log(Level.SEVERE, null, ex);
+//        } 
+//        catch (IOException ex) {
+//            Logger.getLogger(MyThread.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 }
