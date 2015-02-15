@@ -1,4 +1,6 @@
 \documentclass[a4paper,12pt]{article}
+\usepackage{amsmath}
+
 \begin{document}
 
 Date: Sun. 15.02.15
@@ -6,5 +8,8 @@ Date: Sun. 15.02.15
 The main goal of this report is to overview the method named \emph {Direct Coupling Analysis} to predict the amino acids pair contacts within single protein chain. Briefly speaking, the method of \emph {Direct Coupling Analysis} (\emph{DCA}) employs the \emph {Ising} model in statistical physics to construct the interactions among site pairs and use some approximation methods to find out the most probable one. This report will be organized as following. First, we overview the background of \emph {Ising} model and its associating generalized one which is \emph {Pott} model. Second, we present the analogy of \emph {Ising/Pott} models to the interaction system among amino acids pairs. After that, we summarize several approaches to estimate the parameters in \emph {Ising/Pott} models. Finally, a modified version of \emph {DCA} based method will be presented as to figure out the contacts between two proteins in a complex. 
 
 \section{Ising Model}
-Let $ \Lambda $ be finite set, and denote $ \Sigma_\Lambda \s $
+Let $ \Lambda $ be finite set, and denote $ \Sigma_\Lambda \stackrel{def}{=}\{ 1,2,...,q\}^\Lambda$. In particular, $ q $ is set to 2 in \emph {Ising} model. Suppose $ A = (a_{ij})_{i,j \in \Lambda} $ is real symmetric matrix, and $ \textbf{h} = (h_i)_{i \in \Lambda}$ is a real vector. The \emph {Hamiltonian} of the model corresponding to those parameters is a mapping $ H_{A,\textbf{h}} \colon \Sigma_\Lambda \to \textbf{R} $ defined by
+\[ -H_{A,\textbf{h}}(\sigma) \stackrel{def}{=}  \sum_{i,j \in \Lambda} a_{ij}\sigma_i \sigma_j + \sum_{i \in \Lambda} h_i \sigma_i \]
+and the \emph{Gibbs} measure $ G_{A,\textbf{h}} $ on $\Sigma_\Lambda$ is defined by 
+\[ G_{\Lambda,A,\textbf{h}} \stackrel{def}{=} \frac{1}{Z_{\Lambda,A,\textbf{h}}} exp \left[ -H_{A,\textbf{h}}(\sigma) \right] \]
 \end{document}
