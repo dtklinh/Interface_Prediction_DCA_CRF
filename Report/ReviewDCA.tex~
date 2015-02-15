@@ -1,0 +1,8 @@
+\documentclass[a4paper,12pt]{article}
+\begin{document}
+
+Date: Sun. 15.02.15
+
+The main goal of this report is to overview the method named \emph {Direct Coupling Analysis} to predict the amino acids pair contacts within single protein chain. Briefly speaking, the method of \emph {Direct Coupling Analysis} (\emph{DCA}) employs the \emph {Ising} model in statistical physics to construct the interactions among site pairs and use some approximation methods to find out the most probable one. This report will be organized as following. First, we overview the background of \emph {Ising} model and its associating generalized one which is \emph {Pott} model. 
+
+\end{document}
