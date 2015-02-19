@@ -1,0 +1,109 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsmath}
+\usepackage{cite}
+
+\begin{document}
+\title{Report}
+\author{Linh Dang}
+\date{15.02.15} 
+\maketitle
+
+\section*{Purpose}
+Assessment of \emph{Direct Coupling Analysis} (\emph{DCA}) and \emph{Normalized Mutual Information} (\emph{NMI}) for detection of residues contacts intra-protein.
+
+\section*{Data Set}
+The data set consists of 17 protein chains: 1A70\_A, 1A71\_A, 1BQU\_A, 1ELV\_A, 1G2E\_A, 1GDC\_A, 1O0W\_A, 1O47\_A, 1WVN\_A, 2BOL\_A, 2HDA\_A, 2O72\_A, 2VI6\_A, 3BFR\_A, 3FHI\_A, 5PTI\_A, 6GSU\_A.
+
+\section*{Method}
+\subsection{Create MSA}
+MSA is retrieved from BLAST, get as much sequence as possible, but use maximum 20,000 sequences to create MSA.
+\subsection{Algorithms}
+I test with two algorithms. The first one is \emph{DCA}, and the second one is \emph{NMI} from Compensatory Mutation Finder. For both algorithms:
+\[\]
+
+\begin{tabular}{ |p{3cm}|p{10cm}| } 
+ \hline
+ \textbf{Input} & MSA of a protein chain (\#row should be larger than 1000) with length of L   \\ 
+ \hline
+ \textbf{Output} & a list of tube (\(c_i, c_j, s_{ij} \)) where \( 1 \leq i<j \leq L \) , $ c_i, c_j$ are two residues in protein chain and $s_{ij}$ is the corresponding score.   \\ 
+ 
+ \hline
+\end{tabular}
+
+\textbf{Note}: only long-range residues contacts are taken into account, any pair of residues with 4 units is not considered as contact. The cut-off distance of site contact is 8.5 {\AA}.
+
+\subsubsection{DCA}
+Employ Direct Coupling Technique described in \cite{Morcos11}  with the default parameter (pseudocount\_weight = 0.5; $\theta$ = 0.2).
+\subsubsection{NMI}
+Utilize normalized mutual information with and without transformed through DSM to calculate the connection score between two residues in chain. 
+
+\section*{Result}
+\subsection*{Residue Contacts Scores}
+\begin{tabular}{ |c|c|c|c|c|c|c| } \hline
+Top Score & DCA & $NMI_1$ & $NMI_2$ & DCA-$NMI_1$ & DCA-$NMI_2$ & total \\\hline
+50 & \textbf{317} & 57 & 32 & 47 & 20 & 7953 \\
+60 & \textbf{370} & 69 & 40 & 61 & 28 & 7953 \\
+80 & \textbf{455} & 92 & 56 & 90 & 41 & 7953 \\
+100 & \textbf{539} & 112 & 73 & 132 & 60 & 7953 \\
+(*) & \textbf{1730} & 380 & 277 & 789 & 358 & 7953 \\
+\hline \end{tabular}
+
+\paragraph{}
+\emph{Explanation}
+
+$NMI_1$: normalized Mutual Information without transformed via DSM
+
+$NMI_2$: normalized Mutual Information with transformed via DSM
+
+The first column (Top Score) is the number of best residue pair, based on the value from DCA or NMI. For example, in the the second row of above table, we choose the best 50 residue pairs (based on its score, after ignoring the neighborhood) of each protein chain and assume them as the contacts. Based on DCA method, there are 317 true positive, while NMI has only 57 ones. Besides, the index, for example, DCA-$NMI_1$ is the number which shows the overlap between the best 50 site pairs of DCA and $NMI_1$. And the final column is the amount of real pair contacts.
+
+(*) Choosing a fixed number such as 50, 100 could be problematic because it is regardless to the protein chain sequence length. In this evaluation, we calculate the true number of residue contacts (called $N_i$ for chain i) and choose the top-$N_i$ residue pair to evaluate.
+
+\subsection*{Correlations}
+Measure the correlation between DCA, NMI score and distance in 3D among amino acids pairs.
+
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{|c|c|c|c|} \hline
+ & 3D & DCA & NMI \\\hline
+ 3D & 1 & \textbf{-0.29} & 0.04 \\\hline
+ DCA & \textbf{-0.29} & 1 & 0.08 \\\hline
+ NMI & 0.04 & 0.08 & 1 \\\hline
+ \hline
+\end{tabular}
+\caption{Correlation of scores among DCA, MNI and 3D distance before eliminating neighbor pair sites}
+\end{center}
+\end{table}
+\paragraph{}
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{|c|c|c|c|} \hline
+ & 3D & DCA & NMI \\\hline
+ 3D & 1 & \textbf{-0.21} & 0.05 \\\hline
+ DCA & \textbf{-0.21} & 1 & 0.17 \\\hline
+ NMI & 0.05 & 0.17 & 1 \\\hline
+ \hline
+\end{tabular}
+\caption{Correlation of scores among DCA, MNI and 3D distance after eliminating neighbor pair sites}
+\end{center}
+\end{table}
+
+\section*{Remarks}
+\begin{enumerate}
+\item
+DCA definitely outperforms NMI because it could capture the real direct coupling and minimize the effect of indirect coupling.
+\item
+Statistical model in physics could be promising to solve many problem in Bioinformatics.
+\item
+DCA is indeed the inverse Ising model problem. In original Ising model, the lattice \& bonds parameters (analogous to vertexes and edges) are given, and people are interested in finding the configuration of the model ($\sigma_i $ is +1 or -1) such as $< \sigma>$ (the magnetization). In contrast, we assume that the configuration is given (20 amino acids and the gap), and we are interested in estimating the bonds between each pair sites. 
+
+\end{enumerate}
+
+\begin{thebibliography}{1}
+
+  \bibitem{Morcos11} Morcos, F., Pagnani, A., Lunt, B., Bertolino, A., Marks, D.S., Sander, C., Zecchina, R., Onuchic, J.N., Hwa, T., Weigt, M. Direct-coupling analysis of residue coevolution captures native contacts across many protein families. Proc Natl Acad Sci USA 108, E1293-E1301 (2011).
+
+  
+
+  \end{thebibliography}
+\end{document}

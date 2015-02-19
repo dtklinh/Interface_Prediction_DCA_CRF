@@ -1,15 +1,59 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage{amsmath}
+\usepackage{cite}
 
 \begin{document}
 
-Date: Sun. 15.02.15
+\title{Survey on Direct Coupling Analysis Method}
+\author{Linh Dang}
+\date{15.02.15} 
+\maketitle
 
-The main goal of this report is to overview the method named \emph {Direct Coupling Analysis} to predict the amino acids pair contacts within single protein chain. Briefly speaking, the method of \emph {Direct Coupling Analysis} (\emph{DCA}) employs the \emph {Ising} model in statistical physics to construct the interactions among site pairs and use some approximation methods to find out the most probable one. This report will be organized as following. First, we overview the background of \emph {Ising} model and its associating generalized one which is \emph {Pott} model. Second, we present the analogy of \emph {Ising/Pott} models to the interaction system among amino acids pairs. After that, we summarize several approaches to estimate the parameters in \emph {Ising/Pott} models. Finally, a modified version of \emph {DCA} based method will be presented as to figure out the contacts between two proteins in a complex. 
+The main goal of this report is to overview the method named \emph {Direct Coupling Analysis} to predict the amino acids pair contacts within single protein chain. Briefly speaking, the method of \emph {Direct Coupling Analysis} (\emph{DCA}) employs the \emph {Ising} model in statistical physics to construct the interactions among site pairs and use some approximation methods to find out the most probable one. This report will be organized as following. First, we overview the background of \emph {Ising} model. Second, we present the analogy of \emph {Ising} model to the interaction system among amino acids pairs. After that, we summarize several approaches to estimate the parameters in \emph {Ising} models. Finally, a modified version of \emph {DCA} based method will be presented as to figure out the contacts between two proteins in a complex. 
 
 \section{Ising Model}
+All the technological terms as well as definitions are based on \cite{Bolthausen2007}
 Let $ \Lambda $ be finite set, and denote $ \Sigma_\Lambda \stackrel{def}{=}\{ 1,2,...,q\}^\Lambda$. In particular, $ q $ is set to 2 in \emph {Ising} model. Suppose $ A = (a_{ij})_{i,j \in \Lambda} $ is real symmetric matrix, and $ \textbf{h} = (h_i)_{i \in \Lambda}$ is a real vector. The \emph {Hamiltonian} of the model corresponding to those parameters is a mapping $ H_{A,\textbf{h}} \colon \Sigma_\Lambda \to \textbf{R} $ defined by
-\[ -H_{A,\textbf{h}}(\sigma) \stackrel{def}{=}  \sum_{i,j \in \Lambda} a_{ij}\sigma_i \sigma_j + \sum_{i \in \Lambda} h_i \sigma_i \]
+\begin{equation} \label{eq1}
+ -H_{A,\textbf{h}}(\sigma) \stackrel{def}{=}  \sum_{i,j \in \Lambda} a_{ij}\sigma_i \sigma_j + \sum_{i \in \Lambda} h_i \sigma_i 
+\end{equation}
+
 and the \emph{Gibbs} measure $ G_{A,\textbf{h}} $ on $\Sigma_\Lambda$ is defined by 
-\[ G_{\Lambda,A,\textbf{h}} \stackrel{def}{=} \frac{1}{Z_{\Lambda,A,\textbf{h}}} exp \left[ -H_{A,\textbf{h}}(\sigma) \right] \]
+\begin{equation} \label{eq2}
+ G_{\Lambda,A,\textbf{h}} \stackrel{def}{=} \frac{1}{Z_{\Lambda,A,\textbf{h}}} exp \left[ -H_{A,\textbf{h}}(\sigma) \right] 
+\end{equation}
+
+where $ Z_{\Lambda,A,\textbf{h}} $ is partition function, or the normalizing factor in order to make \emph{Gibbs} measure a proper probability distribution. The partition function is defined by
+\begin{equation} \label{eq3}
+ Z_{\Lambda,A,\textbf{h}} \stackrel{def}{=} \sum_\sigma exp \left[ -H_{A,\textbf{h}}(\sigma) \right] 
+\end{equation}
+
+
+\section{Ising Model in Bioinformatics points of view}
+Important sites in protein chain defining its 3D structure tend to reserve or co-evolve over evolutionary process, which is confirmed by several researches \cite{Marks11,Hopf14,Ekeberg13}. The main assumption is that if two amino acids are proximity in 3D structure, they are both reserved or compensatory mutated together. The methods for detection of such co-evolved pairs have been developed for a long time and have rich literature. They could, however, be separated into two main categories which are local and global statistical probability models \cite{Marks12}. In local statistical methods such as \emph{Mutual Information} inherently unable to distinguish between direct and indirect contact pairs because they consider each pair is independent to the others. In another hand, the global probability based models which take into account all pairs in calculation could overcome the shortcoming of the local based methods and give the outperformed results. 
+\[\]
+
+The Ising model in statistical physics could be interpreted in bioinformatics point of view as following. Let $\Lambda$ be a set of all amino acids in protein chain of length $ \mathcal{L} $; and like in \emph{Ising} model, we denote $ \Sigma_\Lambda \stackrel{def}{=}\{ 1,2,...,q\}^{| \Lambda |}$. In addition, $ q $ is set to 21 as 20 amino acid types plus gap. We notice that $ \Sigma_\Lambda$ is a set of all possible sequence of amino acids length $ \mathcal{L} $. Further, consider the pairwise contacts among amino acids are modeled through a non-negative square symmetric matrix $ \mathbf{J} = \left( \mathbf{J}_{ij} \right)_{i,j \in \Lambda} $. And the internal interaction within single amino acid is described by a non-negative vector $ \mathbf{h} = (h_i)_{i \in \Lambda} $. In the scope of structure or pairwise prediction, we are only interested in $\mathbf{J}$ which fully establish the contact information among amino acid pairs. In particular, \emph{Direct Coupling Analysis} (\emph{DCA}) based methods assume direct evolutionary information between two sites captured in $\mathbf{J}$. Consequently, the parameters of the model is $\mathbf{J}$ as well as \( \mathbf{h}\), and the questions are how to calculate or estimate them. In order to answer this question, we look at the origin \emph{Ising} model. The \emph{Hamiltonian} of this protein chain is defined by
+\begin{equation} \label{eq4}
+ -H_{\mathbf{J},\mathbf{h}}(\sigma) \stackrel{def}{=}  \sum_{ i<j, i,j \in \Lambda} \mathbf{J}_{ij}\sigma_i \sigma_j + \sum_{i \in \Lambda} h_i \sigma_i 
+\end{equation}
+
+
+and the \emph{Gibbs} measure on $\Sigma_\Lambda$ is
+\begin{equation} \label{eq5}
+ \mathbf{G}_{\Lambda,\mathbf{J},\mathbf{h}} \stackrel{def}{=} \frac{1}{Z_{\Lambda,\mathbf{J},\mathbf{h}}} exp \left[ -H_{\mathbf{J},\mathbf{h}}(\sigma) \right] 
+\end{equation}
+ 
+ where \(Z_{\Lambda,\mathbf{J},\mathbf{h}}\) as usual the partition function. We could interpret \emph{Gibbs} measure as the equilibrium  probability of the configuration of the system. 
+ 
+\section{Approaches to Estimate the Parameters of the Model}
+
+As to estimate the parameters \(\mathbf{J,h}\), we maximize the log-likelihood of \eqref{eq5} over all sequence in \emph{multiple sequence alignment} (MSA) of this protein chain. This is equivalent to minimize the negative log-likelihood function
+\begin{equation} \label{eq6}
+
+\end{equation}
+
+\bibliographystyle{plain}
+\bibliography{ReviewDCA}
+
 \end{document}

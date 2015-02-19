@@ -1,0 +1,33 @@
+\begin{thebibliography}{1}
+
+\bibitem{Bolthausen2007}
+Erwin Bolthausen.
+\newblock {\em Spin Classes}.
+\newblock Springer, Berlin, germany, 2007.
+
+\bibitem{Marks12}
+Marks DS, Hopf TA, and Sander C.
+\newblock Protein structure prediction from sequence variation.
+\newblock {\em Nat Biotech}, 30, Nov 2012.
+
+\bibitem{Ekeberg13}
+Magnus Ekeberg, Cecilia L\"ovkvist, Yueheng Lan, Martin Weigt, and Erik Aurell.
+\newblock Improved contact prediction in proteins: Using pseudolikelihoods to
+  infer potts models.
+\newblock {\em Phys. Rev. E}, 87:012707, Jan 2013.
+
+\bibitem{Hopf14}
+Thomas~A Hopf, Charlotta P~I Sch{\"a}rfe, Jo{\~a}o P G L~M Rodrigues, Anna~G
+  Green, Oliver Kohlbacher, Chris Sander, Alexandre M J~J Bonvin, and Debora~S
+  Marks.
+\newblock Sequence co-evolution gives 3d contacts and structures of protein
+  complexes.
+\newblock {\em eLife}, 3, 2014.
+
+\bibitem{Marks11}
+Debora~S. Marks, Lucy~J. Colwell, Robert Sheridan, Thomas~A. Hopf, Andrea
+  Pagnani, Riccardo Zecchina, and Chris Sander.
+\newblock Protein 3d structure computed from evolutionary sequence variation.
+\newblock {\em PLoS ONE}, 6(12):e28766, 12 2011.
+
+\end{thebibliography}
