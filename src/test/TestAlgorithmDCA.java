@@ -10,7 +10,7 @@ import MultipleCore.MyThread;
 import Common.Configuration;
 import Common.FastaSequence;
 import Common.StaticMethod;
-import DCA.MyOwnMatrix;
+import LinearAlgebra.MyOwnMatrix;
 import MarkovCluster.Algorithm;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -64,7 +64,7 @@ public class TestAlgorithmDCA {
 //        System.out.println(f.getAllSequence().size());
         
         // test MyOwnMatrix
-        double[][] a = new double[][]{{1,1,1,1}, 
+        float[][] a = new float[][]{{1,1,1,1}, 
             {1,1,0,1}, 
             {1,0,1,0},
             {1,1,0,1}};

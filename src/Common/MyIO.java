@@ -103,6 +103,32 @@ public class MyIO {
         writer.flush();
         writer.close();
     }
+    public static void WriteToFile(String filename, float[][] arr) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
+
+
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                writer.write(arr[i][j] + "\t");
+            }
+            writer.write("\n");
+        }
+        writer.flush();
+        writer.close();
+    }
+     public static void WriteToFile(String filename, String[][] arr) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
+
+
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                writer.write(arr[i][j] + "\t");
+            }
+            writer.write("\n");
+        }
+        writer.flush();
+        writer.close();
+    }
 
     public static void WriteToFile(String filename, double[][][][] arr) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);

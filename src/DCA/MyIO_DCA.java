@@ -28,7 +28,7 @@ public class MyIO_DCA {
 
     public static int[][] ReturnAlignment(String MSA_file) throws FileNotFoundException, IOException {
 //        ArrayList<String> lst_str = MyIO_DCA.ReadMSA(MSA_file);
-        ArrayList<String> lst_str = (new FastaSequence(MSA_file)).getAllSequence(20000);
+        ArrayList<String> lst_str = (new FastaSequence(MSA_file)).getAllSequence(10000);
 //        ArrayList<String> filter = MyIO_DCA.Filter(lst_str);
 //        System.err.println("Redundant in column: " + StaticMethod.CheckRedundantColumn(filter));
 //        int[][] mx = MyIO_DCA.RefineMSA(filter);

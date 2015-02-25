@@ -4,6 +4,7 @@
  */
 package BLAST;
 
+import Common.StaticMethod;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -156,12 +157,14 @@ public class CreateMSAfromBLAST {
         }
     }
 
-    public ArrayList<String> CreateMSA() {
+    public ArrayList<String> CreateMSA(String Dir2PDB) throws IOException {
         ArrayList<String> msa = new ArrayList<String>();
 //        int num = this.Lst_AlignedBlock.size();
         int pro_len = this.ProtSequence.length();
         String pro_name = this.FileName.substring(0, 6);
-        msa.add(">" + pro_name);
+        
+        int[] ResNum = StaticMethod.getResidueNum(Dir2PDB, this.FileName);
+        msa.add(">" + pro_name+"\\"+ResNum[0]+"-"+ResNum[ResNum.length-1]);
         msa.add(this.ProtSequence);
         int count = 1;
         for (AlignedBlock b : this.Lst_AlignedBlock) {

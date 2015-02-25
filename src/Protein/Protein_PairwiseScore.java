@@ -7,7 +7,7 @@ package Protein;
 import Common.StaticMethod;
 import DCA.ColPair_Score;
 import DCA.MyIO_DCA;
-import DCA.MyOwnMatrix;
+import LinearAlgebra.MyOwnMatrix;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,7 +113,7 @@ public class Protein_PairwiseScore {
         this.ProteinChain = name.substring(0, 6);
         this.NeighborDistance = distance;
         this.LstScore = new ArrayList<>();
-        double[][] A = m.getArrayCopy();
+        float[][] A = m.getArrayCopy();
         for(int i=0; i<A.length-1;i++){
             for(int j=i+1;j<A[0].length;j++){
                 ColPair_Score col = new ColPair_Score(i, j, (A[i][j]+A[j][i])/2);

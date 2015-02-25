@@ -9,12 +9,17 @@ import Protein.Protein_PairwiseScore;
 import Drawing.ChartPanel;
 import Drawing.MyDraw;
 import Common.StaticMethod;
+import LinearAlgebra.MyOwnMatrix;
 import java.awt.Graphics;
+import java.io.File;
 import java.io.IOException;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.math.stat.StatUtils;
 import org.apache.commons.math.stat.correlation.Covariance;
 import org.biojava.bio.structure.Chain;
@@ -80,6 +85,61 @@ public class test {
 //            System.out.println(c.getAtomSequence());
 //        }
         
+        
+        /// Randomly pick up 20 protein chains in Homo Dilema (Zellner data set)
+//        String Dir2Seq = "Input/Zellner_DB55/Zellner_Sequence/";
+//        String Dir2PDB = "Input/Zellner_DB55/Zellner_PDB/";
+//        String Dir2Seq_out = "Input/Zellner_DB20/Zellner_Sequence/";
+//        String Dir2PDB_out = "Input/Zellner_DB20/Zellner_PDB/";
+//        int num = 20;
+//        String endfile_Seq = StaticMethod.FindEndName(Dir2Seq);
+//        String endfile_PDB = StaticMethod.FindEndName(Dir2PDB);
+//        
+//        List<String> lst_tmp = utils.Utils.dir2list(Dir2PDB);
+//        ArrayList<String> lst = new ArrayList<>();
+//        boolean had = false;
+//        for(String s: lst_tmp){
+//            for(String str: lst){
+//                if(str.indexOf(s.substring(0, 4))>=0){
+//                    had = true;
+//                    break;
+//                }
+//            }
+//            if(!had){
+//                lst.add(s);
+//                
+//            }
+//            had = false;
+//        }
+//        Iterator<String> iter = lst.iterator();
+//        while(iter.hasNext()){
+//            String v = iter.next();
+//            Structure str = (new PDBFileReader()).getStructure(Dir2PDB+v);
+//            Chain c = str.getChain(0);
+//            if(c.getAtomSequence().length()>400){
+//                iter.remove();
+//            }
+//        }
+//        Collections.shuffle(lst); Collections.shuffle(lst);
+//        for(int i=0; i<num;i++){
+//            String name = lst.get(i).substring(0, 6);
+//            File source_seq = new File(Dir2Seq+name+endfile_Seq);
+//            File source_pdb = new File(Dir2PDB+name+endfile_PDB);
+//            File des_seq = new File(Dir2Seq_out+name+".txt");
+//            File des_pdb = new File(Dir2PDB_out+name+".pdb");
+//            
+//            FileUtils.copyFile(source_seq, des_seq);
+//            FileUtils.copyFile(source_pdb, des_pdb);
+//        }
+        
+        //end
+//        int len = 1000*1000*21*21;
+//        double[] a = new double[len];
+//        double[][][][] d = new double[1000][1000][21][21];
+        int len = 2;
+        
+        MyOwnMatrix m = MyOwnMatrix.random(len, len);
+        m = m.inverseMyOwnMatrix();
         
     }
 }

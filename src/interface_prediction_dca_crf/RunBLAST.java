@@ -10,6 +10,7 @@ import Common.StaticMethod;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,12 +27,26 @@ public class RunBLAST {
 //        System.out.println(Thread.currentThread().getName());
         String path2BLAST = "../../BLAST/ncbi-blast-2.2.30+/bin/blastp";
         String db = "/home/t.dang/BLAST/ncbi-blastdb/nr";
-        int num_algn = 20000;
+        int num_algn = 15000;
         int num_threads = 1;
-        String pathIn = "Input/Magnus_DB/Magnus_Sequence/";
-        String pathOut = "Input/Magnus_DB/Magnus_BLAST/";
+        String pathIn   = "Input/Zellner_DB20/Zellner_Sequence/";
+        String pathOut  = "Input/Zellner_DB20/Zellner_BLAST/";
         
         List<String> lst = utils.Utils.dir2list(pathIn);
+        
+        // not run twice
+        List<String> Done = utils.Utils.dir2list(pathOut);
+        
+         Iterator<String> iter = lst.iterator();
+         while(iter.hasNext()){
+             String s = iter.next();
+             String filename = s.substring(0, 6)+ StaticMethod.FindEndName(pathOut);
+             if(Done.contains(filename)){
+                 iter.remove();
+             }
+         }
+         
+         
         int cpu = 5;
         ArrayList<ArrayList<String>> arr = new ArrayList<ArrayList<String>>();
         arr = StaticMethod.Divide(lst, cpu);

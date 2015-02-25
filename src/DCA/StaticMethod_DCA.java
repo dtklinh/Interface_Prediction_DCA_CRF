@@ -4,6 +4,7 @@
  */
 package DCA;
 
+import LinearAlgebra.MyOwnMatrix;
 import Jama.Matrix;
 //import MyJama.MyMatrix;
 import java.io.FileNotFoundException;
@@ -69,8 +70,8 @@ public class StaticMethod_DCA {
         if(X.getRowDimension()!= Y.getRowDimension() || X.getColumnDimension()!=Y.getColumnDimension()){
             return null;
         }
-        double[][] arr_X = X.getArrayCopy();
-        double[][] arr_Y = Y.getArrayCopy();
+        float[][] arr_X = X.getArrayCopy();
+        float[][] arr_Y = Y.getArrayCopy();
         for(int i=0; i<arr_X.length;i++){
             for(int j=0; j<arr_X[0].length; j++){
                 arr_X[i][j] = arr_X[i][j]/arr_Y[i][j];
@@ -170,10 +171,10 @@ public class StaticMethod_DCA {
         }
         MyIO_DCA.WriteToFile(fileout, tmp);
     }
-    public static double[] Int2Double(int[] X){
-        double[] tmp = new double[X.length];
+    public static float[] Int2Float(int[] X){
+        float[] tmp = new float[X.length];
         for(int i=0; i<X.length; i++){
-            tmp[i] = (double)X[i];
+            tmp[i] = (float)X[i];
         }
         return tmp;
     }

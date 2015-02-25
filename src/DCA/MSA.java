@@ -6,11 +6,14 @@ package DCA;
 
 //import MyJama.MyMatrix;
 //import MyJama.SuperMatrix;
+import LinearAlgebra.MyOwnMatrix;
+import LinearAlgebra.SuperMatrix;
 import NMI.Compute;
 import Common.Configuration;
 import Common.FastaSequence;
 import Common.MyIO;
 import Common.StaticMethod;
+import Jama.Matrix;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,8 +26,8 @@ import java.util.Arrays;
 public class MSA {
 
     private final int q = 21;
-    private final double pseudocount_weight = 0.5;  // lamda
-    private final double theta = 0.2;
+    private final float pseudocount_weight = 0.5f;  // lamda
+    private final float theta = 0.2f;
     private int M; // number of sequence in MSA
     private int N; // lenght of protein
     private int[][] AlgnMx; // numeric alignment of MSA
@@ -52,6 +55,20 @@ public class MSA {
         N = AlgnMx[0].length;
         Dir = dir;
         Name = filename.substring(0, 6);
+    }
+    public MSA(String dir, String filename, int[][] mx){
+        AlgnMx = mx;
+        M = AlgnMx.length;
+        N = AlgnMx[0].length;
+        Dir = dir;
+        Name = filename.substring(0, 6);
+    }
+    public MSA(MSA m){
+        this.AlgnMx = m.getAlgnMx();
+        this.Dir = m.getDir();
+        this.M = m.getM();
+        this.N = m.getN();
+        this.Name = m.getName();
     }
 
     public int[] Conpute_W() { // vector of Km in the paper
@@ -113,7 +130,7 @@ public class MSA {
                 Pi_true.set(i, getAlgnMx()[j][i], Pi_true.get(i, getAlgnMx()[j][i]) + W.get(0, j));
             }
         }
-        Pi_true = Pi_true.times(1.0 / W.sum());
+        Pi_true = Pi_true.times(1f / W.sum());
         return Pi_true;
 
     }
@@ -160,7 +177,7 @@ public class MSA {
 
     // compute true frequency of pair columns
     public SuperMatrix Compute_TrueFreqPair(MyOwnMatrix Pi_true, MyOwnMatrix W) {
-        double[][][][] Pij_true = new double[N][N][q][q];
+        float[][][][] Pij_true = new float[N][N][q][q];
         for (int l = 0; l < M; l++) {
             for (int i = 0; i < N - 1; i++) {
                 for (int j = i + 1; j < N; j++) {
@@ -184,17 +201,19 @@ public class MSA {
     // compute Pij with pseudo count
 
     public SuperMatrix Compute_pcPair(SuperMatrix Pij_true) {
-        SuperMatrix tmp = Pij_true.clone();
+        SuperMatrix tmp = Pij_true;
         tmp.timesScalar(1 - this.pseudocount_weight);
-        SuperMatrix tmp1 = SuperMatrix.ones(getN(), getN(), q, q);
-        tmp1.timesScalar(this.pseudocount_weight / (q * q));
-        tmp = tmp.add(tmp1);
+//        SuperMatrix tmp1 = SuperMatrix.ones(N, N, q, q);
+//        tmp1.timesScalar(this.pseudocount_weight / (q * q));
+//        tmp = tmp.add(tmp1);
+        tmp.addScalar(pseudocount_weight / (q * q));
+        
         MyOwnMatrix scra = MyOwnMatrix.Eyes(q, q);
 
         for (int i = 0; i < getN(); i++) {
             for (int alpha = 0; alpha < q; alpha++) {
                 for (int beta = 0; beta < q; beta++) {
-                    double val = 0.0;
+                    float val = 0.0f;
                     val = Pij_true.get(i, i, alpha, beta) * (1 - pseudocount_weight);
                     val += scra.get(alpha, beta) * pseudocount_weight / q;
                     tmp.set(i, i, alpha, beta, val);
@@ -254,14 +273,14 @@ public class MSA {
                     for (int beta = 0; beta < q - 1; beta++) {
                         int r = StaticMethod_DCA.Mapkey(i, alpha, q - 1);
                         int c = StaticMethod_DCA.Mapkey(j, beta, q - 1);
-                        if (r == 20 && c == 0) {
-                            System.out.println("i: " + i + " j: " + j + " alpha: " + alpha + " beta: " + beta
-                                    + " >> " + r + " : " + c);
-                            System.out.println("Pij="+Pij.get(i, j, alpha, beta)
-                                    + " : Pi(i,alpha)="+Pi.get(i, alpha)+
-                                    " : Pi(j,beta)="+ Pi.get(j, beta));
-                        }
-                        double val = Pij.get(i, j, alpha, beta) - Pi.get(i, alpha) * Pi.get(j, beta);
+//                        if (r == 20 && c == 0) {
+//                            System.out.println("i: " + i + " j: " + j + " alpha: " + alpha + " beta: " + beta
+//                                    + " >> " + r + " : " + c);
+//                            System.out.println("Pij="+Pij.get(i, j, alpha, beta)
+//                                    + " : Pi(i,alpha)="+Pi.get(i, alpha)+
+//                                    " : Pi(j,beta)="+ Pi.get(j, beta));
+//                        }
+                        float val = Pij.get(i, j, alpha, beta) - Pi.get(i, alpha) * Pi.get(j, beta);
                         C.set(r, c, val);
                     }
                 }
@@ -284,7 +303,7 @@ public class MSA {
         MyOwnMatrix W = MyOwnMatrix.Ones(q, q);
         for (int offset1 = 0; offset1 < q - 1; offset1++) {
             for (int offset2 = 0; offset2 < q - 1; offset2++) {
-                double val = C.get(i * (q - 1) + offset1, j * (q - 1) + offset2);
+                float val = C.get(i * (q - 1) + offset1, j * (q - 1) + offset2);
                 W.set(offset1, offset2, val);
             }
         }
@@ -344,10 +363,10 @@ public class MSA {
 //    }
     public ArrayList<MyOwnMatrix> Compute_mu(int i, int j, MyOwnMatrix W, MyOwnMatrix P1) {
         ArrayList<MyOwnMatrix> res = new ArrayList<MyOwnMatrix>();
-        double epsilon = 1e-4;
-        double diff = 1.0;
-        MyOwnMatrix mu1 = MyOwnMatrix.Ones(1, q).times(1.0 / q);
-        MyOwnMatrix mu2 = MyOwnMatrix.Ones(1, q).times(1.0 / q);
+        float epsilon = 1e-4f;
+        float diff = 1.0f;
+        MyOwnMatrix mu1 = MyOwnMatrix.Ones(1, q).times(1f / q);
+        MyOwnMatrix mu2 = MyOwnMatrix.Ones(1, q).times(1f / q);
         MyOwnMatrix pi = P1.getRow(i);
         MyOwnMatrix pj = P1.getRow(j);
         int count = 0;
@@ -357,20 +376,22 @@ public class MSA {
             MyOwnMatrix scra2 = mu1.times(W);
 
             MyOwnMatrix new1 = pi.divideElementWise(scra1);
-            new1 = new1.times(1.0 / new1.sum());
+            new1 = new1.times(1f / new1.sum());
 
             MyOwnMatrix new2 = pj.divideElementWise(scra2);
-            new2 = new2.times(1.0 / new2.sum());
+            new2 = new2.times(1f / new2.sum());
 
-            double max1 = (new1.minus(mu1)).findMaxAbs();
-            double max2 = (new2.minus(mu2)).findMaxAbs();
+            float max1 = (new1.minus(mu1)).findMaxAbs();
+            float max2 = (new2.minus(mu2)).findMaxAbs();
             diff = Math.max(max1, max2);
             mu1 = new1;
             mu2 = new2;
             count++;
         }
         if (count >= 1000) {
-            System.err.println("Sth is wrong when compute mu, " + this.Name);
+            System.err.println("Sth is wrong when compute mu, " + this.Name+"\t i: "+i+"\t j: "+j);
+            System.err.println("Diff: "+ diff);
+           
         }
         res.add(mu1);
         res.add(mu2);
@@ -404,9 +425,9 @@ public class MSA {
 //        
 //    }
 
-    public double CalculateDI(int i, int j, MyOwnMatrix W, MyOwnMatrix mu1, MyOwnMatrix mu2, MyOwnMatrix Pia) {
+    public float CalculateDI(int i, int j, MyOwnMatrix W, MyOwnMatrix mu1, MyOwnMatrix mu2, MyOwnMatrix Pia) {
         MyOwnMatrix Pdir = W.timesElementWise(mu1.transpose().times(mu2));
-        Pdir = Pdir.times(1.0 / Pdir.sum());
+        Pdir = Pdir.times(1f / Pdir.sum());
 
         MyOwnMatrix Pfac = Pia.getRow(i).transpose().times(Pia.getRow(j));
         MyOwnMatrix DI = Pdir.transpose().times(Pdir.divideElementWise(Pfac).logElementWise());
@@ -438,13 +459,13 @@ public class MSA {
 //        return res;
 //    }
 
-    public double[][] GetResult2() throws IOException {
+    public float[][] GetResult2() throws IOException {
         int[] W_Km = this.Conpute_W();
         // Print W_Km
         String str = Configuration.DirTest_DCA + this.Name.substring(0, 6);
 //        MyIO.WriteToFile(str+".km", W_Km);
 
-        double[] dW_Km = StaticMethod_DCA.Int2Double(W_Km);
+        float[] dW_Km = StaticMethod_DCA.Int2Float(W_Km);
         MyOwnMatrix W = new MyOwnMatrix(dW_Km, 1);
         W = W.invElementWise();
 //        MyIO.WriteToFile(str+".W", W.getArrayCopy()); 
@@ -470,12 +491,12 @@ public class MSA {
         
 //        System.exit(0);
 
-        MyOwnMatrix invC = C.inverse();
+        MyOwnMatrix invC = C.inverseMyOwnMatrix();
 //        MyIO.WriteToFile(str + ".invC", invC.getArrayCopy());
 //        System.out.println("Finish write to invC");
 //        System.exit(0);
 
-        double[][] res = new double[getN() * (getN() - 1) / 2][3];
+        float[][] res = new float[getN() * (getN() - 1) / 2][3];
         int count = 0;
         for (int i = 0; i < getN() - 1; i++) {
             for (int j = i + 1; j < getN(); j++) {
@@ -485,11 +506,75 @@ public class MSA {
 //                }
 
                 ArrayList<MyOwnMatrix> mu = this.Compute_mu(i, j, W_mf, Pi);
-                double di = this.CalculateDI(i, j, W_mf, mu.get(0), mu.get(1), Pi);
+                float di = this.CalculateDI(i, j, W_mf, mu.get(0), mu.get(1), Pi);
                 res[count][0] = i;
                 res[count][1] = j;
                 res[count][2] = di;
                 count++;
+//                System.exit(1);
+            }
+        }
+
+        return res;
+    }
+    public float[][] GetResult2SquareMatrix() throws IOException {
+        int[] W_Km = this.Conpute_W();
+        // Print W_Km
+        String str = Configuration.DirTest_DCA + this.Name.substring(0, 6);
+//        MyIO.WriteToFile(str+".km", W_Km);
+
+        float[] dW_Km = StaticMethod_DCA.Int2Float(W_Km);
+        MyOwnMatrix W = new MyOwnMatrix(dW_Km, 1);
+        W = W.invElementWise();
+//        MyIO.WriteToFile(str+".W", W.getArrayCopy()); 
+//        System.err.println("Meff: "+ W.sum());
+//        
+//        double Meff = W.sum();
+        MyOwnMatrix Pi_true = this.Compute_TrueFreqSingle(W);
+//        MyIO.WriteToFile(str+".Pi_true", Pi_true.getArrayCopy());
+
+        SuperMatrix Pij_true = this.Compute_TrueFreqPair(Pi_true, W);
+//        MyIO.WriteToFile(str + ".Pij_true", Pij_true.getArrayCopy());
+
+
+        MyOwnMatrix Pi = this.Compute_pcSingle(Pi_true);
+//        MyIO.WriteToFile(str + ".Pi", Pi.getArrayCopy());
+
+        SuperMatrix Pij = this.Compute_pcPair(Pij_true);
+//        MyIO.WriteToFile(str + ".Pij", Pij.getArrayCopy());
+
+        MyOwnMatrix C = this.Compute_C(Pij, Pi);
+        System.out.println("Finish compute C Matrix");
+//        
+//        MyIO.WriteToFile(str + ".C", C.getArrayCopy());
+        
+//        System.exit(0);
+        Pij_true = null; Pij = null;
+
+        
+        MyOwnMatrix invC = C.inverseMyOwnMatrix();
+//        MyIO.WriteToFile(str + ".invC", invC.getArrayCopy());
+//        System.out.println("Finish write to invC");
+//        System.exit(0);
+
+//        double[][] res = new double[getN() * (getN() - 1) / 2][3];
+        float[][] res = new float[N][N];
+        int count = 0;
+        for (int i = 0; i < getN() - 1; i++) {
+            for (int j = i + 1; j < getN(); j++) {
+                MyOwnMatrix W_mf = this.Return_W(invC, i, j);
+//                if(i==0 && j==1){
+//                    MyIO.WriteToFile(str+".0_1.W_mf", W_mf.getArrayCopy());
+//                }
+
+                ArrayList<MyOwnMatrix> mu = this.Compute_mu(i, j, W_mf, Pi);
+                float di = this.CalculateDI(i, j, W_mf, mu.get(0), mu.get(1), Pi);
+                res[i][j] = di;
+                res[j][i] = di;
+//                res[count][0] = i;
+//                res[count][1] = j;
+//                res[count][2] = di;
+//                count++;
 //                System.exit(1);
             }
         }
@@ -565,6 +650,8 @@ public class MSA {
      */
     public void setAlgnMx(int[][] AlgnMx) {
         this.AlgnMx = AlgnMx;
+        this.M = AlgnMx.length;
+        this.N = AlgnMx[0].length;
     }
     
     

@@ -4,7 +4,7 @@
  */
 package MarkovCluster;
 
-import DCA.MyOwnMatrix;
+import LinearAlgebra.MyOwnMatrix;
 
 /**
  *
@@ -45,8 +45,8 @@ public class Algorithm {
 //    }
     private static MyOwnMatrix inflate(MyOwnMatrix m){
         MyOwnMatrix tmp = m.timesElementWise(m);
-        double[][] A = tmp.getArrayCopy();
-        double[] sumcol = tmp.sumColumn();
+        float[][] A = tmp.getArrayCopy();
+        float[] sumcol = tmp.sumColumn();
         for(int c=0; c<tmp.getColumnDimension(); c++){
             for(int r=0; r<tmp.getRowDimension(); r++){
                 A[r][c] = A[r][c]/sumcol[c];

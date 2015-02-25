@@ -17,8 +17,11 @@ import java.util.HashSet;
 import java.util.List;
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.io.PDBFileReader;
 
 /**
  *
@@ -221,6 +224,54 @@ public class StaticMethod {
         //System.out.println("Dis: "+ dis);
         //System.exit(0);
         return dis;
+    }
+    public static int[] getResidueNum(String Dir2PDB, String ProtName) throws IOException{
+        String endfile = FindEndName(Dir2PDB);
+        Structure s = (new PDBFileReader()).getStructure(Dir2PDB+ProtName.substring(0, 6) +endfile);
+        Chain c = s.getChain(0);
+        List<Group> lst = c.getAtomGroups();
+        int[] res = new int[lst.size()];
+        for(int i=0; i<lst.size(); i++){
+            res[i] = lst.get(i).getResidueNumber().getSeqNum();
+        }
+        return res;
+    }
+    public static double[][] AdjustIndex(double[][] d, String path2PDBFile) throws IOException{
+        double[][] res = new double[d.length][d[0].length];
+        Structure s = (new PDBFileReader()).getStructure(path2PDBFile);
+        Chain c = s.getChain(0);
+        List<Group> lst_group = c.getAtomGroups();
+        ArrayList<Integer> ResidualNum = new ArrayList<>();
+        for (int i = 0; i < lst_group.size(); i++) {
+            ResidualNum.add(lst_group.get(i).getResidueNumber().getSeqNum());
+        }
+        for (int i=0; i<d.length;i++) {
+           res[i][0] = ResidualNum.get((int)d[i][0]);
+           res[i][1] = ResidualNum.get((int)d[i][1]);
+           res[i][2] = d[i][2];
+        }
+        return res;
+    }
+    public static int[] getResidueNum(String path2PDBFile) throws IOException{
+        Structure s = (new PDBFileReader()).getStructure(path2PDBFile);
+        Chain c = s.getChain(0);
+        List<Group> lst_group = c.getAtomGroups();
+        int[] ResidueNum = new int[lst_group.size()];
+        for(int i=0; i<lst_group.size(); i++){
+            ResidueNum[i] = lst_group.get(i).getResidueNumber().getSeqNum();
+        }
+        return ResidueNum;
+    }
+    public static String[] findChainID(List<String> lst, String ProteinID){
+        String[] res = new String[2];
+        int count = 0;
+        for(String s: lst){
+            if(s.startsWith(ProteinID)){
+                res[count] = s.substring(5, 6);
+                count ++;
+            }
+        }
+        return res;
     }
     
 }

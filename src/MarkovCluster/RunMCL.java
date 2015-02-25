@@ -5,7 +5,7 @@
 package MarkovCluster;
 
 import Common.MyIO;
-import DCA.MyOwnMatrix;
+import LinearAlgebra.MyOwnMatrix;
 import Protein.Protein_PairwiseScore;
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +25,7 @@ public class RunMCL {
         String Dir2Output = "Input/Magnus_DB/Magnus_DCA/SelfMultiple/";
         String Dir2PDB = "Input/Magnus_DB/Magnus_PDB_SingleChain/";
         int neighbor = 4;
-        double epsilon = 1e-3;
+        float epsilon = 0.001f;
         double distance_contact = 8.5d;
         List<String> lst = utils.Utils.dir2list(Dir2File);
         for(String s: lst){
