@@ -96,6 +96,10 @@ DCA definitely outperforms NMI because it could capture the real direct coupling
 Statistical model in physics could be promising to solve many problem in Bioinformatics.
 \item
 DCA is indeed the inverse Ising model problem. In original Ising model, the lattice \& bonds parameters (analogous to vertexes and edges) are given, and people are interested in finding the configuration of the model ($\sigma_i $ is +1 or -1) such as $< \sigma>$ (the magnetization). In contrast, we assume that the configuration is given (20 amino acids and the gap), and we are interested in estimating the bonds between each pair sites. 
+\item
+Using Ising model could be too overkill as well as lack of insights of the protein system. Firstly, Ising model in physics is dealing with the chain/grid of particles or more in high dimension. It takes into account every possible neighbor contacts which we do not know in advance. Secondly, the system is governed by the interaction among neighbor sites and the external magnetic field, while neglecting the inner properties of particle (amino acids in our case). 
+\item
+Design a more proper model for protein chain and protein complex. 
 
 \end{enumerate}
 
