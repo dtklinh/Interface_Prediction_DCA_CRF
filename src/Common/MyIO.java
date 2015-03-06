@@ -4,7 +4,7 @@
  */
 package Common;
 
-import DCA.ColPair_Score;
+import LinearAlgebra.FloatMatrix;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -47,6 +48,16 @@ public class MyIO {
     public static void WriteToFile(String filename, List<String> lst) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
 //        String tmp = "";
+        for (String s : lst) {
+            if (!s.trim().isEmpty()) {
+                writer.write(s + "\n");
+            }
+        }
+        writer.flush();
+        writer.close();
+    }
+    public static void WriteToFile(String filename, HashSet<String> lst) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
         for (String s : lst) {
             if (!s.trim().isEmpty()) {
                 writer.write(s + "\n");
@@ -329,5 +340,36 @@ public class MyIO {
 //    public static void Write
 //    public static ArrayList<ColPair_Score> Read2ColPair(String path2file){
 //        
+//    }
+    public static HashSet<String> Read_GI_FromBLAST(String path2file) throws FileNotFoundException, IOException{
+        FileInputStream fstream = new FileInputStream(path2file);
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String line = "";
+        HashSet<String> res = new HashSet<>();
+        while(true){
+            line = br.readLine();
+            if(line==null){
+                break;
+            }
+            line = line.trim();
+            if(line.startsWith(("gi|")) || line.startsWith((">gi|"))){
+                String[] arr = line.split(Pattern.quote("|"));
+               
+                String gi = arr[1];
+                int tmp = Integer.parseInt(gi);
+                res.add(String.valueOf(tmp));
+            }
+        }
+        return res;
+    }
+//    public static Pro ReadProtein_Pairwise(String path2file) throws FileNotFoundException{
+//        FileInputStream fstream = new FileInputStream(path2file);
+//        DataInputStream in = new DataInputStream(fstream);
+//        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+//        String line = "";
+//        while(true){
+//            
+//        }
 //    }
 }

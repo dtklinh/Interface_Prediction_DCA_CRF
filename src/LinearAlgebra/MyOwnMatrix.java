@@ -5,6 +5,7 @@
 package LinearAlgebra;
 
 import Jama.Matrix;
+import LinearAlgebra.*;
 import NMI.Dsm;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,11 +16,11 @@ import java.util.List;
  *
  * @author t.dang
  */
-public class MyOwnMatrix extends FloatMatrix{
-    public MyOwnMatrix(float[][] X){
+public class MyOwnMatrix extends Matrix{
+    public MyOwnMatrix(double[][] X){
         super(X);
     }
-    public MyOwnMatrix(float[] X, int i){
+    public MyOwnMatrix(double[] X, int i){
         super(X,i);
     }
     
@@ -32,30 +33,30 @@ public class MyOwnMatrix extends FloatMatrix{
         }
     }
     public MyOwnMatrix expElementWise(){
-        float[][] X = this.getArrayCopy();
+        double[][] X = this.getArrayCopy();
         int m = this.getRowDimension();
         int n = this.getColumnDimension();
         for(int i=0; i<m; i++){
             for(int j=0; j<n; j++){
-                X[i][j] = (float)Math.exp(X[i][j]);
+                X[i][j] = Math.exp(X[i][j]);
                 
             }
         }
         return new MyOwnMatrix(X);
     }
     public MyOwnMatrix logElementWise(){
-        float[][] X = this.getArrayCopy();
+        double[][] X = this.getArrayCopy();
         int m = this.getRowDimension();
         int n = this.getColumnDimension();
         for(int i=0; i<m; i++){
             for(int j=0; j<n; j++){
-                X[i][j] = (float)Math.log(X[i][j]);
+                X[i][j] = Math.log(X[i][j]);
             }
         }
         return new MyOwnMatrix(X);
     }
     public MyOwnMatrix invElementWise(){
-        float[][] X = this.getArrayCopy();
+        double[][] X = this.getArrayCopy();
         int m = this.getRowDimension();
         int n = this.getColumnDimension();
         for(int i=0; i<m; i++){
@@ -66,17 +67,17 @@ public class MyOwnMatrix extends FloatMatrix{
         return new MyOwnMatrix(X);
     }
     public static MyOwnMatrix random(int m, int n){
-        return new MyOwnMatrix(FloatMatrix.random(m, n).getArrayCopy());
+        return new MyOwnMatrix(Matrix.random(m, n).getArrayCopy());
     }
     public MyOwnMatrix getRow(int idx){
-        FloatMatrix X = this.getFloatMatrix(idx, idx, 0, this.getColumnDimension()-1);
+        Matrix X = this.getMatrix(idx, idx, 0, this.getColumnDimension()-1);
         return new MyOwnMatrix(X.getArrayCopy());
     }
     public MyOwnMatrix getMyOwnMatrix(int r1, int r2, int c1, int c2){
-        FloatMatrix X = this.getFloatMatrix(r1, r2, c1, c2);
+        Matrix X = this.getMatrix(r1, r2, c1, c2);
         return new MyOwnMatrix(X.getArrayCopy());
     }
-    public void setRow(int idx, float[] X){
+    public void setRow(int idx, double[] X){
         if(X.length!=this.getColumnDimension()
                 || idx<0 || idx>=this.getRowDimension()){
             System.err.println("mismatch in dim when setrow");
@@ -92,25 +93,25 @@ public class MyOwnMatrix extends FloatMatrix{
             System.err.println("mismatch dim when setting row by matrix");
             return;
         }
-        this.setFloatMatrix(idx, idx, 0, this.getColumnDimension()-1, X);
+        this.setMatrix(idx, idx, 0, this.getColumnDimension()-1, X);
     }
     public MyOwnMatrix getColumn(int idx){
-        FloatMatrix X = this.getFloatMatrix(0, this.getRowDimension()-1, idx, idx);
+        Matrix X = this.getMatrix(0, this.getRowDimension()-1, idx, idx);
         return new MyOwnMatrix(X.getArrayCopy());
     }
     public void setColumn(int idx, MyOwnMatrix X){
-        this.setFloatMatrix(0, this.getRowDimension()-1, idx, idx, X);
+        this.setMatrix(0, this.getRowDimension()-1, idx, idx, X);
     }
-    public void setColumn(int idx, float[]X){
+    public void setColumn(int idx, double[]X){
         MyOwnMatrix tmp = new MyOwnMatrix(X, X.length);
         this.setColumn(idx, tmp);
     }
     public static MyOwnMatrix Zeros(int m, int n){
-        float[][] d = new float[m][n];
+        double[][] d = new double[m][n];
         return new MyOwnMatrix(d);
     }
     public static MyOwnMatrix Ones(int m, int n){
-        float[][] d = new float[m][n];
+        double[][] d = new double[m][n];
         for(int i=0; i<m; i++){
             for(int j=0; j<n; j++){
                 d[i][j] = 1f;
@@ -119,18 +120,18 @@ public class MyOwnMatrix extends FloatMatrix{
         return new MyOwnMatrix(d);
     }
 //    public void setArray(double[][] arr){
-//        this = new MyOwnMatrix(arr);
+//        this = new MyOwnFloatMatrix(arr);
 //    }
     public static MyOwnMatrix Eyes(int m, int n){
-        float[][] d = new float[m][n];
+        double[][] d = new double[m][n];
         int min = Math.min(m, n);
         for(int i=0; i<min; i++){
             d[i][i] = 1f;
         }
         return new MyOwnMatrix(d);
     }
-    public float sum(){
-        float s =0f;
+    public double sum(){
+        double s =0.0;
         int R = this.getRowDimension();
         int C = this.getColumnDimension();
         for(int i=0; i<R; i++){
@@ -140,11 +141,11 @@ public class MyOwnMatrix extends FloatMatrix{
         }
         return s;
     }
-    public float[] sumColumn(){
+    public double[] sumColumn(){
         int dim_col = this.getColumnDimension();
         int dim_row = this.getRowDimension();
-        float[] res = new float[dim_col];
-        float[][]A = this.getArrayCopy();
+        double[] res = new double[dim_col];
+        double[][]A = this.getArrayCopy();
         for(int c=0; c<dim_col; c++){
             for(int r=0; r<dim_row; r++){
                 res[c] += A[r][c];
@@ -164,14 +165,14 @@ public class MyOwnMatrix extends FloatMatrix{
         return s;
     }
     @Override
- public MyOwnMatrix times(float x){
-        FloatMatrix tmp = this.timesEquals(x);
+ public MyOwnMatrix times(double x){
+        Matrix tmp = this.timesEquals(x);
         return new MyOwnMatrix(tmp.getArrayCopy());
     }
     
     public MyOwnMatrix times(MyOwnMatrix X){
-        FloatMatrix P = new FloatMatrix(this.getArrayCopy());
-        FloatMatrix Q = new FloatMatrix(X.getArrayCopy());
+        Matrix P = new Matrix(this.getArrayCopy());
+        Matrix Q = new Matrix(X.getArrayCopy());
         P = P.times(Q);
         return new MyOwnMatrix(P.getArrayCopy());
     }
@@ -181,8 +182,8 @@ public class MyOwnMatrix extends FloatMatrix{
             System.err.println("mismatch dim when times elements wise");
             return null;
         }
-        float[][] P = this.getArrayCopy();
-        float[][] Q = X.getArrayCopy();
+        double[][] P = this.getArrayCopy();
+        double[][] Q = X.getArrayCopy();
         for(int i=0; i<P.length; i++){
             for(int j=0; j<P[0].length; j++){
                 P[i][j] = P[i][j]*Q[i][j];
@@ -195,8 +196,8 @@ public class MyOwnMatrix extends FloatMatrix{
         return this.timesElementWise(Y);
     }
     public MyOwnMatrix add(MyOwnMatrix X){
-        FloatMatrix P = new FloatMatrix(this.getArrayCopy());
-        FloatMatrix Q = new FloatMatrix(X.getArrayCopy());
+        Matrix P = new Matrix(this.getArrayCopy());
+        Matrix Q = new Matrix(X.getArrayCopy());
         P = P.plus(Q);
         return new MyOwnMatrix(P.getArrayCopy());
     }
@@ -207,20 +208,20 @@ public class MyOwnMatrix extends FloatMatrix{
     }
     
     public MyOwnMatrix inverseMyOwnMatrix(){
-//        Matrix P = new Matrix(this.getArrayCopy());
-//        P = P.inverse();
-        return new MyOwnMatrix(this.inverse().getArrayCopy());
-        //return new MyOwnMatrix(P.getArrayCopy());
+        Matrix P = new Matrix(this.getArrayCopy());
+        P = P.inverse();
+//        return new MyOwnMatrix(this.inverse().getArrayCopy());
+        return new MyOwnMatrix(P.getArrayCopy());
     }
     @Override
     public MyOwnMatrix transpose(){
-        FloatMatrix tmp = new FloatMatrix(this.getArrayCopy());
+        Matrix tmp = new Matrix(this.getArrayCopy());
         tmp = tmp.transpose();
         return new MyOwnMatrix(tmp.getArrayCopy());
     }
-    public float findMaxAbs(){
-        float[] X = this.getRowPackedCopy();
-        float max = 0f;
+    public double findMaxAbs(){
+        double[] X = this.getRowPackedCopy();
+        double max = 0f;
         for(int i=0; i<X.length; i++){
             if(Math.abs(X[i])>max){
                 max = Math.abs(X[i]);
@@ -229,9 +230,9 @@ public class MyOwnMatrix extends FloatMatrix{
         return max;
     }
     public MyOwnMatrix normalize(){
-        return this.times(1f/this.sum());
+        return this.times(1.0/this.sum());
     }
-    public static MyOwnMatrix fromPairScore2Matrix(String path2file, float epsilon) throws IOException{
+    public static MyOwnMatrix fromPairScore2Matrix(String path2file, double epsilon) throws IOException{
         List<String> lst = utils.Utils.file2list(path2file);
         int N = (int) ((Math.sqrt(8*lst.size()+1)+1)/2);
         if(N*(N-1)/2 != lst.size()){
@@ -240,22 +241,22 @@ public class MyOwnMatrix extends FloatMatrix{
         }
         
         // find median
-        ArrayList<Float> lst_score = new ArrayList<>();
+        ArrayList<Double> lst_score = new ArrayList<>();
         
         
-        float[][] mtr = new float[N][N];
+        double[][] mtr = new double[N][N];
         for(String s: lst){
             String[] arr = s.split("\\s+");
             int R = (int)Double.parseDouble(arr[0]);
             int C = (int)Double.parseDouble(arr[1]);
             if(Math.abs(R-C)<=4) continue;
-            float val = Float.parseFloat(arr[2]);
+            double val = Double.parseDouble(arr[2]);
             mtr[R][C] = val;
             mtr[C][R] = val;
             lst_score.add(val);
         }
         Collections.sort(lst_score);
-        float median = lst_score.get(lst_score.size()/2);
+        double median = lst_score.get(lst_score.size()/2);
         for(int i=0; i<N-1;i++){
             for(int j=i+1; j<N; j++){
                 if(mtr[i][j]<median){
@@ -281,7 +282,7 @@ public class MyOwnMatrix extends FloatMatrix{
         return true;
     }
     public void makeTransitionMatrix(){
-        float[][] a = this.getArray();
+        double[][] a = this.getArray();
         for(int i=0; i<a.length;i++){
             float s = 0f;
             for(int j=0; j<a[i].length;j++){
@@ -305,8 +306,8 @@ public class MyOwnMatrix extends FloatMatrix{
         return s;
     }
     public void normalizeColumn(){
-        float[][] A = this.getArray();
-        float[] sum_col = this.sumColumn();
+        double[][] A = this.getArray();
+        double[] sum_col = this.sumColumn();
         for(int i=0; i<A.length; i++){
             for(int j=0;j<A[0].length;j++){
                 A[i][j] = A[i][j]/sum_col[j];
@@ -314,7 +315,7 @@ public class MyOwnMatrix extends FloatMatrix{
         }
     }
     public void makeDSM(){
-        float[][] A = this.getArray();
+        double[][] A = this.getArray();
         A = Dsm.processMatrix(A);
     }
 }

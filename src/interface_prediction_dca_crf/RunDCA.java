@@ -6,10 +6,11 @@ package interface_prediction_dca_crf;
 
 import Common.Configuration;
 import Common.MyIO;
-import DCA.MSA;
+import DCA.MSA_FloatMatrix;
 import DCA.ThreadDCA;
 import MultipleCore.MyThread;
 import Common.StaticMethod;
+import DCA.MSA_JamaMatrix;
 import HomologousProteinsType.Complex;
 import HomologousProteinsType.ThreadComplex;
 import NMI.ThreadNMI;
@@ -45,17 +46,17 @@ public class RunDCA {
             }
         }
 
-        ArrayList<MSA> lst_MSA = new ArrayList<MSA>();
+        ArrayList<MSA_FloatMatrix> lst_MSA = new ArrayList<MSA_FloatMatrix>();
         for (String s : lst_filename) {
-            MSA m = new MSA(DirMSAFile, s);
+            MSA_FloatMatrix m = new MSA_FloatMatrix(DirMSAFile, s);
             lst_MSA.add(m);
         }
 //        double[][] DSM = MyIO.ReadDSM("Input/Magnus_DB/newDSM.out");
 
-        ArrayList<ArrayList<MSA>> arr_MSA = StaticMethod.Divide(lst_MSA, num_cpu);
+        ArrayList<ArrayList<MSA_FloatMatrix>> arr_MSA = StaticMethod.Divide(lst_MSA, num_cpu);
         for (int k = 0; k < arr_MSA.size(); k++) {
             // Run DCA
-            /*
+            ///*
             ThreadDCA dca = new ThreadDCA(arr_MSA.get(k), DirResultFile);
             MyThread th = new MyThread(dca);
             th.start();
@@ -63,9 +64,9 @@ public class RunDCA {
             // end Run DCA
             
             // Run Complex DCA
-            ThreadComplex com = new ThreadComplex(arr_MSA.get(k), DirResultFile, 10);
-            MyThread th = new MyThread(com);
-            th.start();
+//            ThreadComplex com = new ThreadComplex(arr_MSA.get(k), DirResultFile, 5);
+//            MyThread th = new MyThread(com);
+//            th.start();
             // end Complex DCA
 
             // Run NMI (Normalized Mutual Information)

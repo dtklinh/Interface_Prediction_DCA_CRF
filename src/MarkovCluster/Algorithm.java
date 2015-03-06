@@ -4,7 +4,7 @@
  */
 package MarkovCluster;
 
-import LinearAlgebra.MyOwnMatrix;
+import LinearAlgebra.MyOwnFloatMatrix;
 
 /**
  *
@@ -12,7 +12,7 @@ import LinearAlgebra.MyOwnMatrix;
  */
 public class Algorithm {
 
-    public static MyOwnMatrix process(MyOwnMatrix m) throws InterruptedException {
+    public static MyOwnFloatMatrix process(MyOwnFloatMatrix m) throws InterruptedException {
 //        if (!m.checkSymetric()) {
 //            System.err.println("Matrix is not symetric");
 ////            System.exit(1);
@@ -25,12 +25,12 @@ public class Algorithm {
         round++;
         double epsilon = 1e-6;
         double dis = 1;
-        MyOwnMatrix res = new MyOwnMatrix(m.getArrayCopy());
+        MyOwnFloatMatrix res = new MyOwnFloatMatrix(m.getArrayCopy());
         res.normalizeColumn();
 //        res.normalizeColumn();
         while(dis>epsilon){
             
-            MyOwnMatrix tmp = res.times(res);
+            MyOwnFloatMatrix tmp = res.times(res);
             tmp = inflate(tmp);
             dis = res.minus(tmp).absSum();
             res = tmp;
@@ -38,13 +38,13 @@ public class Algorithm {
         }
         return res;
     }
-//    private static MyOwnMatrix inflate(MyOwnMatrix m){
-//        MyOwnMatrix P = new MyOwnMatrix(m.getArrayCopy());
+//    private static MyOwnFloatMatrix inflate(MyOwnFloatMatrix m){
+//        MyOwnFloatMatrix P = new MyOwnFloatMatrix(m.getArrayCopy());
 //        double[] ss = new double[P.getColumnDimension()];
 //        for()
 //    }
-    private static MyOwnMatrix inflate(MyOwnMatrix m){
-        MyOwnMatrix tmp = m.timesElementWise(m);
+    private static MyOwnFloatMatrix inflate(MyOwnFloatMatrix m){
+        MyOwnFloatMatrix tmp = m.timesElementWise(m);
         float[][] A = tmp.getArrayCopy();
         float[] sumcol = tmp.sumColumn();
         for(int c=0; c<tmp.getColumnDimension(); c++){
@@ -52,6 +52,6 @@ public class Algorithm {
                 A[r][c] = A[r][c]/sumcol[c];
             }
         }
-        return new MyOwnMatrix(A);
+        return new MyOwnFloatMatrix(A);
     }
 }

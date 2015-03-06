@@ -4,7 +4,7 @@
  */
 package Protein;
 
-import DCA.ColPair_Score;
+import Common.ColPair_Score;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,11 @@ public class Protein_Pairwise_Reference extends Protein_PairwiseScore{
          ArrayList<ColPair_Score> lst_score = this.getLstScore();
          for(ColPair_Score s: lst_score){
              if(s.getScore()<ContactDistance){
-                 res.add(Math.abs(s.getP1()-s.getP2()));
+                 int p1 = Integer.parseInt(s.getP1());
+                 int p2 = Integer.parseInt(s.getP2());
+                 
+//                 res.add(Math.abs(s.getP1()-s.getP2()));
+                 res.add(Math.abs(p1-p2));
              }
          }
          return res;
@@ -84,8 +88,12 @@ public class Protein_Pairwise_Reference extends Protein_PairwiseScore{
          this.EliminateNeighbor();
          ArrayList<ColPair_Score> lst_score = this.getLstScore();
          for(ColPair_Score s: lst_score){
+             
              if(s.getScore()<ContactDistance){
-                 res.add(Math.abs(s.getP1()-s.getP2())/(double)len);
+                 int p1 = Integer.parseInt(s.getP1());
+                 int p2 = Integer.parseInt(s.getP2());
+//                 res.add(Math.abs(s.getP1()-s.getP2())/(double)len);
+                  res.add(Math.abs(p1-p2)/(double)len);
              }
          }
          return res;

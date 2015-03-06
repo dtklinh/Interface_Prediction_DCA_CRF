@@ -5,7 +5,7 @@
 package Protein;
 
 import Common.StaticMethod;
-import DCA.ColPair_Score;
+import Common.ColPair_Score;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +93,7 @@ public class ProteinChain {
                 AminoAcid a;
 
                 double d = StaticMethod.DistanceBtwGroups(LstAmino.get(i), LstAmino.get(j));
-                res.add(new ColPair_Score(i, j, d));
+                res.add(new ColPair_Score(String.valueOf(i), String.valueOf(j), d));
 
             }
         }

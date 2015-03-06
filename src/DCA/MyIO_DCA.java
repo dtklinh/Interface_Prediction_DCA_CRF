@@ -5,6 +5,7 @@
 package DCA;
 
 //import MyJama.MyMatrix;
+import Common.ColPair_Score;
 import Common.FastaSequence;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -28,7 +29,7 @@ public class MyIO_DCA {
 
     public static int[][] ReturnAlignment(String MSA_file) throws FileNotFoundException, IOException {
 //        ArrayList<String> lst_str = MyIO_DCA.ReadMSA(MSA_file);
-        ArrayList<String> lst_str = (new FastaSequence(MSA_file)).getAllSequence(10000);
+        ArrayList<String> lst_str = (new FastaSequence(MSA_file)).getAllSequence(20000);
 //        ArrayList<String> filter = MyIO_DCA.Filter(lst_str);
 //        System.err.println("Redundant in column: " + StaticMethod.CheckRedundantColumn(filter));
 //        int[][] mx = MyIO_DCA.RefineMSA(filter);
@@ -201,11 +202,11 @@ public class MyIO_DCA {
             if(s.isEmpty())
                 continue;
             String[] arr = s.split("\t");
-            int p1 = (int)Double.parseDouble(arr[0]);
-            int p2 = (int)Double.parseDouble(arr[1]);
+//            int p1 = (int)Double.parseDouble(arr[0]);
+//            int p2 = (int)Double.parseDouble(arr[1]);
             
             double score = Double.parseDouble(arr[2]);
-            ColPair_Score d = new ColPair_Score( p1, p2, score);
+            ColPair_Score d = new ColPair_Score( arr[0], arr[1], score);
             res.add(d);
         }
         return res;
@@ -218,11 +219,11 @@ public class MyIO_DCA {
             if(s.isEmpty())
                 continue;
             String[] arr = s.split("\t");
-            int p1 = (int)Double.parseDouble(arr[0]);
-            int p2 = (int)Double.parseDouble(arr[1]);
+//            int p1 = (int)Double.parseDouble(arr[0]);
+//            int p2 = (int)Double.parseDouble(arr[1]);
             
             double score = Double.parseDouble(arr[idx_score]);
-            ColPair_Score d = new ColPair_Score( p1, p2, score);
+            ColPair_Score d = new ColPair_Score( arr[0], arr[1], score);
             res.add(d);
         }
         return res;

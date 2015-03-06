@@ -4,19 +4,19 @@ public class Dsm {
 
     static double epsilon = 0.000000000000009;
 
-    private static float[][] calculate(float[][] matrix) {
+    private static double[][] calculate(double[][] matrix) {
 
         int loop = 0;
         boolean check = false;
         while (!check) {
             System.out.println("**************LOOP: " + loop + "*********************************");
-            float[] rowSum = rowSum(matrix);
+            double[] rowSum = rowSum(matrix);
             for (int i = 0; i < matrix.length; i++) {
                 for (int j = 0; j < matrix.length; j++) {
                     matrix[i][j] = matrix[i][j] / rowSum[i];
                 }
             }
-            float[] columnSum = columnSum(matrix);
+            double[] columnSum = columnSum(matrix);
             for (int i = 0; i < matrix.length; i++) {
                 for (int j = 0; j < matrix.length; j++) {
                     matrix[j][i] = matrix[j][i] / columnSum[i];
@@ -32,9 +32,9 @@ public class Dsm {
 
     }
 
-    private static float[] rowSum(float matrix[][]) {
+    private static double[] rowSum(double matrix[][]) {
 
-        float row[] = new float[matrix.length];
+        double row[] = new double[matrix.length];
         for (int i = 0; i < matrix.length; i++) {
             row[i] = 0;
             for (int j = 0; j < matrix.length; j++) {
@@ -44,9 +44,9 @@ public class Dsm {
         return row;
     }
 
-    private static float[] columnSum(float matrix[][]) {
+    private static double[] columnSum(double matrix[][]) {
 
-        float column[] = new float[matrix.length];
+        double column[] = new double[matrix.length];
         for (int i = 0; i < matrix.length; i++) {
             column[i] = 0;
             for (int j = 0; j < matrix.length; j++) {
@@ -56,10 +56,10 @@ public class Dsm {
         return column;
     }
 
-    private static boolean check(float matrix[][]) {
+    private static boolean check(double matrix[][]) {
 
-        float[] rowSum = kahanRowSum(matrix);
-        float[] columnSum = kahanColumnSum(matrix);
+        double[] rowSum = kahanRowSum(matrix);
+        double[] columnSum = kahanColumnSum(matrix);
 
         boolean result = true;
         for (int i = 0; i < matrix.length; i++) {
@@ -75,9 +75,9 @@ public class Dsm {
         return result;
     }
 
-    private static float[] kahanRowSum(float[][] input) {
-        float sum[] = new float[input.length];
-        float c = 0f, y, t;          //A running compensation for lost low-order bits.
+    private static double[] kahanRowSum(double[][] input) {
+        double sum[] = new double[input.length];
+        double c = 0f, y, t;          //A running compensation for lost low-order bits.
         for (int i = 0; i < input.length; i++) {
             sum[i] = 0f;
             for (int j = 0; j < input.length; j++) {
@@ -94,9 +94,9 @@ public class Dsm {
         return sum;
     }
 
-    private static float[] kahanColumnSum(float[][] input) {
-        float sum[] = new float[input.length];
-        float c = 0f, y, t;          //A running compensation for lost low-order bits.
+    private static double[] kahanColumnSum(double[][] input) {
+        double sum[] = new double[input.length];
+        double c = 0f, y, t;          //A running compensation for lost low-order bits.
         for (int i = 0; i < input.length; i++) {
             sum[i] = 0f;
             for (int j = 0; j < input.length; j++) {
@@ -113,7 +113,7 @@ public class Dsm {
     }
 
     /**/
-    public static float[][] processMatrix( float[][] matrix ) {
+    public static double[][] processMatrix( double[][] matrix ) {
         for(int i=0;i<matrix.length;i++){
             double s=0;
             for(int j=0;j<matrix[0].length;j++){

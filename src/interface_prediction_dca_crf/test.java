@@ -4,11 +4,13 @@
  */
 package interface_prediction_dca_crf;
 
-import DCA.ColPair_Score;
+import Common.ColPair_Score;
+import Common.Configuration;
 import Protein.Protein_PairwiseScore;
 import Drawing.ChartPanel;
 import Drawing.MyDraw;
 import Common.StaticMethod;
+import LinearAlgebra.MyOwnFloatMatrix;
 import LinearAlgebra.MyOwnMatrix;
 import java.awt.Graphics;
 import java.io.File;
@@ -25,6 +27,7 @@ import org.apache.commons.math.stat.correlation.Covariance;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.PDBFileReader;
+import utils.Utils;
 
 /**
  *
@@ -136,10 +139,18 @@ public class test {
 //        int len = 1000*1000*21*21;
 //        double[] a = new double[len];
 //        double[][][][] d = new double[1000][1000][21][21];
-        int len = 2;
+//        double[][] A = new double[][]{{1,2,3},{4,5,6},{7,8,14}};
+//        MyOwnMatrix m = new MyOwnMatrix(A);
+//        m = m.inverseMyOwnMatrix();
+//        m.print2Screen();
         
-        MyOwnMatrix m = MyOwnMatrix.random(len, len);
-        m = m.inverseMyOwnMatrix();
+        List<String> lst = Utils.dir2list(Configuration.Dir2PDB);
+        for(String s: lst){
+            File f = new File(Configuration.Dir2PDB+s);
+            File f2 = new File(Configuration.Dir2PDB+s.toLowerCase());
+            if(f2.exists()) throw new java.io.IOException("file exists");
+            f.renameTo(f2);
+        }
         
     }
 }

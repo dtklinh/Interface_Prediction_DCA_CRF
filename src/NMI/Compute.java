@@ -1,7 +1,7 @@
 package NMI;
 
 import Common.FastaSequence;
-import DCA.ColPair_Score;
+import Common.ColPair_Score;
 import java.util.ArrayList;
 
 public class Compute {
@@ -17,7 +17,7 @@ public class Compute {
         for (int i = 0; i < columns.size()-1; ++i) {
             for (int j = i + 1; j < columns.size(); ++j) {
                 double uValue = H2r.evaluate(columns.get(i), columns.get(j), mode);
-                pairs.add(new ColPair_Score(i, j, uValue));
+                pairs.add(new ColPair_Score(String.valueOf(i), String.valueOf(j), uValue));
 //                if (uValue >= 0.0) {
 //                    int place = 0;
 //                    boolean toAdd = true;
@@ -53,7 +53,7 @@ public class Compute {
     for (int i = 0; i < columns.size()-1; ++i) {
         for (int j = i + 1; j < columns.size(); ++j) {
             double uValue = H2rModified.evaluate(columns.get(i), columns.get(j), dsm, mode);
-            pairs.add(new ColPair_Score(i, j, uValue));
+            pairs.add(new ColPair_Score(String.valueOf(i), String.valueOf(j), uValue));
 //            if (uValue >= 0.0) {
 //                int place = 0;
 //                boolean toAdd = true;

@@ -16,23 +16,23 @@ import java.util.ArrayList;
  */
 public class ThreadDCA extends MyObject {
 
-    private ArrayList<MSA> Lst_MSA;
+    private ArrayList<MSA_FloatMatrix> Lst_MSA;
     private String DirForOut;
 
-    public ThreadDCA(ArrayList<MSA> lst, String dir) {
+    public ThreadDCA(ArrayList<MSA_FloatMatrix> lst, String dir) {
         Lst_MSA = lst;
         DirForOut = dir;
     }
 
     public void run() throws IOException {
-        for (MSA m : Lst_MSA) {
+        for (MSA_FloatMatrix m : Lst_MSA) {
             System.out.println("Thread "+Thread.currentThread().getName()+" run on "+m.getName());
             utils.Utils.tic();
             
-            //print MSA
+            //print MSA_FloatMatrix
 //            MyIO.WriteToFile(Configuration.DirTest_DCA+m.getName()+".algn", m.getAlgnMx());
             
-            float[][] d = m.GetResult2();
+            String[][] d = m.GetResult3(Configuration.Dir2PDBSingleChain);
             MyIO.WriteToFile(DirForOut+m.getName()+".dca", d);
             utils.Utils.tac();
         }

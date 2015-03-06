@@ -8,27 +8,27 @@ package LinearAlgebra;
  *
  * @author t.dang
  */
-public class SuperMatrix {
+public class SuperFloatMatrix {
     private int M1;
     private int M2;
     private int N1;
     private int N2;
     private float[][][][] A;
-    public SuperMatrix(int m1, int m2, int n1, int n2){
+    public SuperFloatMatrix(int m1, int m2, int n1, int n2){
         this.M1 = m1;
         this.M2 = m2;
         this.N1 = n1;
         this.N2 = n2;
         this.A = new float[m1][m2][n1][n2];
     }
-    public SuperMatrix(float[][][][] X){
+    public SuperFloatMatrix(float[][][][] X){
         this.M1 = X.length;
         this.M2 = X[0].length;
         this.N1 = X[0][0].length;
         this.N2 = X[0][0][0].length;
         this.A = X;
     }
-    public SuperMatrix(SuperMatrix X){
+    public SuperFloatMatrix(SuperFloatMatrix X){
         
     }
 
@@ -130,7 +130,7 @@ public class SuperMatrix {
             }
         }
     }
-    public SuperMatrix add(SuperMatrix X){
+    public SuperFloatMatrix add(SuperFloatMatrix X){
         if(X.M1!=this.M1 || X.M2!=this.M2 || X.N1!=this.N1 || X.N2!=this.N2){
             System.err.println("mismatch dim when adding supermatrix");
             return null;
@@ -146,7 +146,7 @@ public class SuperMatrix {
                 }
             }
         }
-        return new SuperMatrix(a);
+        return new SuperFloatMatrix(a);
     }
     public void addScalar(float v){
         for(int i1=0; i1<M1; i1++){
@@ -172,7 +172,7 @@ public class SuperMatrix {
         }
         return tmp;
     }
-    public static SuperMatrix ones(int m1, int m2, int n1, int n2){
+    public static SuperFloatMatrix ones(int m1, int m2, int n1, int n2){
         float[][][][] tmp = new float[m1][m2][n1][n2];
         for(int i1=0; i1<m1; i1++){
             for(int i2=0; i2<m2; i2++){
@@ -183,11 +183,11 @@ public class SuperMatrix {
                 }
             }
         }
-        return new SuperMatrix(tmp);
+        return new SuperFloatMatrix(tmp);
     }
-    public SuperMatrix clone(){
+    public SuperFloatMatrix clone(){
         float[][][][] a = this.getArrayCopy();
-        return new SuperMatrix(a);
+        return new SuperFloatMatrix(a);
     }
     public float get(int m1, int m2, int n1, int n2){
         return A[m1][m2][n1][n2];

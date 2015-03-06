@@ -5,9 +5,10 @@
 package DCA;
 
 //import MyJama.MyMatrix;
-//import MyJama.SuperMatrix;
-import LinearAlgebra.MyOwnMatrix;
-import LinearAlgebra.SuperMatrix;
+//import MyJama.SuperFloatMatrix;
+import Common.ColPair_Score;
+import LinearAlgebra.MyOwnFloatMatrix;
+import LinearAlgebra.SuperFloatMatrix;
 import NMI.Compute;
 import Common.Configuration;
 import Common.FastaSequence;
@@ -18,30 +19,38 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.ResidueNumber;
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.io.PDBFileParser;
+import org.biojava.bio.structure.io.PDBFileReader;
+import utils.Utils;
 
 /**
  *
  * @author t.dang
  */
-public class MSA {
+public class MSA_FloatMatrix {
 
     private final int q = 21;
     private final float pseudocount_weight = 0.5f;  // lamda
     private final float theta = 0.2f;
-    private int M; // number of sequence in MSA
+    private int M; // number of sequence in MSA_FloatMatrix
     private int N; // lenght of protein
-    private int[][] AlgnMx; // numeric alignment of MSA
+    private int[][] AlgnMx; // numeric alignment of MSA_FloatMatrix
     private String Name;
     private String Dir;
 
-    public MSA(int m, int n, int[][] mx, String name) {
+    public MSA_FloatMatrix(int m, int n, int[][] mx, String name) {
         M = m;
         N = n;
         AlgnMx = mx;
         Name = name;
     }
 
-    public MSA(int m, int n, String dir, String filename) throws FileNotFoundException, IOException {
+    public MSA_FloatMatrix(int m, int n, String dir, String filename) throws FileNotFoundException, IOException {
         M = m;
         N = n;
         Dir = dir;
@@ -49,21 +58,23 @@ public class MSA {
         Name = filename.substring(0, 6);
     }
 
-    public MSA(String dir, String filename) throws FileNotFoundException, IOException {
-        AlgnMx = MyIO_DCA.ReturnAlignment(dir + filename);
-        M = AlgnMx.length;
-        N = AlgnMx[0].length;
+    public MSA_FloatMatrix(String dir, String filename) throws FileNotFoundException, IOException {
         Dir = dir;
         Name = filename.substring(0, 6);
+        String endfile = StaticMethod.FindEndName(dir);
+        AlgnMx = MyIO_DCA.ReturnAlignment(dir + Name+endfile);
+        M = AlgnMx.length;
+        N = AlgnMx[0].length;
+        
     }
-    public MSA(String dir, String filename, int[][] mx){
+    public MSA_FloatMatrix(String dir, String filename, int[][] mx){
         AlgnMx = mx;
         M = AlgnMx.length;
         N = AlgnMx[0].length;
         Dir = dir;
         Name = filename.substring(0, 6);
     }
-    public MSA(MSA m){
+    public MSA_FloatMatrix(MSA_FloatMatrix m){
         this.AlgnMx = m.getAlgnMx();
         this.Dir = m.getDir();
         this.M = m.getM();
@@ -71,7 +82,7 @@ public class MSA {
         this.Name = m.getName();
     }
 
-    public int[] Conpute_W() { // vector of Km in the paper
+    public int[] Compute_W() { // vector of Km in the paper
         int[] mx = new int[getM()];
 
         for (int i = 0; i < getM(); i++) {
@@ -93,38 +104,46 @@ public class MSA {
 
         return mx;
     }
+     public float Compute_M_eff(){
+        int[] Km = this.Compute_W();
+        float res = 0f;
+        for(int i=0; i<Km.length; i++){
+            res += 1f/Km[i];
+        }
+        return res;
+    }
 // calculate frequency after ajusting weight of sequence (Eq(4))
 
-    public double[][] Compute_ReweightedFreqSingle(int[] W_Km) {
-        double[][] freq = new double[getN()][q];
-
-        for (int i = 0; i < getN(); i++) {
-            for (int j = 0; j < q; j++) {
-                double d = 0.0;
-                for (int k = 0; k < getM(); k++) {
-                    if (getAlgnMx()[k][i] == j) {
-                        d += 1.0 / W_Km[k];
-                    }
-                }
-                freq[i][j] = d;
-            }
-        }
-        double M_eff = 0.0;
-        for (int i = 0; i < getM(); i++) {
-            M_eff += 1.0 / W_Km[i];
-        }
-        for (int i = 0; i < getN(); i++) {
-            for (int j = 0; j < q; j++) {
-                freq[i][j] = (freq[i][j] + pseudocount_weight / q) / (pseudocount_weight + M_eff);
-            }
-        }
-
-        return freq;
-    }
+//    public double[][] Compute_ReweightedFreqSingle(int[] W_Km) {
+//        double[][] freq = new double[getN()][q];
+//
+//        for (int i = 0; i < getN(); i++) {
+//            for (int j = 0; j < q; j++) {
+//                double d = 0.0;
+//                for (int k = 0; k < getM(); k++) {
+//                    if (getAlgnMx()[k][i] == j) {
+//                        d += 1.0 / W_Km[k];
+//                    }
+//                }
+//                freq[i][j] = d;
+//            }
+//        }
+//        double M_eff = 0.0;
+//        for (int i = 0; i < getM(); i++) {
+//            M_eff += 1.0 / W_Km[i];
+//        }
+//        for (int i = 0; i < getN(); i++) {
+//            for (int j = 0; j < q; j++) {
+//                freq[i][j] = (freq[i][j] + pseudocount_weight / q) / (pseudocount_weight + M_eff);
+//            }
+//        }
+//
+//        return freq;
+//    }
     // compute true frequency Pi_true
 
-    public MyOwnMatrix Compute_TrueFreqSingle(MyOwnMatrix W) {
-        MyOwnMatrix Pi_true = MyOwnMatrix.Zeros(getN(), q);
+    public MyOwnFloatMatrix Compute_TrueFreqSingle(MyOwnFloatMatrix W) {
+        MyOwnFloatMatrix Pi_true = MyOwnFloatMatrix.Zeros(getN(), q);
         for (int j = 0; j < getM(); j++) {
             for (int i = 0; i < getN(); i++) {
                 Pi_true.set(i, getAlgnMx()[j][i], Pi_true.get(i, getAlgnMx()[j][i]) + W.get(0, j));
@@ -136,47 +155,47 @@ public class MSA {
     }
     // compute Pi with pseudo count
 
-    public MyOwnMatrix Compute_pcSingle(MyOwnMatrix Pi_true) {
-        MyOwnMatrix tmp1 = Pi_true.times(1 - this.pseudocount_weight);
-        MyOwnMatrix tmp2 = MyOwnMatrix.Ones(getN(), q).times(this.pseudocount_weight / q);
+    public MyOwnFloatMatrix Compute_pcSingle(MyOwnFloatMatrix Pi_true) {
+        MyOwnFloatMatrix tmp1 = Pi_true.times(1 - this.pseudocount_weight);
+        MyOwnFloatMatrix tmp2 = MyOwnFloatMatrix.Ones(getN(), q).times(this.pseudocount_weight / q);
         return tmp1.add(tmp2);
     }
     // calculate frequency of pair after adjusting weight (Eq(5))
 
-    public double[][][][] Compute_ReweightedFreqpair(int[] W_Km) {
-        double[][][][] freq = new double[getN()][getN()][q][q];
-        for (int i1 = 0; i1 < getN() - 1; i1++) {
-            for (int i2 = i1 + 1; i2 < getN(); i2++) {
-                for (int j1 = 0; j1 < q; j1++) {
-                    for (int j2 = 0; j2 < q; j2++) {
-                        for (int k = 0; k < getM(); k++) {
-                            if (getAlgnMx()[k][i1] == j1 && getAlgnMx()[k][i2] == j2) {
-                                freq[i1][i2][j1][j2] += 1.0 / W_Km[k];
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        double M_eff = 0.0;
-        for (int i = 0; i < getM(); i++) {
-            M_eff += 1.0 / W_Km[i];
-        }
-        for (int i1 = 0; i1 < getN() - 1; i1++) {
-            for (int i2 = i1 + 1; i2 < getN(); i2++) {
-                for (int j1 = 0; j1 < q; j1++) {
-                    for (int j2 = 0; j2 < q; j2++) {
-                        freq[i1][i2][j1][j2] = (freq[i1][i2][j1][j2] + pseudocount_weight / (q * q)) / (pseudocount_weight + M_eff);
-
-                    }
-                }
-            }
-        }
-        return freq;
-    }
+//    public double[][][][] Compute_ReweightedFreqpair(int[] W_Km) {
+//        double[][][][] freq = new double[getN()][getN()][q][q];
+//        for (int i1 = 0; i1 < getN() - 1; i1++) {
+//            for (int i2 = i1 + 1; i2 < getN(); i2++) {
+//                for (int j1 = 0; j1 < q; j1++) {
+//                    for (int j2 = 0; j2 < q; j2++) {
+//                        for (int k = 0; k < getM(); k++) {
+//                            if (getAlgnMx()[k][i1] == j1 && getAlgnMx()[k][i2] == j2) {
+//                                freq[i1][i2][j1][j2] += 1.0 / W_Km[k];
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        double M_eff = 0.0;
+//        for (int i = 0; i < getM(); i++) {
+//            M_eff += 1.0 / W_Km[i];
+//        }
+//        for (int i1 = 0; i1 < getN() - 1; i1++) {
+//            for (int i2 = i1 + 1; i2 < getN(); i2++) {
+//                for (int j1 = 0; j1 < q; j1++) {
+//                    for (int j2 = 0; j2 < q; j2++) {
+//                        freq[i1][i2][j1][j2] = (freq[i1][i2][j1][j2] + pseudocount_weight / (q * q)) / (pseudocount_weight + M_eff);
+//
+//                    }
+//                }
+//            }
+//        }
+//        return freq;
+//    }
 
     // compute true frequency of pair columns
-    public SuperMatrix Compute_TrueFreqPair(MyOwnMatrix Pi_true, MyOwnMatrix W) {
+    public SuperFloatMatrix Compute_TrueFreqPair(MyOwnFloatMatrix Pi_true, MyOwnFloatMatrix W) {
         float[][][][] Pij_true = new float[N][N][q][q];
         for (int l = 0; l < M; l++) {
             for (int i = 0; i < N - 1; i++) {
@@ -186,9 +205,9 @@ public class MSA {
                 }
             }
         }
-        SuperMatrix m_Pij_true = new SuperMatrix(Pij_true);
+        SuperFloatMatrix m_Pij_true = new SuperFloatMatrix(Pij_true);
         m_Pij_true.divideScalar(W.sum());
-        MyOwnMatrix scra = MyOwnMatrix.Eyes(q, q);
+        MyOwnFloatMatrix scra = MyOwnFloatMatrix.Eyes(q, q);
         for (int i = 0; i < N; i++) {
             for (int alpha = 0; alpha < q; alpha++) {
                 for (int beta = 0; beta < q; beta++) {
@@ -200,15 +219,15 @@ public class MSA {
     }
     // compute Pij with pseudo count
 
-    public SuperMatrix Compute_pcPair(SuperMatrix Pij_true) {
-        SuperMatrix tmp = Pij_true;
+    public SuperFloatMatrix Compute_pcPair(SuperFloatMatrix Pij_true) {
+        SuperFloatMatrix tmp = Pij_true.clone();
         tmp.timesScalar(1 - this.pseudocount_weight);
-//        SuperMatrix tmp1 = SuperMatrix.ones(N, N, q, q);
+//        SuperFloatMatrix tmp1 = SuperFloatMatrix.ones(N, N, q, q);
 //        tmp1.timesScalar(this.pseudocount_weight / (q * q));
 //        tmp = tmp.add(tmp1);
         tmp.addScalar(pseudocount_weight / (q * q));
         
-        MyOwnMatrix scra = MyOwnMatrix.Eyes(q, q);
+        MyOwnFloatMatrix scra = MyOwnFloatMatrix.Eyes(q, q);
 
         for (int i = 0; i < getN(); i++) {
             for (int alpha = 0; alpha < q; alpha++) {
@@ -265,8 +284,8 @@ public class MSA {
 //        return C;
 //    }
     // another computation of Matrix C
-    public MyOwnMatrix Compute_C(SuperMatrix Pij, MyOwnMatrix Pi) {
-        MyOwnMatrix C = MyOwnMatrix.Ones(N * (q - 1), N * (q - 1));
+    public MyOwnFloatMatrix Compute_C(SuperFloatMatrix Pij, MyOwnFloatMatrix Pi) {
+        MyOwnFloatMatrix C = MyOwnFloatMatrix.Ones(N * (q - 1), N * (q - 1));
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 for (int alpha = 0; alpha < q - 1; alpha++) {
@@ -299,8 +318,8 @@ public class MSA {
 //        }
 //        return m;
 //    }
-    public MyOwnMatrix Return_W(MyOwnMatrix C, int i, int j) {
-        MyOwnMatrix W = MyOwnMatrix.Ones(q, q);
+    public MyOwnFloatMatrix Return_W(MyOwnFloatMatrix C, int i, int j) {
+        MyOwnFloatMatrix W = MyOwnFloatMatrix.Ones(q, q);
         for (int offset1 = 0; offset1 < q - 1; offset1++) {
             for (int offset2 = 0; offset2 < q - 1; offset2++) {
                 float val = C.get(i * (q - 1) + offset1, j * (q - 1) + offset2);
@@ -321,24 +340,24 @@ public class MSA {
 //            mu[1][ii] = 1.0 / q;
 //            mu[2][ii] = 1.0 / q;
 //        }
-//        MyOwnMatrix m_mu = new MyOwnMatrix(mu);
-//        MyOwnMatrix m_mu1 = m_mu.getMyOwnMatrix(0, 0, 0, q - 1);
-//        MyOwnMatrix m_mu2 = m_mu.getMyOwnMatrix(1, 1, 0, q - 1);
-//        MyOwnMatrix m_W = new MyOwnMatrix(Exp_W);
-//        MyOwnMatrix m_Pi = new MyOwnMatrix(Pi);
-//        MyOwnMatrix m_p1 = m_Pi.getMyOwnMatrix(i, i, 0, q - 1);
-//        MyOwnMatrix m_p2 = m_Pi.getMyOwnMatrix(j, j, 0, q - 1);
+//        MyOwnFloatMatrix m_mu = new MyOwnFloatMatrix(mu);
+//        MyOwnFloatMatrix m_mu1 = m_mu.getMyOwnMatrix(0, 0, 0, q - 1);
+//        MyOwnFloatMatrix m_mu2 = m_mu.getMyOwnMatrix(1, 1, 0, q - 1);
+//        MyOwnFloatMatrix m_W = new MyOwnFloatMatrix(Exp_W);
+//        MyOwnFloatMatrix m_Pi = new MyOwnFloatMatrix(Pi);
+//        MyOwnFloatMatrix m_p1 = m_Pi.getMyOwnMatrix(i, i, 0, q - 1);
+//        MyOwnFloatMatrix m_p2 = m_Pi.getMyOwnMatrix(j, j, 0, q - 1);
 //        double epsilon = 1e-4;
 //        double diff = 1.0;
 //        while (diff > epsilon) {
-//            MyOwnMatrix scar1 = m_mu2.times(m_W.transpose());
-//            MyOwnMatrix scar2 = m_mu1.times(m_W);
+//            MyOwnFloatMatrix scar1 = m_mu2.times(m_W.transpose());
+//            MyOwnFloatMatrix scar2 = m_mu1.times(m_W);
 //
-////            MyOwnMatrix new1 = StaticMethod.DivideComponentWise(m_p1, scar1);
+////            MyOwnFloatMatrix new1 = StaticMethod.DivideComponentWise(m_p1, scar1);
 ////            MyMatrix new2 = StaticMethod.DivideComponentWise(m_p2, scar2);
 //            
-//            MyOwnMatrix new1 = m_p1.divideElementWise(scar1);
-//            MyOwnMatrix new2 = m_p2.divideElementWise(scar2);
+//            MyOwnFloatMatrix new1 = m_p1.divideElementWise(scar1);
+//            MyOwnFloatMatrix new2 = m_p2.divideElementWise(scar2);
 //            
 ////            new1 = StaticMethod.Normalize(new1);
 ////            new2 = StaticMethod.Normalize(new2);
@@ -361,24 +380,24 @@ public class MSA {
 //        }
 //        return mu;
 //    }
-    public ArrayList<MyOwnMatrix> Compute_mu(int i, int j, MyOwnMatrix W, MyOwnMatrix P1) {
-        ArrayList<MyOwnMatrix> res = new ArrayList<MyOwnMatrix>();
+    public ArrayList<MyOwnFloatMatrix> Compute_mu(int i, int j, MyOwnFloatMatrix W, MyOwnFloatMatrix P1) {
+        ArrayList<MyOwnFloatMatrix> res = new ArrayList<MyOwnFloatMatrix>();
         float epsilon = 1e-4f;
         float diff = 1.0f;
-        MyOwnMatrix mu1 = MyOwnMatrix.Ones(1, q).times(1f / q);
-        MyOwnMatrix mu2 = MyOwnMatrix.Ones(1, q).times(1f / q);
-        MyOwnMatrix pi = P1.getRow(i);
-        MyOwnMatrix pj = P1.getRow(j);
+        MyOwnFloatMatrix mu1 = MyOwnFloatMatrix.Ones(1, q).times(1f / q);
+        MyOwnFloatMatrix mu2 = MyOwnFloatMatrix.Ones(1, q).times(1f / q);
+        MyOwnFloatMatrix pi = P1.getRow(i);
+        MyOwnFloatMatrix pj = P1.getRow(j);
         int count = 0;
         while (diff > epsilon && count < 1000) {
 //            System.out.println("Iteration: "+ count+"  :  "+diff);
-            MyOwnMatrix scra1 = mu2.times(W.transpose());
-            MyOwnMatrix scra2 = mu1.times(W);
+            MyOwnFloatMatrix scra1 = mu2.times(W.transpose());
+            MyOwnFloatMatrix scra2 = mu1.times(W);
 
-            MyOwnMatrix new1 = pi.divideElementWise(scra1);
+            MyOwnFloatMatrix new1 = pi.divideElementWise(scra1);
             new1 = new1.times(1f / new1.sum());
 
-            MyOwnMatrix new2 = pj.divideElementWise(scra2);
+            MyOwnFloatMatrix new2 = pj.divideElementWise(scra2);
             new2 = new2.times(1f / new2.sum());
 
             float max1 = (new1.minus(mu1)).findMaxAbs();
@@ -401,36 +420,36 @@ public class MSA {
 //    public double CalculateDI(int i, int j, double[][] W, double[][]mu, double[][] Pi){
 ////        double tiny = 1.0e-20;
 //        double[][] Exp_W = StaticMethod_DCA.ExpMatrix_Component(StaticMethod_DCA.Negative_Matrix(W));
-//        MyOwnMatrix m_W = new MyOwnMatrix(Exp_W);
-//        MyOwnMatrix m_mu = new MyOwnMatrix(mu);
-//        MyOwnMatrix m_mu1 = m_mu.getMyOwnMatrix(0, 0, 0, q-1);
-//        MyOwnMatrix m_mu2 = m_mu.getMyOwnMatrix(1, 1, 0, q-1);
+//        MyOwnFloatMatrix m_W = new MyOwnFloatMatrix(Exp_W);
+//        MyOwnFloatMatrix m_mu = new MyOwnFloatMatrix(mu);
+//        MyOwnFloatMatrix m_mu1 = m_mu.getMyOwnMatrix(0, 0, 0, q-1);
+//        MyOwnFloatMatrix m_mu2 = m_mu.getMyOwnMatrix(1, 1, 0, q-1);
 //        
-//        MyOwnMatrix tmp = m_mu1.transpose().times(m_mu2);
+//        MyOwnFloatMatrix tmp = m_mu1.transpose().times(m_mu2);
 ////        MyMatrix Pdir = StaticMethod.Multiply_ComponentWise(m_W, tmp);
-//        MyOwnMatrix Pdir = m_W.timesElementWise(tmp);
+//        MyOwnFloatMatrix Pdir = m_W.timesElementWise(tmp);
 //        
 ////        Pdir = StaticMethod.Normalize(Pdir);
 //        Pdir = Pdir.normalize();
 //        
-//        MyOwnMatrix m_Pi = new MyOwnMatrix(Pi);
-//        MyOwnMatrix m_p1 = m_Pi.getMyOwnMatrix(i, i, 0, q - 1);
-//        MyOwnMatrix m_p2 = m_Pi.getMyOwnMatrix(j, j, 0, q - 1);
-//        MyOwnMatrix Pfac = m_p1.transpose().times(m_p2);
+//        MyOwnFloatMatrix m_Pi = new MyOwnFloatMatrix(Pi);
+//        MyOwnFloatMatrix m_p1 = m_Pi.getMyOwnMatrix(i, i, 0, q - 1);
+//        MyOwnFloatMatrix m_p2 = m_Pi.getMyOwnMatrix(j, j, 0, q - 1);
+//        MyOwnFloatMatrix Pfac = m_p1.transpose().times(m_p2);
 //        
-////        MyOwnMatrix log = StaticMethod.Log_ComponentWise(StaticMethod.DivideComponentWise(Pdir, Pfac));
+////        MyOwnFloatMatrix log = StaticMethod.Log_ComponentWise(StaticMethod.DivideComponentWise(Pdir, Pfac));
 ////        MyMatrix res = Pdir.transpose().times(log);
-//        MyOwnMatrix res = Pdir.transpose().times(Pdir.divideElementWise(Pfac).logElementWise());
+//        MyOwnFloatMatrix res = Pdir.transpose().times(Pdir.divideElementWise(Pfac).logElementWise());
 //        return res.trace();
 //        
 //    }
 
-    public float CalculateDI(int i, int j, MyOwnMatrix W, MyOwnMatrix mu1, MyOwnMatrix mu2, MyOwnMatrix Pia) {
-        MyOwnMatrix Pdir = W.timesElementWise(mu1.transpose().times(mu2));
+    public float CalculateDI(int i, int j, MyOwnFloatMatrix W, MyOwnFloatMatrix mu1, MyOwnFloatMatrix mu2, MyOwnFloatMatrix Pia) {
+        MyOwnFloatMatrix Pdir = W.timesElementWise(mu1.transpose().times(mu2));
         Pdir = Pdir.times(1f / Pdir.sum());
 
-        MyOwnMatrix Pfac = Pia.getRow(i).transpose().times(Pia.getRow(j));
-        MyOwnMatrix DI = Pdir.transpose().times(Pdir.divideElementWise(Pfac).logElementWise());
+        MyOwnFloatMatrix Pfac = Pia.getRow(i).transpose().times(Pia.getRow(j));
+        MyOwnFloatMatrix DI = Pdir.transpose().times(Pdir.divideElementWise(Pfac).logElementWise());
         return DI.trace();
     }
 //    public double[] GetResult() throws FileNotFoundException, IOException{
@@ -460,38 +479,38 @@ public class MSA {
 //    }
 
     public float[][] GetResult2() throws IOException {
-        int[] W_Km = this.Conpute_W();
+        int[] W_Km = this.Compute_W();
         // Print W_Km
         String str = Configuration.DirTest_DCA + this.Name.substring(0, 6);
 //        MyIO.WriteToFile(str+".km", W_Km);
 
         float[] dW_Km = StaticMethod_DCA.Int2Float(W_Km);
-        MyOwnMatrix W = new MyOwnMatrix(dW_Km, 1);
+        MyOwnFloatMatrix W = new MyOwnFloatMatrix(dW_Km, 1);
         W = W.invElementWise();
 //        MyIO.WriteToFile(str+".W", W.getArrayCopy()); 
 //        System.err.println("Meff: "+ W.sum());
 //        
 //        double Meff = W.sum();
-        MyOwnMatrix Pi_true = this.Compute_TrueFreqSingle(W);
+        MyOwnFloatMatrix Pi_true = this.Compute_TrueFreqSingle(W);
 //        MyIO.WriteToFile(str+".Pi_true", Pi_true.getArrayCopy());
 
-        SuperMatrix Pij_true = this.Compute_TrueFreqPair(Pi_true, W);
+        SuperFloatMatrix Pij_true = this.Compute_TrueFreqPair(Pi_true, W);
 //        MyIO.WriteToFile(str + ".Pij_true", Pij_true.getArrayCopy());
 
 
-        MyOwnMatrix Pi = this.Compute_pcSingle(Pi_true);
+        MyOwnFloatMatrix Pi = this.Compute_pcSingle(Pi_true);
 //        MyIO.WriteToFile(str + ".Pi", Pi.getArrayCopy());
 
-        SuperMatrix Pij = this.Compute_pcPair(Pij_true);
+        SuperFloatMatrix Pij = this.Compute_pcPair(Pij_true);
 //        MyIO.WriteToFile(str + ".Pij", Pij.getArrayCopy());
 
-        MyOwnMatrix C = this.Compute_C(Pij, Pi);
+        MyOwnFloatMatrix C = this.Compute_C(Pij, Pi);
 //        
 //        MyIO.WriteToFile(str + ".C", C.getArrayCopy());
         
 //        System.exit(0);
 
-        MyOwnMatrix invC = C.inverseMyOwnMatrix();
+        MyOwnFloatMatrix invC = C.inverseMyOwnMatrix();
 //        MyIO.WriteToFile(str + ".invC", invC.getArrayCopy());
 //        System.out.println("Finish write to invC");
 //        System.exit(0);
@@ -500,14 +519,14 @@ public class MSA {
         int count = 0;
         for (int i = 0; i < getN() - 1; i++) {
             for (int j = i + 1; j < getN(); j++) {
-                MyOwnMatrix W_mf = this.Return_W(invC, i, j);
+                MyOwnFloatMatrix W_mf = this.Return_W(invC, i, j);
 //                if(i==0 && j==1){
 //                    MyIO.WriteToFile(str+".0_1.W_mf", W_mf.getArrayCopy());
 //                }
 
-                ArrayList<MyOwnMatrix> mu = this.Compute_mu(i, j, W_mf, Pi);
+                ArrayList<MyOwnFloatMatrix> mu = this.Compute_mu(i, j, W_mf, Pi);
                 float di = this.CalculateDI(i, j, W_mf, mu.get(0), mu.get(1), Pi);
-                res[count][0] = i;
+                res[count][0] = i; // same idx with matlab, must change later
                 res[count][1] = j;
                 res[count][2] = di;
                 count++;
@@ -517,33 +536,101 @@ public class MSA {
 
         return res;
     }
-    public float[][] GetResult2SquareMatrix() throws IOException {
-        int[] W_Km = this.Conpute_W();
+    public String[][] GetResult3(String Dir2PDBSingleChain) throws IOException {
+        String endfile = StaticMethod.FindEndName(Dir2PDBSingleChain);
+        Structure s = (new PDBFileReader()).getStructure(Dir2PDBSingleChain+Name+endfile);
+        Chain c = s.getChain(0);
+        List<Group> groups = c.getAtomGroups();
+        ArrayList<ResidueNumber> lst_ResidueNum = new ArrayList<>();
+        for(int i=0;i<groups.size(); i++){
+            lst_ResidueNum.add(groups.get(i).getResidueNumber());
+        }
+        
+        
+        int[] W_Km = this.Compute_W();
         // Print W_Km
         String str = Configuration.DirTest_DCA + this.Name.substring(0, 6);
 //        MyIO.WriteToFile(str+".km", W_Km);
 
         float[] dW_Km = StaticMethod_DCA.Int2Float(W_Km);
-        MyOwnMatrix W = new MyOwnMatrix(dW_Km, 1);
+        MyOwnFloatMatrix W = new MyOwnFloatMatrix(dW_Km, 1);
         W = W.invElementWise();
 //        MyIO.WriteToFile(str+".W", W.getArrayCopy()); 
 //        System.err.println("Meff: "+ W.sum());
 //        
 //        double Meff = W.sum();
-        MyOwnMatrix Pi_true = this.Compute_TrueFreqSingle(W);
+        MyOwnFloatMatrix Pi_true = this.Compute_TrueFreqSingle(W);
 //        MyIO.WriteToFile(str+".Pi_true", Pi_true.getArrayCopy());
 
-        SuperMatrix Pij_true = this.Compute_TrueFreqPair(Pi_true, W);
+        SuperFloatMatrix Pij_true = this.Compute_TrueFreqPair(Pi_true, W);
 //        MyIO.WriteToFile(str + ".Pij_true", Pij_true.getArrayCopy());
 
 
-        MyOwnMatrix Pi = this.Compute_pcSingle(Pi_true);
+        MyOwnFloatMatrix Pi = this.Compute_pcSingle(Pi_true);
 //        MyIO.WriteToFile(str + ".Pi", Pi.getArrayCopy());
 
-        SuperMatrix Pij = this.Compute_pcPair(Pij_true);
+        SuperFloatMatrix Pij = this.Compute_pcPair(Pij_true);
 //        MyIO.WriteToFile(str + ".Pij", Pij.getArrayCopy());
 
-        MyOwnMatrix C = this.Compute_C(Pij, Pi);
+        MyOwnFloatMatrix C = this.Compute_C(Pij, Pi);
+//        
+//        MyIO.WriteToFile(str + ".C", C.getArrayCopy());
+        
+//        System.exit(0);
+
+        MyOwnFloatMatrix invC = C.inverseMyOwnMatrix();
+//        MyIO.WriteToFile(str + ".invC", invC.getArrayCopy());
+//        System.out.println("Finish write to invC");
+//        System.exit(0);
+
+        String[][] res = new String[getN() * (getN() - 1) / 2][3];
+        int count = 0;
+        for (int i = 0; i < getN() - 1; i++) {
+            for (int j = i + 1; j < getN(); j++) {
+                MyOwnFloatMatrix W_mf = this.Return_W(invC, i, j);
+//                if(i==0 && j==1){
+//                    MyIO.WriteToFile(str+".0_1.W_mf", W_mf.getArrayCopy());
+//                }
+
+                ArrayList<MyOwnFloatMatrix> mu = this.Compute_mu(i, j, W_mf, Pi);
+                float di = this.CalculateDI(i, j, W_mf, mu.get(0), mu.get(1), Pi);
+                res[count][0] = lst_ResidueNum.get(i).toString(); 
+                res[count][1] = lst_ResidueNum.get(j).toString();
+                res[count][2] = String.valueOf(di);
+                count++;
+//                System.exit(1);
+            }
+        }
+
+        return res;
+    }
+    public float[][] GetResult2SquareMatrix() throws IOException {
+        int[] W_Km = this.Compute_W();
+        // Print W_Km
+        String str = Configuration.DirTest_DCA + this.Name.substring(0, 6);
+//        MyIO.WriteToFile(str+".km", W_Km);
+
+        float[] dW_Km = StaticMethod_DCA.Int2Float(W_Km);
+        MyOwnFloatMatrix W = new MyOwnFloatMatrix(dW_Km, 1);
+        W = W.invElementWise();
+//        MyIO.WriteToFile(str+".W", W.getArrayCopy()); 
+//        System.err.println("Meff: "+ W.sum());
+//        
+//        double Meff = W.sum();
+        MyOwnFloatMatrix Pi_true = this.Compute_TrueFreqSingle(W);
+//        MyIO.WriteToFile(str+".Pi_true", Pi_true.getArrayCopy());
+
+        SuperFloatMatrix Pij_true = this.Compute_TrueFreqPair(Pi_true, W);
+//        MyIO.WriteToFile(str + ".Pij_true", Pij_true.getArrayCopy());
+
+
+        MyOwnFloatMatrix Pi = this.Compute_pcSingle(Pi_true);
+//        MyIO.WriteToFile(str + ".Pi", Pi.getArrayCopy());
+
+        SuperFloatMatrix Pij = this.Compute_pcPair(Pij_true);
+//        MyIO.WriteToFile(str + ".Pij", Pij.getArrayCopy());
+
+        MyOwnFloatMatrix C = this.Compute_C(Pij, Pi);
         System.out.println("Finish compute C Matrix");
 //        
 //        MyIO.WriteToFile(str + ".C", C.getArrayCopy());
@@ -552,7 +639,7 @@ public class MSA {
         Pij_true = null; Pij = null;
 
         
-        MyOwnMatrix invC = C.inverseMyOwnMatrix();
+        MyOwnFloatMatrix invC = C.inverseMyOwnMatrix();
 //        MyIO.WriteToFile(str + ".invC", invC.getArrayCopy());
 //        System.out.println("Finish write to invC");
 //        System.exit(0);
@@ -562,12 +649,12 @@ public class MSA {
         int count = 0;
         for (int i = 0; i < getN() - 1; i++) {
             for (int j = i + 1; j < getN(); j++) {
-                MyOwnMatrix W_mf = this.Return_W(invC, i, j);
+                MyOwnFloatMatrix W_mf = this.Return_W(invC, i, j);
 //                if(i==0 && j==1){
 //                    MyIO.WriteToFile(str+".0_1.W_mf", W_mf.getArrayCopy());
 //                }
 
-                ArrayList<MyOwnMatrix> mu = this.Compute_mu(i, j, W_mf, Pi);
+                ArrayList<MyOwnFloatMatrix> mu = this.Compute_mu(i, j, W_mf, Pi);
                 float di = this.CalculateDI(i, j, W_mf, mu.get(0), mu.get(1), Pi);
                 res[i][j] = di;
                 res[j][i] = di;
@@ -656,7 +743,7 @@ public class MSA {
     
     
     ////////////////// for Compensatory Mutation Finder
-    public double[][] NormalizedMutualInformation(double[][] dsm){
+    public String[][] NormalizedMutualInformation(double[][] dsm){
         String path = "";
         if(Name.indexOf(".")<0){
             path = Dir + Name + StaticMethod.FindEndName(Dir);
@@ -673,12 +760,12 @@ public class MSA {
             System.err.println("WRONG");
             System.exit(1);
         }
-        double[][] res = new double[unmodified.size()][4];
+        String[][] res = new String[unmodified.size()][4];
         for(int i=0; i<unmodified.size(); i++){
             res[i][0] = unmodified.get(i).getP1();
             res[i][1] = unmodified.get(i).getP2();
-            res[i][2] = unmodified.get(i).getScore();
-            res[i][3] = modified.get(i).getScore();
+            res[i][2] = String.valueOf(unmodified.get(i).getScore());
+            res[i][3] = String.valueOf(modified.get(i).getScore());
         }
         return res;
     }

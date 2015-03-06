@@ -100,6 +100,7 @@ public class StaticMethod {
 
         return res;
     }
+    
     public static boolean CompareFiles(String file1, String file2) throws FileNotFoundException, IOException{
         // Reader 1
         FileInputStream fstream1 = new FileInputStream(file1);

@@ -4,7 +4,7 @@
  */
 package DCA;
 
-import LinearAlgebra.MyOwnMatrix;
+import LinearAlgebra.MyOwnFloatMatrix;
 import Jama.Matrix;
 //import MyJama.MyMatrix;
 import java.io.FileNotFoundException;
@@ -66,7 +66,7 @@ public class StaticMethod_DCA {
         }
         return mtx;
     }
-    public static MyOwnMatrix DivideComponentWise(MyOwnMatrix X, MyOwnMatrix Y){
+    public static MyOwnFloatMatrix DivideComponentWise(MyOwnFloatMatrix X, MyOwnFloatMatrix Y){
         if(X.getRowDimension()!= Y.getRowDimension() || X.getColumnDimension()!=Y.getColumnDimension()){
             return null;
         }
@@ -77,7 +77,7 @@ public class StaticMethod_DCA {
                 arr_X[i][j] = arr_X[i][j]/arr_Y[i][j];
             }
         }
-        return new MyOwnMatrix(arr_X);
+        return new MyOwnFloatMatrix(arr_X);
     }
 //    public static MyMatrix Normalize(MyMatrix X){
 //        double[][] arr = X.getArrayCopy();
@@ -175,6 +175,13 @@ public class StaticMethod_DCA {
         float[] tmp = new float[X.length];
         for(int i=0; i<X.length; i++){
             tmp[i] = (float)X[i];
+        }
+        return tmp;
+    }
+     public static double[] Int2Double(int[] X){
+        double[] tmp = new double[X.length];
+        for(int i=0; i<X.length; i++){
+            tmp[i] = (double)X[i];
         }
         return tmp;
     }

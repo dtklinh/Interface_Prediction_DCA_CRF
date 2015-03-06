@@ -4,13 +4,15 @@
  */
 package test;
 
-import DCA.MSA;
+import DCA.MSA_FloatMatrix;
 import DCA.ThreadDCA;
 import MultipleCore.MyThread;
 import Common.Configuration;
 import Common.FastaSequence;
 import Common.StaticMethod;
-import LinearAlgebra.MyOwnMatrix;
+import DCA.MSA_JamaMatrix;
+import HomologousProteinsType.Complex;
+import LinearAlgebra.MyOwnFloatMatrix;
 import MarkovCluster.Algorithm;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,25 +34,26 @@ public class TestAlgorithmDCA {
         String DirMSAFile = Configuration.DirTest_MSA;
         String DirOut_DCAFile = Configuration.DirTest_DCA;
         
-        // Run 1 MSA
-        /*
+        // Run 1 MSA_Matrix
+        ///*
         int num_cpu = 1;
         List<String> lst_tmp = utils.Utils.dir2list(DirMSAFile);
         ArrayList<String> lst_filename = new ArrayList<>();
         lst_filename.addAll(lst_tmp);
         
-        ArrayList<MSA> lst_MSA = new ArrayList<MSA>();
+        ArrayList<MSA_FloatMatrix> lst_MSA = new ArrayList<MSA_FloatMatrix>();
         for(String s: lst_filename){
-            MSA m = new MSA(DirMSAFile, s);
+            MSA_FloatMatrix m = new MSA_FloatMatrix(DirMSAFile, s);
+            m.setAlgnMx(Complex.refineMSA(m.getAlgnMx(), 10));
             lst_MSA.add(m);
         }
-        ArrayList<ArrayList<MSA>> arr_MSA = StaticMethod.Divide(lst_MSA, num_cpu);
+        ArrayList<ArrayList<MSA_FloatMatrix>> arr_MSA = StaticMethod.Divide(lst_MSA, num_cpu);
         for(int k=0; k<arr_MSA.size(); k++){
             ThreadDCA dca = new ThreadDCA(arr_MSA.get(k), DirOut_DCAFile);
             MyThread th = new MyThread(dca);
             th.start();
         } //*/
-        // Run 1 MSA // end
+        // Run 1 MSA_FloatMatrix // end
         
         // Compare 2 Matrixes
 //        String filename = "10MH_A.invC";
@@ -63,14 +66,14 @@ public class TestAlgorithmDCA {
 //        FastaSequence f = new FastaSequence(Configuration.DirTest_MSA+"10MH_A.msa");
 //        System.out.println(f.getAllSequence().size());
         
-        // test MyOwnMatrix
-        float[][] a = new float[][]{{1,1,1,1}, 
-            {1,1,0,1}, 
-            {1,0,1,0},
-            {1,1,0,1}};
-        MyOwnMatrix m = new MyOwnMatrix(a);
-        m = Algorithm.process(m);
-        m.print2Screen();
+        // test MyOwnFloatMatrix
+//        float[][] a = new float[][]{{1,1,1,1}, 
+//            {1,1,0,1}, 
+//            {1,0,1,0},
+//            {1,1,0,1}};
+//        MyOwnFloatMatrix m = new MyOwnFloatMatrix(a);
+//        m = Algorithm.process(m);
+//        m.print2Screen();
         
     }
 }

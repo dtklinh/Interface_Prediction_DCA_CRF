@@ -13,15 +13,15 @@ public class SuperMatrix {
     private int M2;
     private int N1;
     private int N2;
-    private float[][][][] A;
+    private double[][][][] A;
     public SuperMatrix(int m1, int m2, int n1, int n2){
         this.M1 = m1;
         this.M2 = m2;
         this.N1 = n1;
         this.N2 = n2;
-        this.A = new float[m1][m2][n1][n2];
+        this.A = new double[m1][m2][n1][n2];
     }
-    public SuperMatrix(float[][][][] X){
+    public SuperMatrix(double[][][][] X){
         this.M1 = X.length;
         this.M2 = X[0].length;
         this.N1 = X[0][0].length;
@@ -91,24 +91,24 @@ public class SuperMatrix {
     /**
      * @return the A
      */
-    public float[][][][] getA() {
+    public double[][][][] getA() {
         return A;
     }
 
     /**
      * @param A the A to set
      */
-    public void setA(float[][][][] A) {
+    public void setA(double[][][][] A) {
         this.A = A;
         this.M1 = A.length;
         this.M2 = A[0].length;
         this.N1 = A[0][0].length;
         this.N2 = A[0][0][0].length;
     }
-    public void set(int m1, int m2, int n1, int n2, float val){
+    public void set(int m1, int m2, int n1, int n2, double val){
         A[m1][m2][n1][n2] = val;
     }
-    public void divideScalar(float d){
+    public void divideScalar(double d){
         for(int i1=0; i1<M1; i1++){
             for(int i2=0; i2<M2; i2++){
                 for(int j1=0; j1<N1; j1++){
@@ -119,7 +119,7 @@ public class SuperMatrix {
             }
         }
     }
-    public void timesScalar(float d){
+    public void timesScalar(double d){
         for(int i1=0; i1<M1; i1++){
             for(int i2=0; i2<M2; i2++){
                 for(int j1=0; j1<N1; j1++){
@@ -130,13 +130,24 @@ public class SuperMatrix {
             }
         }
     }
+    public void addScalar(double v){
+        for(int i1=0; i1<M1; i1++){
+            for(int i2=0; i2<M2; i2++){
+                for(int j1=0; j1<N1; j1++){
+                    for(int j2=0; j2<N2; j2++){
+                        A[i1][i2][j1][j2] = A[i1][i2][j1][j2] + v;
+                    }
+                }
+            }
+        }
+    }
     public SuperMatrix add(SuperMatrix X){
         if(X.M1!=this.M1 || X.M2!=this.M2 || X.N1!=this.N1 || X.N2!=this.N2){
             System.err.println("mismatch dim when adding supermatrix");
             return null;
         }
-        float[][][][] a = this.getArrayCopy();
-        float[][][][] b = X.getArrayCopy();
+        double[][][][] a = this.getArrayCopy();
+        double[][][][] b = X.getArrayCopy();
         for(int i1=0; i1<M1; i1++){
             for(int i2=0; i2<M2; i2++){
                 for(int j1=0; j1<N1; j1++){
@@ -148,19 +159,9 @@ public class SuperMatrix {
         }
         return new SuperMatrix(a);
     }
-    public void addScalar(float v){
-        for(int i1=0; i1<M1; i1++){
-            for(int i2=0; i2<M2; i2++){
-                for(int j1=0; j1<N1; j1++){
-                    for(int j2=0; j2<N2; j2++){
-                        A[i1][i2][j1][j2] += v;
-                    }
-                }
-            }
-        }
-    }
-    public float[][][][] getArrayCopy(){
-        float[][][][] tmp = new float[M1][M2][N1][N2];
+    
+    public double[][][][] getArrayCopy(){
+        double[][][][] tmp = new double[M1][M2][N1][N2];
         for(int i1=0; i1<M1; i1++){
             for(int i2=0; i2<M2; i2++){
                 for(int j1=0; j1<N1; j1++){
@@ -173,7 +174,7 @@ public class SuperMatrix {
         return tmp;
     }
     public static SuperMatrix ones(int m1, int m2, int n1, int n2){
-        float[][][][] tmp = new float[m1][m2][n1][n2];
+        double[][][][] tmp = new double[m1][m2][n1][n2];
         for(int i1=0; i1<m1; i1++){
             for(int i2=0; i2<m2; i2++){
                 for(int j1=0; j1<n1; j1++){
@@ -186,10 +187,10 @@ public class SuperMatrix {
         return new SuperMatrix(tmp);
     }
     public SuperMatrix clone(){
-        float[][][][] a = this.getArrayCopy();
+        double[][][][] a = this.getArrayCopy();
         return new SuperMatrix(a);
     }
-    public float get(int m1, int m2, int n1, int n2){
+    public double get(int m1, int m2, int n1, int n2){
         return A[m1][m2][n1][n2];
     }
     

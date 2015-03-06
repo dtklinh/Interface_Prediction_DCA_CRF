@@ -6,7 +6,7 @@ package HomologousProteinsType;
 
 import Common.Configuration;
 import Common.StaticMethod;
-import DCA.MSA;
+import DCA.MSA_FloatMatrix;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import java.util.Random;
  *
  * @author t.dang
  */
-public class Complex extends MSA{
+public class Complex extends MSA_FloatMatrix{
     private int Separate;
     private String ChainOneID;
     private String ChainTwoID;
@@ -32,13 +32,13 @@ public class Complex extends MSA{
          ChainOneID = Chain1;
         ChainTwoID = Chain2;
     }
-    public Complex(MSA m, int s, String Chain1, String Chain2){
+    public Complex(MSA_FloatMatrix m, int s, String Chain1, String Chain2){
         super(m);
         this.Separate = s;
         ChainOneID = Chain1;
         ChainTwoID = Chain2;
     }
-    // because two chain are identical, thus identical MSA. 
+    // because two chain are identical, thus identical MSA_FloatMatrix. 
     public void refineMSA(){
         int separate = Separate;
         int[][] arr = this.getAlgnMx();
@@ -64,12 +64,38 @@ public class Complex extends MSA{
         }
         this.setAlgnMx(newarr);
     }
+    public static  int[][] refineMSA(int[][] arr, int separate){
+//        int separate = Separate;
+//        int[][] arr = this.getAlgnMx();
+        int row = arr.length;
+        int col = arr[0].length;
+        int[][] newarr = new int[row][2*col+separate];
+        for(int i=0;i<row; i++){
+            for(int j=0; j<col; j++){
+                newarr[i][j] = arr[i][j];
+                newarr[i][j+col+separate] = arr[i][j];
+            }
+            Random r = new Random();
+            for(int j=col;j<col+separate;j++){
+                int tmp ;
+                if(i==0){
+                    tmp = r.nextInt(20)+1;
+                }
+                else{
+                    tmp = r.nextInt(21);
+                }
+                newarr[i][j] = tmp;
+            }
+        }
+        return newarr;
+//        this.setAlgnMx(newarr);
+    }
     public String[][] getResult() throws IOException{
         float[][] d = this.GetResult2SquareMatrix();
         // only take inter-protein scores // need to improve performence
        
-        String Path2PDB_1 = Configuration.Dir2PDB+this.getName().substring(0, 5)+ChainOneID +StaticMethod.FindEndName(Configuration.Dir2PDB);
-        String Path2PDB_2 = Configuration.Dir2PDB+this.getName().substring(0, 5)+ChainTwoID +StaticMethod.FindEndName(Configuration.Dir2PDB);
+        String Path2PDB_1 = Configuration.Dir2PDBSingleChain+this.getName().substring(0, 5)+ChainOneID +StaticMethod.FindEndName(Configuration.Dir2PDBSingleChain);
+        String Path2PDB_2 = Configuration.Dir2PDBSingleChain+this.getName().substring(0, 5)+ChainTwoID +StaticMethod.FindEndName(Configuration.Dir2PDBSingleChain);
         int[] Residue_1 = StaticMethod.getResidueNum(Path2PDB_1);
         int[] Residue_2 = StaticMethod.getResidueNum(Path2PDB_2);
         

@@ -46,7 +46,8 @@ public class FloatMatrix implements Cloneable, Serializable {
     public FloatMatrix(int m, int n) {
         this.m = m;
         this.n = n;
-        A = new float[m][n];
+        A = (new float[m][n]);
+
     }
 
     /**
@@ -59,7 +60,7 @@ public class FloatMatrix implements Cloneable, Serializable {
     public FloatMatrix(int m, int n, float s) {
         this.m = m;
         this.n = n;
-        A = new float[m][n];
+        A = (new float[m][n]);
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 A[i][j] = s;
@@ -112,7 +113,7 @@ public class FloatMatrix implements Cloneable, Serializable {
         if (m * n != vals.length) {
             throw new IllegalArgumentException("Array length must be a multiple of m.");
         }
-        A = new float[m][n];
+        A = (new float[m][n]);
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 A[i][j] = vals[i + j * m];
@@ -129,21 +130,21 @@ public class FloatMatrix implements Cloneable, Serializable {
      * @param A Two-dimensional array of floats.
      * @exception IllegalArgumentException All rows must have the same length
      */
-    public static FloatMatrix constructWithCopy(float[][] A) {
-        int m = A.length;
-        int n = A[0].length;
-        FloatMatrix X = new FloatMatrix(m, n);
-        float[][] C = X.getArray();
-        for (int i = 0; i < m; i++) {
-            if (A[i].length != n) {
-                throw new IllegalArgumentException("All rows must have the same length.");
-            }
-            for (int j = 0; j < n; j++) {
-                C[i][j] = A[i][j];
-            }
-        }
-        return X;
-    }
+//    public static FloatMatrix constructWithCopy(float[][] A) {
+//        int m = A.length;
+//        int n = A[0].length;
+//        FloatMatrix X = new FloatMatrix(m, n);
+//        T[][] C = X.getArray();
+//        for (int i = 0; i < m; i++) {
+//            if (A[i].length != n) {
+//                throw new IllegalArgumentException("All rows must have the same length.");
+//            }
+//            for (int j = 0; j < n; j++) {
+//                C[i][j] = A[i][j];
+//            }
+//        }
+//        return X;
+//    }
 
     /**
      * Make a deep copy of a matrix
@@ -181,7 +182,7 @@ public class FloatMatrix implements Cloneable, Serializable {
      * @return Two-dimensional array copy of matrix elements.
      */
     public float[][] getArrayCopy() {
-        float[][] C = new float[m][n];
+        float[][] C = (new float[m][n]);
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 C[i][j] = A[i][j];
@@ -197,7 +198,7 @@ public class FloatMatrix implements Cloneable, Serializable {
      * columns.
      */
     public float[] getColumnPackedCopy() {
-        float[] vals = new float[m * n];
+        float[] vals = (new float[m * n]);
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 vals[i + j * m] = A[i][j];
@@ -212,7 +213,7 @@ public class FloatMatrix implements Cloneable, Serializable {
      * @return FloatMatrix elements packed in a one-dimensional array by rows.
      */
     public float[] getRowPackedCopy() {
-        float[] vals = new float[m * n];
+        float[] vals = (new float[m * n]);
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 vals[i * n + j] = A[i][j];
@@ -263,7 +264,7 @@ public class FloatMatrix implements Cloneable, Serializable {
      */
     public FloatMatrix getFloatMatrix(int i0, int i1, int j0, int j1) {
         FloatMatrix X = new FloatMatrix(i1 - i0 + 1, j1 - j0 + 1);
-        float[][] B = X.getArray();
+        float[][] B = (X.getArray());
         try {
             for (int i = i0; i <= i1; i++) {
                 for (int j = j0; j <= j1; j++) {
@@ -286,7 +287,7 @@ public class FloatMatrix implements Cloneable, Serializable {
      */
     public FloatMatrix getFloatMatrix(int[] r, int[] c) {
         FloatMatrix X = new FloatMatrix(r.length, c.length);
-        float[][] B = X.getArray();
+        float[][] B = (X.getArray());
         try {
             for (int i = 0; i < r.length; i++) {
                 for (int j = 0; j < c.length; j++) {
@@ -310,7 +311,7 @@ public class FloatMatrix implements Cloneable, Serializable {
      */
     public FloatMatrix getFloatMatrix(int i0, int i1, int[] c) {
         FloatMatrix X = new FloatMatrix(i1 - i0 + 1, c.length);
-        float[][] B = X.getArray();
+        float[][] B = (X.getArray());
         try {
             for (int i = i0; i <= i1; i++) {
                 for (int j = 0; j < c.length; j++) {
@@ -334,7 +335,7 @@ public class FloatMatrix implements Cloneable, Serializable {
      */
     public FloatMatrix getFloatMatrix(int[] r, int j0, int j1) {
         FloatMatrix X = new FloatMatrix(r.length, j1 - j0 + 1);
-        float[][] B = X.getArray();
+        float[][] B = (X.getArray());
         try {
             for (int i = 0; i < r.length; i++) {
                 for (int j = j0; j <= j1; j++) {
@@ -373,7 +374,7 @@ public class FloatMatrix implements Cloneable, Serializable {
         try {
             for (int i = i0; i <= i1; i++) {
                 for (int j = j0; j <= j1; j++) {
-                    A[i][j] = X.get(i - i0, j - j0);
+                    A[i][j] = (X.get(i - i0, j - j0));
                 }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -393,7 +394,7 @@ public class FloatMatrix implements Cloneable, Serializable {
         try {
             for (int i = 0; i < r.length; i++) {
                 for (int j = 0; j < c.length; j++) {
-                    A[r[i]][c[j]] = X.get(i, j);
+                    A[r[i]][c[j]] = (X.get(i, j));
                 }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -414,7 +415,7 @@ public class FloatMatrix implements Cloneable, Serializable {
         try {
             for (int i = 0; i < r.length; i++) {
                 for (int j = j0; j <= j1; j++) {
-                    A[r[i]][j] = X.get(i, j - j0);
+                    A[r[i]][j] = (X.get(i, j - j0));
                 }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -435,7 +436,7 @@ public class FloatMatrix implements Cloneable, Serializable {
         try {
             for (int i = i0; i <= i1; i++) {
                 for (int j = 0; j < c.length; j++) {
-                    A[i][c[j]] = X.get(i - i0, j);
+                    A[i][c[j]] = (X.get(i - i0, j));
                 }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -450,7 +451,7 @@ public class FloatMatrix implements Cloneable, Serializable {
      */
     public FloatMatrix transpose() {
         FloatMatrix X = new FloatMatrix(n, m);
-        float[][] C = X.getArray();
+        float[][] C = (X.getArray());
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 C[j][i] = A[i][j];
@@ -465,15 +466,17 @@ public class FloatMatrix implements Cloneable, Serializable {
      * @return maximum column sum.
      */
     public float norm1() {
-        float f = 0;
+        double f = 0f;
         for (int j = 0; j < n; j++) {
-            float s = 0;
+           double s = 0;
             for (int i = 0; i < m; i++) {
-                s += Math.abs(A[i][j]);
+                double val = (double)((Number)(A[i][j]));
+                double abs = Math.abs(val);
+                s = s+ abs;
             }
             f = Math.max(f, s);
         }
-        return f;
+        return (float)f;
     }
 
     /**
@@ -925,6 +928,10 @@ public class FloatMatrix implements Cloneable, Serializable {
     }
 
     public FloatMatrix inverse() {
+        // LU Decomposition
+        return solve(identity(m, m));
+        // Gaussian Method
+        /*
         float[][] a = this.getArray();
         int n = a.length;
         float x[][] = new float[n][n];
@@ -958,6 +965,11 @@ public class FloatMatrix implements Cloneable, Serializable {
             }
         }
         return new FloatMatrix(x);
+        */ 
+    }
+    
+    public FloatMatrix solve(FloatMatrix B){
+        return (m == n ? (new LUDecompositionFloat(this)).solve(B) : (new QRDecompositionFloat(this)).solve(B));
     }
 
     private static void gaussian(float a[][], int index[]) {
@@ -1010,5 +1022,13 @@ public class FloatMatrix implements Cloneable, Serializable {
                 }
             }
         }
+    }
+    public static FloatMatrix ones(int m, int n){
+        FloatMatrix mx = new FloatMatrix(m, n, 1f);
+        return mx;
+    }
+    public static FloatMatrix zeros(int m, int n){
+        FloatMatrix mx = new FloatMatrix(m, n, 0f);
+        return mx;
     }
 }

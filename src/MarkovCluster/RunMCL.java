@@ -5,7 +5,7 @@
 package MarkovCluster;
 
 import Common.MyIO;
-import LinearAlgebra.MyOwnMatrix;
+import LinearAlgebra.MyOwnFloatMatrix;
 import Protein.Protein_PairwiseScore;
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +29,7 @@ public class RunMCL {
         double distance_contact = 8.5d;
         List<String> lst = utils.Utils.dir2list(Dir2File);
         for(String s: lst){
-            MyOwnMatrix m = MyOwnMatrix.fromPairScore2Matrix(Dir2File+s, epsilon);
+            MyOwnFloatMatrix m = MyOwnFloatMatrix.fromPairScore2Matrix(Dir2File+s, epsilon);
 //            m.makeDSM();
             m = Algorithm.process(m);
 //            if(!m.checkSymetric()){

@@ -5,7 +5,7 @@
 package Protein;
 
 import Common.MyIO;
-import DCA.ColPair_Score;
+import Common.ColPair_Score;
 import MultipleCore.MyObject;
 import java.io.IOException;
 import java.util.ArrayList;

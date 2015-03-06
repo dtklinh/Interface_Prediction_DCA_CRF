@@ -5,16 +5,20 @@
 package Protein;
 
 import Common.StaticMethod;
-import DCA.ColPair_Score;
+import Common.ColPair_Score;
+import Common.Configuration;
 import DCA.MyIO_DCA;
-import LinearAlgebra.MyOwnMatrix;
+import LinearAlgebra.MyOwnFloatMatrix;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.io.PDBFileReader;
 
 /**
@@ -27,6 +31,14 @@ public class Protein_PairwiseScore {
     private String ProteinChain;
     private int NeighborDistance;
     private ArrayList<ColPair_Score> LstScore;
+    private ArrayList<String> LstResidueNum;
+    
+    public Protein_PairwiseScore(String p2f, String protChain, int nd, ArrayList<ColPair_Score> lst){
+        Path2File = p2f;
+        ProteinChain = protChain;
+        NeighborDistance = nd;
+        LstScore = lst;
+    }
 
     /**
      * @return the ProteinChain
@@ -77,8 +89,16 @@ public class Protein_PairwiseScore {
         String Path2OpenFile = "";
         this.NeighborDistance = distance;
         this.Path2File = path;
-        Path2OpenFile = path + name.substring(0, 6) + endfile;
-        this.ProteinChain = name.substring(0, 6);
+//        this.ProteinChain = name.substring(0, 6);
+        if(name.indexOf(".")<0){
+            ProteinChain = name;
+        }
+        else{
+            int idx = name.indexOf(".");
+            ProteinChain = name.substring(0,idx);
+        }
+        Path2OpenFile = path + ProteinChain + endfile;
+        
 //        if (name.length() == 6) {
 //            this.ProteinChain = name;
 //            Path2OpenFile = path + name + endfile;
@@ -87,6 +107,17 @@ public class Protein_PairwiseScore {
 //            Path2OpenFile = path + name;
 //        }
         this.LstScore = MyIO_DCA.ReadDCA_Score(Path2OpenFile);
+        // ResidueNumber
+        /*
+        Path2OpenFile = Configuration.Dir2PDBSingleChain+ProteinChain+StaticMethod.FindEndName(Configuration.Dir2PDBSingleChain);
+        Structure s = (new PDBFileReader()).getStructure(Path2OpenFile);
+        Chain c = s.getChain(0);
+        List<Group> lst_groups = c.getAtomGroups();
+        LstResidueNum = new ArrayList<>();
+        for(int i=0;i<lst_groups.size();i++){
+            LstResidueNum.add(lst_groups.get(i).getResidueNumber().toString());
+        }
+        */ 
     }
 
     public Protein_PairwiseScore(String path, String name, int distance, int idx_score) throws IOException {
@@ -108,7 +139,7 @@ public class Protein_PairwiseScore {
         this.LstScore = MyIO_DCA.ReadDCA_Score(Path2OpenFile, idx_score);
     }
 
-    public Protein_PairwiseScore(String path, String name, int distance, MyOwnMatrix m){
+    public Protein_PairwiseScore(String path, String name, int distance, MyOwnFloatMatrix m){
         this.Path2File = path;
         this.ProteinChain = name.substring(0, 6);
         this.NeighborDistance = distance;
@@ -116,7 +147,7 @@ public class Protein_PairwiseScore {
         float[][] A = m.getArrayCopy();
         for(int i=0; i<A.length-1;i++){
             for(int j=i+1;j<A[0].length;j++){
-                ColPair_Score col = new ColPair_Score(i, j, (A[i][j]+A[j][i])/2);
+                ColPair_Score col = new ColPair_Score(String.valueOf(i), String.valueOf(j), (A[i][j]+A[j][i])/2);
 //                ColPair_Score col = new ColPair_Score(i, j, Math.min(A[i][j], A[j][i]));
                 LstScore.add(col);
             }
@@ -164,9 +195,9 @@ public class Protein_PairwiseScore {
         Structure s = (new PDBFileReader()).getStructure(Path2Folder + ProteinChain + endfile);
         Chain c = s.getChain(0);
         List<Group> lst_group = c.getAtomGroups();
-        ArrayList<Integer> ResidualNum = new ArrayList<>();
+        ArrayList<String> ResidualNum = new ArrayList<>();
         for (int i = 0; i < lst_group.size(); i++) {
-            ResidualNum.add(lst_group.get(i).getResidueNumber().getSeqNum());
+            ResidualNum.add(lst_group.get(i).getResidueNumber().toString());
         }
         for (ColPair_Score d : getLstScore()) {
 //            int p1_idx = ResidualNum.indexOf(d.getP1());
@@ -177,10 +208,31 @@ public class Protein_PairwiseScore {
 //                System.err.println("Res len: "+ ResidualNum.size());
 //                System.exit(1);
 //            }
-            d.setP1(ResidualNum.get(d.getP1()));
-            d.setP2(ResidualNum.get(d.getP2()));
+            d.setP1(ResidualNum.get(Integer.parseInt(d.getP1())));
+            d.setP2(ResidualNum.get(Integer.parseInt(d.getP2())));
         }
 
+    }
+    public void AdjustSecondIndex(String Path2PDBFile, String chain2) throws IOException, StructureException {
+        Structure s = (new PDBFileReader()).getStructure(Path2PDBFile);
+        Chain c = s.getChainByPDB(chain2);
+        List<Group> groups = c.getAtomGroups();
+        Iterator<Group> iterGroup = groups.iterator();
+        while(iterGroup.hasNext()){
+            Group g = iterGroup.next();
+            if(!g.hasAminoAtoms()){
+                iterGroup.remove();
+            }
+        }
+        System.out.println("Chain 2: "+chain2 +" : length: "+groups.size());
+        Iterator<ColPair_Score> iter = LstScore.iterator();
+        while(iter.hasNext()){
+            ColPair_Score col = iter.next();
+            String Res2 = col.getP2();
+            int idx2 = LstResidueNum.indexOf(Res2);
+            String newidx2 = groups.get(idx2).getResidueNumber().toString();
+            col.setP2(newidx2);
+        }
     }
 //    public void Print2Screen(){
 //        
@@ -192,10 +244,10 @@ public class Protein_PairwiseScore {
 //        double dis = getScore(P1, P2);
 //        if()
 //    }
-    public double getScore(int p1, int p2) {
+    public double getScore(String p1, String p2) {
         double res = -10;
         for (ColPair_Score col : getLstScore()) {
-            if (col.getP1() == p1 && col.getP2() == p2) {
+            if (col.getP1().equals(p1)  && col.getP2().equals(p2) ) {
                 return col.getScore();
 
             }
@@ -212,9 +264,9 @@ public class Protein_PairwiseScore {
 //    public int CountTP(ArrayList<ColPair_Score> lst){
 //        
 //    }
-    public double getScoreByIndexes(int P1, int P2) {
+    public double getScoreByIndexes(String P1, String P2) {
         for (ColPair_Score s : LstScore) {
-            if (s.getP1() == P1 && s.getP2() == P2) {
+            if (s.getP1().equals(P1)  && s.getP2().equals(P2) ) {
                 return s.getScore();
             }
         }
@@ -263,6 +315,27 @@ public class Protein_PairwiseScore {
     }
     public int getSequenceLength(){
         return (int)(1+ Math.sqrt(8*LstScore.size()+1))/2;
+    }
+    
+    @Override
+    public Protein_PairwiseScore clone(){
+        return new Protein_PairwiseScore(Path2File, ProteinChain, NeighborDistance, LstScore);
+    }
+    public void ComputeEVcomplex(float M_eff){
+        int L = getSequenceLength();
+//        Protein_PairwiseScore p = this.clone();
+//        ArrayList<ColPair_Score> lst_score = p.getLstScore();
+        Iterator<ColPair_Score> iter = LstScore.iterator(); 
+        double min = Collections.min(LstScore).getScore();
+        while(iter.hasNext()){
+            ColPair_Score c = iter.next();
+            double score = c.getScore();
+            score = (score/min);
+            score = score/(1+1/(Math.sqrt(M_eff/L)));
+            c.setScore(score);
+        }
+//        p.setLstScore(lst_score);
+        
     }
     
 }

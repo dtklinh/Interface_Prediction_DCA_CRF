@@ -5,7 +5,7 @@
 package Analysis;
 
 import Common.StaticMethod;
-import DCA.ColPair_Score;
+import Common.ColPair_Score;
 import Protein.Protein_PairwiseScore;
 import java.io.IOException;
 import java.util.List;
