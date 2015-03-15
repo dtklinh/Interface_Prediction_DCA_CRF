@@ -8,6 +8,7 @@ import Common.StaticMethod;
 import Common.ColPair_Score;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
@@ -26,6 +27,7 @@ public class ProteinChain {
     private String Sequence;
     private String Dir2PDB;
     private List<Group> LstAmino;
+    private HashMap<Integer, String> Map_idx_ResNum;
 
     /**
      * @return the ProteinChainID
@@ -83,6 +85,12 @@ public class ProteinChain {
         Chain c = s.getChain(0);
         this.Sequence = c.getAtomSequence();
         this.LstAmino = c.getAtomGroups();
+        Map_idx_ResNum = new HashMap<>();
+        for(int i=0; i<LstAmino.size(); i++){
+            int key = i;
+            String val = LstAmino.get(i).getResidueNumber().toString();
+            Map_idx_ResNum.put(key, val);
+        }
     }
 
     public ArrayList<ColPair_Score> DistancePairwise() throws StructureException {

@@ -23,6 +23,12 @@ public final class FastaSequence {
     public FastaSequence(String filename) {
         readSequenceFromFile(filename);
     }
+    public FastaSequence(String[] desc, String[] seq){
+        description = new String[desc.length];
+        sequence = new String[seq.length];
+        System.arraycopy(desc, 0, description, 0, desc.length);
+        System.arraycopy(seq, 0, sequence, 0, seq.length);
+    }
 
     void readSequenceFromFile(String file) {
         List desc = new ArrayList();
@@ -88,6 +94,11 @@ public final class FastaSequence {
         }
         return lst;
     }
+    public String[] getSequences(){
+        String[] seq = new String[sequence.length];
+        System.arraycopy(sequence, 0, seq, 0, sequence.length);
+        return seq;
+    }
     
     public ArrayList<String> getAllSequence(int max){
         ArrayList<String> lst = new ArrayList<>();
@@ -103,6 +114,11 @@ public final class FastaSequence {
     //return description as String
     public String getDescription(int i) {
         return description[i];
+    }
+    public String[] getAllDescription(){
+        String[] desc = new String[description.length];
+        System.arraycopy(description, 0, desc, 0, description.length);
+        return desc;
     }
 
     public int size() {
@@ -138,4 +154,21 @@ public final class FastaSequence {
         }
         return cols;
     }
+    public String[] getAllUniprotID(){
+        String[] ids = new String[this.description.length-1];
+        for(int i=1; i<description.length; i++){
+            String[] arr = description[i].split("|");
+            ids[i-1] = arr[2];
+        }
+        return ids;
+    }
+    public HashSet<String> getAllUniprotID2Set(){
+        HashSet<String> res = new HashSet<>();
+        for(int i=1; i<description.length; i++){
+            String[] arr = description[i].split("\\|");
+            res.add(arr[2].trim().split("\\s+")[0]);
+        }
+        return res;
+    }
+    
 }

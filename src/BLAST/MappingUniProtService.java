@@ -5,6 +5,7 @@
 package BLAST;
 
 import Common.Configuration;
+import Common.FastaSequence;
 import Common.MyIO;
 import Common.StaticMethod;
 import java.io.FileNotFoundException;
@@ -26,22 +27,22 @@ public class MappingUniProtService {
     public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
         // TODO code application logic here
         // get all GIs number in BLAST output file
-        /*
-        List<String> lst = utils.Utils.dir2list(Configuration.Dir2Sequence);
+        ///*
+        List<String> lst = utils.Utils.dir2list(Configuration.DirTest_MSA);
         HashSet<String> Lst_GI = new HashSet<>();
-        String endfileBLAST = StaticMethod.FindEndName(Configuration.Dir2BLAST);
+        String endfileBLAST = StaticMethod.FindEndName(Configuration.DirTest_MSA);
         for (String s : lst) {
-            String name = s.trim().substring(0, 6);
-            String path2file = Configuration.Dir2BLAST + name + endfileBLAST;
-            HashSet<String> gi = MyIO.Read_GI_FromBLAST(path2file);
-            Lst_GI.addAll(gi);
+            String path2file = Configuration.DirTest_MSA+ s;
+            FastaSequence f = new FastaSequence(path2file);
+            HashSet<String> uniprot = f.getAllUniprotID2Set();
+            Lst_GI.addAll(uniprot);
         }
-        ArrayList<String> tmp = new ArrayList<>();
-        tmp.addAll(Lst_GI);
-        ArrayList<ArrayList<String>> lst_arr = StaticMethod.Divide(tmp, 32);
-        for (int i = 0; i < 32; i++) {
-            MyIO.WriteToFile(Configuration.Dir2DataBase + Configuration.MethodMakingMSA + "GI/GIs_"+i+".txt", lst_arr.get(i));
-        }
+        
+        MyIO.WriteToFile("Test/Hetedima/MSA-Methods/HHblits/Uniprot.txt", Lst_GI);
+//        ArrayList<ArrayList<String>> lst_arr = StaticMethod.Divide(tmp, 32);
+//        for (int i = 0; i < 32; i++) {
+//            MyIO.WriteToFile(Configuration.Dir2DataBase + Configuration.MethodMakingMSA + "GI/GIs_"+i+".txt", lst_arr.get(i));
+//        }
         //*/
         // end
 
@@ -88,14 +89,14 @@ public class MappingUniProtService {
 //            rt.freeMemory();
 //            utils.Utils.tac();
 //        }
-        List<String> lst = utils.Utils.dir2list(Configuration.TmpDir+"MAP/");
-        ArrayList<String> lines = new ArrayList<>();
-        for(String s: lst){
-            List<String> f = utils.Utils.file2list(Configuration.TmpDir+"MAP/"+s);
-            f.remove(0);
-            lines.addAll(f);
-        }
-        MyIO.WriteToFile(Configuration.Dir2DataBase+Configuration.MethodMakingMSA+"GI_Uniprot.map", lines);
+//        List<String> lst = utils.Utils.dir2list(Configuration.TmpDir+"MAP/");
+//        ArrayList<String> lines = new ArrayList<>();
+//        for(String s: lst){
+//            List<String> f = utils.Utils.file2list(Configuration.TmpDir+"MAP/"+s);
+//            f.remove(0);
+//            lines.addAll(f);
+//        }
+//        MyIO.WriteToFile(Configuration.Dir2DataBase+Configuration.MethodMakingMSA+"GI_Uniprot.map", lines);
         
     }
 }

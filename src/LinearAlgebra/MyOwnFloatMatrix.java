@@ -5,6 +5,7 @@
 package LinearAlgebra;
 
 //import Jama.Matrix;
+import Common.MyMath;
 import NMI.Dsm;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -327,5 +328,27 @@ public class MyOwnFloatMatrix extends FloatMatrix{
                 A[i][j] = (float)B[i][j];
             }
         }
+    }
+    public MyOwnFloatMatrix sqrtElementwise(){
+        float[][] d = this.getArrayCopy();
+        for(int i=0; i<d.length; i++){
+            for(int j=0; j<d[0].length; j++){
+                d[i][j] = (float) Math.sqrt(d[i][j]);
+            }
+        }
+        return new MyOwnFloatMatrix(d);
+    }
+    public MyOwnFloatMatrix atanhElementwise(){
+        float[][] d = this.getArrayCopy();
+        for(int i=0; i<d.length; i++){
+            for(int j=0; j<d[0].length; j++){
+                d[i][j] = MyMath.atanh(d[i][j]);
+            }
+        }
+        return new MyOwnFloatMatrix(d);
+    }
+    public MyOwnFloatMatrix clone(){
+        float[][] d = this.getArrayCopy();
+        return new MyOwnFloatMatrix(d);
     }
 }

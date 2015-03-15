@@ -23,8 +23,8 @@ public class CreateSinglePDB {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        String Dir2PDB_Org = "Input/Magnus_DB/Magnus_PDB_Origin/";
-        String Dir2PDB_Single = "Input/Magnus_DB/Magnus_PDB_SingleChain/";
+        String Dir2PDB_Org = "Test/Hetedima/PDBComplex/";
+        String Dir2PDB_Single = "Test/Hetedima/PDBSingleChain/";
         List<String> lst = utils.Utils.dir2list(Dir2PDB_Org);
 
         for (String s : lst) {
@@ -38,13 +38,17 @@ public class CreateSinglePDB {
                 c = struc.getChain(i);
                 if ((c.getAtomGroup(0).getType()).equalsIgnoreCase("amino")) {
                     ChainID = c.getChainID();
-                    break;
+//                    break;
                 }
-            }
-            if (ProteinID != null && ChainID != null) {
+                if (ProteinID != null && ChainID != null) {
                 RefineProteinChain rf = new RefineProteinChain(ProteinID, ChainID);
-                rf.PrintFileOffLine(Dir2PDB_Org+s, Dir2PDB_Single+ProteinID+"_"+ChainID+".msa");
+                rf.PrintFileOffLine(Dir2PDB_Org+s, Dir2PDB_Single+ProteinID+"_"+ChainID+".pdb");
             }
+            }
+//            if (ProteinID != null && ChainID != null) {
+//                RefineProteinChain rf = new RefineProteinChain(ProteinID, ChainID);
+//                rf.PrintFileOffLine(Dir2PDB_Org+s, Dir2PDB_Single+ProteinID+"_"+ChainID+".pdb");
+//            }
         }
     }
 }

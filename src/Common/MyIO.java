@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -372,4 +373,65 @@ public class MyIO {
 //            
 //        }
 //    }
+    
+//    public ArrayList<String> ReadUniprotIDFromMSA(String path2filename){
+//        FastaSequence f = new FastaSequence(path2filename);
+//        f.
+//    }
+    
+    public static HashMap<String, ArrayList<String>> ReadMapUniprotEMBL(String filename) throws FileNotFoundException, IOException{
+        FileInputStream fstream = new FileInputStream(filename);
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String line = "";
+        
+        HashMap<String, ArrayList<String>> map = new HashMap<>();
+        while(true){
+            line = br.readLine();
+            if(line==null){
+                break;
+            }
+            line = line.trim();
+            if(!line.isEmpty()){
+                String[] arr = line.split("\\s+");
+                if(arr[0].equalsIgnoreCase("from") && arr[1].equalsIgnoreCase("to")){
+                    continue;
+                }
+                if(!map.containsKey(arr[0])){
+                    ArrayList<String> vals = new ArrayList<>();
+                    vals.add(arr[1]);
+                    map.put(arr[0], vals);
+                }
+                else{
+                    ArrayList<String> vals = map.get(arr[0]);
+                    vals.add(arr[1]);
+                    map.put(arr[0], vals);
+                }
+            }
+        }
+        br.close();
+        return map;
+    }
+    public static void WriteFastaSequence2File(String filename, FastaSequence f) throws IOException{
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
+        String[] desc = f.getAllDescription();
+        String[] seq =  f.getSequences();
+        if(desc.length!=seq.length){
+            System.err.println("Length od desc and seq not equal");
+            System.exit(1);
+        }
+        for(int i=0; i<desc.length; i++){
+            String description;
+            if(desc[i].startsWith(">")){
+                description = desc[i];
+            }
+            else{
+                description = ">"+ desc[i];
+            }
+            writer.write(description+"\n");
+            writer.write(seq[i]+"\n");
+        }
+        writer.flush();
+        writer.close();
+    }
 }

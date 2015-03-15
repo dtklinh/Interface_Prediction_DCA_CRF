@@ -11,7 +11,7 @@ import Common.Configuration;
 import Common.FastaSequence;
 import Common.StaticMethod;
 import DCA.MSA_JamaMatrix;
-import HomologousProteinsType.Complex;
+import HomodimaProtein.Complex;
 import LinearAlgebra.MyOwnFloatMatrix;
 import MarkovCluster.Algorithm;
 import java.io.FileNotFoundException;

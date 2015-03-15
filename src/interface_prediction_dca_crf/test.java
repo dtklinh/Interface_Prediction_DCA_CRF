@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -144,13 +145,22 @@ public class test {
 //        m = m.inverseMyOwnMatrix();
 //        m.print2Screen();
         
-        List<String> lst = Utils.dir2list(Configuration.Dir2PDB);
-        for(String s: lst){
-            File f = new File(Configuration.Dir2PDB+s);
-            File f2 = new File(Configuration.Dir2PDB+s.toLowerCase());
-            if(f2.exists()) throw new java.io.IOException("file exists");
-            f.renameTo(f2);
-        }
+//        List<String> lst = Utils.dir2list(Configuration.Dir2PDB);
+//        for(String s: lst){
+//            File f = new File(Configuration.Dir2PDB+s);
+//            File f2 = new File(Configuration.Dir2PDB+s.toLowerCase());
+//            if(f2.exists()) throw new java.io.IOException("file exists");
+//            f.renameTo(f2);
+//        }
         
+        HashMap<String, ArrayList<String>> map = new HashMap<>();
+        ArrayList<String> vals = new ArrayList<>();
+        vals.add("one"); vals.add("ein");
+        map.put("mot", vals);
+        System.out.println(map);
+        vals = map.get("mot");
+        vals.add("mot");
+        
+        System.out.println(map);
     }
 }

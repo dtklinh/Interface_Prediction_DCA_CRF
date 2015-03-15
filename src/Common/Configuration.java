@@ -9,7 +9,7 @@ package Common;
  * @author t.dang
  */
 public class Configuration {
-    public static String DirTest_MSA = "Test/MSA/";
+    public static String DirTest_MSA = "Test/Hetedima/MSA-Methods/HHblits/MSA/";
     public static String DirTest_DCA = "Test/DCA/";
     public static String DirTest_MatFile = "TestDCA/FileFromMatlab/";
     public static String TmpDir = "Tmp/";
