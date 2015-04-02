@@ -16,15 +16,15 @@ public class Configuration {
     
     public static String HomeProject = "/afs/informatik.uni-goettingen.de/user/t/t.dang/NetBeansProjects/Interface_Prediction_DCA_CRF/";
     
-    public static final String Dir2DataBase = "Input/Zellner_DB20/";
-    public static final String MethodMakingMSA = "BLAST/";
+    public static final String Dir2DataBase = "Test/Hetedima/";
+    public static final String MethodMakingMSA = "MSA-Methods/HHblits/";
     
-    public static final String Dir2PDBSingleChain = Dir2DataBase + "PDB_SingleChain/";
-    public static final String Dir2PDB = Dir2DataBase + "PDB/";
+    public static final String Dir2PDBSingleChain = Dir2DataBase + "PDBSingleChain/";
+    public static final String Dir2PDB = Dir2DataBase + "PDBComplex/";
     public static final String Dir2MSA = Dir2DataBase+MethodMakingMSA+"MSA/";
     public static final String Dir2BLAST = Dir2DataBase+MethodMakingMSA+"BLAST/";
     public static final String Dir2DCA = Dir2DataBase+MethodMakingMSA+"DCA/";
     public static final String Dir2Sequence = Dir2DataBase + "Sequence/";
-    public static final String Dir2EVcomplex = Dir2DataBase+MethodMakingMSA + "EVcomplex/";
-    public static final String Dir23DComplex = Dir2DataBase + "3Dcomplex/";
+    public static final String Dir2EVcomplex = Dir2DataBase+MethodMakingMSA + "ConcatResultAdjustIdx/";
+    public static final String Dir23DComplex = Dir2DataBase + "3DComplex/";
 }

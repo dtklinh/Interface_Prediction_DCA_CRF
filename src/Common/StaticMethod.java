@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Atom;
@@ -273,6 +275,37 @@ public class StaticMethod {
             }
         }
         return res;
+    }
+    
+    // a hashmap from index number to Residue Number
+    public static HashMap<Integer, String> getMapIdx2ResNum(String path2pdbfile, String chain, int startIdx) throws StructureException, IOException{
+        // startIdx = 0 in java, =1 in Matlab
+        HashMap<Integer, String> map = new HashMap<>();
+        Chain C = (new PDBFileReader()).getStructure(path2pdbfile).getChainByPDB(chain);
+        Iterator<Group> iter = C.getAtomGroups().iterator();
+        int count = startIdx;
+        while(iter.hasNext()){
+            Group g = iter.next();
+            if(g.getType().equalsIgnoreCase("amino")){
+                map.put(count, g.getResidueNumber().toString());
+                count++;
+            }
+        }
+        return map;
+    }
+    public static HashMap<String, Integer> getMapResNum2Idx(String path2pdbfile, String chain, int startIdx) throws StructureException, IOException{
+        HashMap<String, Integer> map = new HashMap<>();
+        Chain C = (new PDBFileReader()).getStructure(path2pdbfile).getChainByPDB(chain);
+        Iterator<Group> iter = C.getAtomGroups().iterator();
+        int count = startIdx;
+        while(iter.hasNext()){
+            Group g = iter.next();
+            if(g.getType().equalsIgnoreCase("amino")){
+                map.put(g.getResidueNumber().toString(), count);
+                count++;
+            }
+        }
+        return map;
     }
     
 }

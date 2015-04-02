@@ -6,6 +6,8 @@ package interface_prediction_dca_crf;
 
 import Common.ColPair_Score;
 import Common.Configuration;
+import Common.FastaSequence;
+import Common.MyIO;
 import Protein.Protein_PairwiseScore;
 import Drawing.ChartPanel;
 import Drawing.MyDraw;
@@ -25,8 +27,11 @@ import java.util.Random;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.math.stat.StatUtils;
 import org.apache.commons.math.stat.correlation.Covariance;
+import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.io.PDBFileReader;
 import utils.Utils;
 
@@ -39,7 +44,7 @@ public class test {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, StructureException {
         // TODO code application logic here
         // test for divide a list into several sublist
 //        List<String> lst = utils.Utils.file2list("Input/LstZellnerFile.txt");
@@ -153,14 +158,39 @@ public class test {
 //            f.renameTo(f2);
 //        }
         
-        HashMap<String, ArrayList<String>> map = new HashMap<>();
-        ArrayList<String> vals = new ArrayList<>();
-        vals.add("one"); vals.add("ein");
-        map.put("mot", vals);
-        System.out.println(map);
-        vals = map.get("mot");
-        vals.add("mot");
+//        HashMap<String, ArrayList<String>> map = new HashMap<>();
+//        ArrayList<String> vals = new ArrayList<>();
+//        vals.add("one"); vals.add("ein");
+//        map.put("mot", vals);
+//        System.out.println(map);
+//        vals = map.get("mot");
+//        vals.add("mot");
+//        
+//        System.out.println(map);
         
-        System.out.println(map);
+
+        // separate MSA
+        String chain1 = "A", chain2 = "B";
+        FastaSequence f = new FastaSequence("Test2/3a0r.concatMSA.txt");
+        Structure s = (new PDBFileReader()).getStructure("Test2/PDB/3a0r.pdb");
+        int len1 = s.getChainByPDB(chain1).getAtomSequence().length();
+        int len2 = s.getChainByPDB(chain2).getAtomSequence().length();
+        
+        String[] seq = f.getSequences();
+        String[] seq1 = new String[seq.length];
+        String[] seq2 = new String[seq.length];
+        for(int i=0; i<seq.length; i++){
+            String part1 = seq[i].substring(0, len1);
+            String part2 = seq[i].substring(len1, len1 + len2);
+            seq1[i] = part1;
+            seq2[i] = part2;
+        }
+        
+        FastaSequence f1 = new FastaSequence(f.getAllDescription(), seq1);
+        MyIO.WriteFastaSequence2File("Test2/3a0r_A.msa", f1);
+        FastaSequence f2 = new FastaSequence(f.getAllDescription(), seq2);
+        MyIO.WriteFastaSequence2File("Test2/3a0r_B.msa", f2);
+        
+        
     }
 }

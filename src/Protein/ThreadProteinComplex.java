@@ -29,7 +29,7 @@ public class ThreadProteinComplex extends MyObject{
             utils.Utils.tic();
                        
             ArrayList<ColPair_Score> d = s.DistancePairwise();
-            MyIO.WriteLstToFile(Dir2ScoreFile+s.getProteinID()+".3d", d);
+            MyIO.WriteLstToFile(Dir2ScoreFile+s.getProteinID()+"_"+s.getChain1_ID()+"_"+s.getChain2_ID()+".3d", d);
             utils.Utils.tac();
         }
     }

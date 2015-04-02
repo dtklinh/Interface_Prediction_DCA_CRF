@@ -15,5 +15,8 @@ public class Interface_Prediction_DCA_CRF {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        // adjust index in single chain plmdca
+        
     }
 }

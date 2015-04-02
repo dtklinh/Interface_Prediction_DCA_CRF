@@ -48,9 +48,10 @@ public class Calculate3DDistance {
             MyThread th = new MyThread(p);
             th.start();
         }
-                */
+                //*/
         
         // for residue from 2 chains
+        /*
         int cpu = 1;
         List<String> lst = Utils.dir2list(Configuration.Dir2PDB);
         List<String> lst_chain = Utils.dir2list(Configuration.Dir2PDBSingleChain);
@@ -67,5 +68,6 @@ public class Calculate3DDistance {
             MyThread th = new MyThread(p);
             th.start();
         }
+        //*/
     }
 }

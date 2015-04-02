@@ -26,7 +26,7 @@ public class GetResult {
         String Dir2DCA = Configuration.Dir2EVcomplex;
 //        String Dir2NMI1 = "Input/Magnus_DB/Magnus_NMI/AdjustIndex/WithoutDSM/";
 //        String Dir2NMI2 = "Input/Magnus_DB/Magnus_NMI/AdjustIndex/WithDSM/";
-        int neighbor = 4;
+        int neighbor = 0;
         int top = 100;
 //        int bottom =50;
         List<String> lst = utils.Utils.dir2list(Dir23D);

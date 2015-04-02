@@ -271,7 +271,7 @@ public class Protein_PairwiseScore {
             }
         }
         System.err.println("Position 1 or 2 is not found");
-        return -10;
+        return 10;
     }
 
     public int CountOverlap(Protein_PairwiseScore other) {
