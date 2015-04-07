@@ -1,11 +1,19 @@
 package LinearAlgebra;
 
+import Common.ColPair_Score;
 import Jama.Matrix;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -48,6 +56,32 @@ public class FloatMatrix implements Cloneable, Serializable {
         this.n = n;
         A = (new float[m][n]);
 
+    }
+    public FloatMatrix(String filename, int row, int col) throws FileNotFoundException, IOException{
+        FileInputStream fstream = new FileInputStream(filename);
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        
+        float[][] Arr = new float[row][col];
+        this.m = row;
+        this.n = col;
+        int MRow =0;
+        while(true){
+            String line = br.readLine();
+            if(line==null){
+                break;
+            }
+            line = line.trim();
+            if(line.isEmpty()){
+                continue;
+            }
+            String[] lstStr = line.split("\\s+");
+            for(int i=0; i<col; i++){
+                Arr[MRow][i] = Float.parseFloat(lstStr[i]);
+            }
+            MRow++;
+        }
+        this.A = Arr;
     }
 
     /**
@@ -1030,5 +1064,61 @@ public class FloatMatrix implements Cloneable, Serializable {
     public static FloatMatrix zeros(int m, int n){
         FloatMatrix mx = new FloatMatrix(m, n, 0f);
         return mx;
+    }
+    
+    public boolean isSymmetric(){
+        if(m!=n){
+            return false;
+        }
+        for(int i=0; i<m-1;i++){
+            for(int j=i+1; j< m; j++){
+                if(A[i][j]!=A[j][i]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    public ArrayList<ColPair_Score> convert2ColPairsSqrtMx(int startIdx){
+        if(!isSymmetric()){
+            System.err.println("Matrix is not symmetric: "+m+":"+n);
+            System.exit(1);
+        }
+        ArrayList<ColPair_Score> res = new ArrayList<>();
+        for(int i=0;i<m-1; i++){
+            String p1 = String.valueOf(i+startIdx);
+            for(int j=i+1; j<m; j++){
+                String p2 = String.valueOf(j+startIdx);
+                ColPair_Score c = new ColPair_Score(p1, p2, A[i][j]);
+                res.add(c);
+            }
+        }
+        return res;
+    }
+    public ArrayList<ColPair_Score> convert2ColPairsRecMx(int startIdx){
+        ArrayList<ColPair_Score> res = new ArrayList<>();
+        for(int i=0;i<m; i++){
+            String p1 = String.valueOf(i+startIdx);
+            for(int j=0; j<n; j++){
+                String p2 = String.valueOf(j+startIdx);
+                ColPair_Score c = new ColPair_Score(p1, p2, A[i][j]);
+                res.add(c);
+            }
+        }
+        return res;
+    }
+    
+    public static FloatMatrix convert2Matrix(ArrayList<ColPair_Score> lst, int len1, int len2, int startIdx){
+        int m = len1+len2;
+        int n = m;
+        float[][] A = new float[m][n];
+        for(ColPair_Score c: lst){
+            int p1 = Integer.parseInt(c.getP1()) - startIdx;
+            int p2 = Integer.parseInt(c.getP2()) - startIdx;
+            A[p1][p2] = (float)c.getScore();
+            A[p2][p1] = A[p1][p2];
+        }
+        return new FloatMatrix(A);
     }
 }

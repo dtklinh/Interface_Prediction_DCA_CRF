@@ -335,8 +335,11 @@ public class MyIO {
                 row++;
             }
         }
+        br.close();
         return tmp;
     }
+    
+    
     
 //    public static void Write
 //    public static ArrayList<ColPair_Score> Read2ColPair(String path2file){
@@ -433,5 +436,27 @@ public class MyIO {
         }
         writer.flush();
         writer.close();
+    }
+    
+    public static ArrayList<ColPair_Score> read2ColPair(String path2file, String regex) throws FileNotFoundException, IOException{
+        FileInputStream fstream = new FileInputStream(path2file);
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        ArrayList<ColPair_Score> res = new ArrayList<>();
+        String line;
+        while(true){
+            line = br.readLine();
+            if(line==null){
+                break;
+            }
+            line = line.trim();
+            if(!line.isEmpty()){
+                String[] arr = line.split(regex);
+                ColPair_Score p = new ColPair_Score(arr[0], arr[1], Double.parseDouble(arr[2]));
+                res.add(p);
+            }
+        }
+        br.close();
+        return res;
     }
 }

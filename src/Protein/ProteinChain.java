@@ -9,6 +9,7 @@ import Common.ColPair_Score;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
@@ -85,6 +86,13 @@ public class ProteinChain {
         Chain c = s.getChain(0);
         this.Sequence = c.getAtomSequence();
         this.LstAmino = c.getAtomGroups();
+        Iterator<Group> iter = LstAmino.iterator();
+        while(iter.hasNext()){
+            Group p = iter.next();
+            if(!p.getType().equalsIgnoreCase("amino")){
+                iter.remove();
+            }
+        }
         Map_idx_ResNum = new HashMap<>();
         for(int i=0; i<LstAmino.size(); i++){
             int key = i;
@@ -99,12 +107,28 @@ public class ProteinChain {
         for (int i = 0; i < len - 1; i++) {
             for (int j = i + 1; j < len; j++) {
                 AminoAcid a;
-
-                double d = StaticMethod.DistanceBtwGroups(LstAmino.get(i), LstAmino.get(j));
-                res.add(new ColPair_Score(String.valueOf(i), String.valueOf(j), d));
+                Group g1 = LstAmino.get(i);
+                Group g2 = LstAmino.get(j);
+                double d = StaticMethod.DistanceBtwGroups(g1, g2);
+                
+                res.add(new ColPair_Score(g1.getResidueNumber().toString(), g2.getResidueNumber().toString(), d));
 
             }
         }
         return res;
+    }
+
+    /**
+     * @return the Map_idx_ResNum
+     */
+    public HashMap<Integer, String> getMap_idx_ResNum() {
+        return Map_idx_ResNum;
+    }
+
+    /**
+     * @param Map_idx_ResNum the Map_idx_ResNum to set
+     */
+    public void setMap_idx_ResNum(HashMap<Integer, String> Map_idx_ResNum) {
+        this.Map_idx_ResNum = Map_idx_ResNum;
     }
 }

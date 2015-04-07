@@ -29,6 +29,10 @@ public final class FastaSequence {
         System.arraycopy(desc, 0, description, 0, desc.length);
         System.arraycopy(seq, 0, sequence, 0, seq.length);
     }
+    
+    public FastaSequence clone(){
+        return new FastaSequence(description, sequence);
+    }
 
     void readSequenceFromFile(String file) {
         List desc = new ArrayList();
