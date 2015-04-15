@@ -5,6 +5,7 @@
 package Common;
 
 import LinearAlgebra.FloatMatrix;
+import Protein.NewProteinComplexSkeleton;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -458,5 +459,46 @@ public class MyIO {
         }
         br.close();
         return res;
+    }
+    
+    public static ArrayList<NewProteinComplexSkeleton> readComplexSkeleton(String Path2File, String regrex) throws FileNotFoundException, IOException{
+        FileInputStream fstream = new FileInputStream(Path2File);
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        
+        ArrayList<NewProteinComplexSkeleton> res = new ArrayList<>();
+        while(true){
+            String line = br.readLine();
+            if(line==null){
+                break;
+            }
+            line = line.trim();
+            if(line.isEmpty()){
+                continue;
+            }
+            String[] arr = line.split(regrex);
+            res.add(new NewProteinComplexSkeleton(arr[0], arr[1], arr[2]));
+        }
+        return res;
+    }
+    public static HashMap<String, Double> readRASAFile(String Path2File) throws FileNotFoundException, IOException{
+        HashMap<String, Double> map = new HashMap<>();
+        FileInputStream fstream = new FileInputStream(Path2File);
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        while(true){
+            String line = br.readLine();
+            if(line==null){
+                break;
+            }
+            line = line.trim();
+            if(!line.isEmpty()){
+                String[] arr = line.split("\\s+");
+                String Resnum = arr[0].split("_")[2];
+                double score = Double.parseDouble(arr[3]);
+                map.put(Resnum, score);
+            }
+        }
+        return map;
     }
 }

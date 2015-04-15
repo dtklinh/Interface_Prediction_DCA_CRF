@@ -4,12 +4,14 @@
  */
 package DCA;
 
+import Common.ColPair_Score;
 import Common.Configuration;
 import LinearAlgebra.MyOwnFloatMatrix;
 import LinearAlgebra.SuperFloatMatrix;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.lang.Math;
+import java.util.HashMap;
 
 /**
  *
@@ -40,9 +42,10 @@ public class DCA {
     public DCA(int[][] mx) {
         M = mx.length;
         N = mx[0].length;
-        AlgnMx = new int[M][];
+        AlgnMx = new int[M][N];
         for (int i = 0; i < M; i++) {
             System.arraycopy(mx[i], 0, AlgnMx[i], 0, N);
+            
         }
     }
 
@@ -263,7 +266,7 @@ public class DCA {
 
                 ArrayList<MyOwnFloatMatrix> mu = this.Compute_mu(i, j, W_mf, Pi);
                 float di = this.CalculateDI(i, j, W_mf, mu.get(0), mu.get(1), Pi);
-                res[count][0] = i; // same idx with matlab, must change later
+                res[count][0] = i; 
                 res[count][1] = j;
                 res[count][2] = di;
                 count++;
@@ -271,6 +274,16 @@ public class DCA {
             }
         }
 
+        return res;
+    }
+    public ArrayList<ColPair_Score> GetResult(HashMap<Integer,String> map) throws IOException{
+        ArrayList<ColPair_Score> res = new ArrayList<>();
+        float[][] A = this.GetResult();
+        for(int i=0; i<A.length; i++){
+            String p1 = map.get((int)A[i][0]);
+            String p2 = map.get((int)A[i][1]);
+            res.add(new ColPair_Score(p1, p2, A[i][2]));
+        }
         return res;
     }
     private MyOwnFloatMatrix Compute_JTAP(int i, int j, MyOwnFloatMatrix invC, MyOwnFloatMatrix Pi){

@@ -5,6 +5,7 @@
 package Common;
 
 import Analysis.GeneralResult;
+import Protein.Residue;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -307,5 +308,33 @@ public class StaticMethod {
         }
         return map;
     }
+    public static int getNumResidue(List<ColPair_Score> lst){
+        HashSet<String> MySet = new HashSet<>();
+        for(ColPair_Score col: lst){
+            MySet.add(col.getP1());
+            MySet.add(col.getP2());
+        }
+        return MySet.size();
+    }
+    public static ArrayList<Residue> toLstResidue(List<ColPair_Score> lst){
+        
+        ArrayList<Residue> res = new ArrayList<>();
+        
+        ArrayList<String> MyList = new ArrayList<>();
+        HashSet<String> MySet = new HashSet<>();
+        for(ColPair_Score col: lst){
+            String p1 = col.getP1();
+            String p2 = col.getP2();
+            
+            MyList.add(p1); MyList.add(p2);
+            MySet.add(p1); MySet.add(p2);
+        }
+        for(String s: MySet){
+            int freq = Collections.frequency(MyList, s);
+            res.add(new Residue(s, freq));
+        }
+        return res;
+    }
+    
     
 }

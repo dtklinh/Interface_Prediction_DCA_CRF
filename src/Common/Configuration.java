@@ -27,4 +27,6 @@ public class Configuration {
     public static final String Dir2Sequence = Dir2DataBase + "Sequence/";
     public static final String Dir2EVcomplex = Dir2DataBase+MethodMakingMSA + "ConcatResultAdjustIdx/";
     public static final String Dir23DComplex = Dir2DataBase + "3DComplex/";
+    
+    public static final double Percent = 0.65;
 }
