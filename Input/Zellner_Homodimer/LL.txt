@@ -1,0 +1,7 @@
+//3a0r	A	B
+// train
+1qop	A	B
+1tyg	A	B
+// test
+1efp	A	B
+4he8	J	K
