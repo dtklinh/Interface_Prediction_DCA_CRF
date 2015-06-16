@@ -28,5 +28,19 @@ public class Configuration {
     public static final String Dir2EVcomplex = Dir2DataBase+MethodMakingMSA + "ConcatResultAdjustIdx/";
     public static final String Dir23DComplex = Dir2DataBase + "3DComplex/";
     
-    public static final double Percent = 0.65;
+    public static final double Percent = 0.75;
+    // Van der Waals radius
+    public static final double VdW_H = 1.2;
+    public static final double VdW_C = 1.7;
+    public static final double VdW_N = 1.55;
+    public static final double VdW_O = 1.52;
+    public static final double VdW_F = 1.47;
+    public static final double VdW_P = 1.8;
+    public static final double VdW_S = 1.8;
+    public static final double VdW_Cl = 1.75;
+    
+    public static final boolean UseVanDerWaals = true;
+    public static final boolean UseCarbonAlpha = false;
+    public static final int Neighbor = 7;
+    public static final double RASA_Thres = 0.15;
 }

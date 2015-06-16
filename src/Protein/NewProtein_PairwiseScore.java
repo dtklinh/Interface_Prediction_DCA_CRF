@@ -5,6 +5,7 @@
 package Protein;
 
 import Common.ColPair_Score;
+import Common.Configuration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -80,6 +81,49 @@ public class NewProtein_PairwiseScore {
         Collections.sort(LstScore);
         return LstScore.subList((LstScore.size() - N), LstScore.size());
 
+    }
+    public List<ColPair_Score> topAll(NewProtein_Pairwise_ScoreRef ref, ArrayList<ColPair_Score> Lst_PairScore,
+            boolean UseNeighborDef, boolean UseSARAScore) {
+        ArrayList<ColPair_Score> LstScore = new ArrayList<>();
+        LstScore.addAll(Lst_PairScore);
+        if (UseNeighborDef) {
+            for (int i = LstScore.size() - 1; i >= 0; i--) {
+                ColPair_Score c = LstScore.get(i);
+                if (UseSARAScore) {
+                    if (!ref.isPairOnSurface(c)) {
+                        LstScore.remove(i);
+                        continue;
+                    }
+                }
+//                if(ref.getPairPosition(c).equalsIgnoreCase("Core-Core")){
+//                    LstScore.remove(i);
+//                    continue;
+//                }
+                if (c.IsNeighbor(this.NeighborDistance)) {
+                    LstScore.remove(i);
+                }
+            }
+        }
+        Collections.sort(LstScore);
+        return LstScore;
+
+    }
+    public List<ColPair_Score> topOverThreshold(ArrayList<ColPair_Score> Lst_PairScore, double thres,
+            boolean IncludeNeighbor){
+        ArrayList<ColPair_Score> res = new ArrayList<>();
+        for(ColPair_Score col: Lst_PairScore){
+            if(col.getScore()>=thres ){
+                if(IncludeNeighbor){
+                res.add(col);
+                }
+                else{
+                    if(!col.IsNeighbor(Configuration.Neighbor)){
+                        res.add(col);
+                    }
+                }
+            }
+        }
+        return res;
     }
 
     public List<ColPair_Score> randomPickUp(ArrayList<ColPair_Score> Lst_PairScore, int num, boolean OnSurface,

@@ -5,6 +5,7 @@
 package Protein;
 
 import Common.ColPair_Score;
+import Common.Configuration;
 import Common.StaticMethod;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,18 +83,31 @@ public class NewProteinChain {
         }
         this.LstAminoAcid = lst;
     }
-    public ArrayList<ColPair_Score> pairwiseDistance() throws StructureException{
+    public ArrayList<ColPair_Score> pairwiseDistance(){
+        try{
         ArrayList<ColPair_Score> res = new ArrayList<>();
         for(int i=0; i<getLstAminoAcid().size()-1; i++){
             Group g1 = getLstAminoAcid().get(i);
             for(int j = i+1; j<getLstAminoAcid().size(); j++){
                 Group g2 = getLstAminoAcid().get(j);
-                double score = StaticMethod.DistanceBtwGroups(g1, g2);
+                double score = 0;
+                if(Configuration.UseCarbonAlpha){
+                 score = StaticMethod.DistanceBtwGroups(g1, g2);
+                }
+                else{
+                    score = StaticMethod.DistanceBtwGroupsAnyAtom(g1, g2);
+                }
                 ColPair_Score col = new ColPair_Score(g1.getResidueNumber().toString(), g2.getResidueNumber().toString(), score);
                 res.add(col);
             }
         }
         return res;
+        } catch(StructureException e){
+            System.err.println(this.ProteinPDBID);
+            System.err.println(e.toString());
+            System.exit(1);
+            return null;
+        }
     }
 
     /**

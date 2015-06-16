@@ -62,8 +62,8 @@ public class H2r {
         }
 
 
-        double Hi = Entropy.entropy(aminoCounterOne);
-        double Hj = Entropy.entropy(aminoCounterTwo);
+        double Hi = Entropy.entropyDouble(aminoCounterOne);
+        double Hj = Entropy.entropyDouble(aminoCounterTwo);
 
         double Hij = Entropy.jointEntropy(pairCounter);
 

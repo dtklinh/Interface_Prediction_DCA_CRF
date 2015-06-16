@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -58,6 +59,7 @@ public class MyIO {
         writer.flush();
         writer.close();
     }
+
     public static void WriteToFile(String filename, HashSet<String> lst) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
         for (String s : lst) {
@@ -68,11 +70,12 @@ public class MyIO {
         writer.flush();
         writer.close();
     }
+
     public static void WriteLstToFile(String filename, ArrayList<ColPair_Score> lst) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
 //        String tmp = "";
         for (ColPair_Score s : lst) {
-            writer.write(s.getP1()+"\t"+ s.getP2()+"\t"+s.getScore()+"\n");
+            writer.write(s.getP1() + "\t" + s.getP2() + "\t" + s.getScore() + "\n");
         }
         writer.flush();
         writer.close();
@@ -116,6 +119,7 @@ public class MyIO {
         writer.flush();
         writer.close();
     }
+
     public static void WriteToFile(String filename, float[][] arr) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
 
@@ -129,7 +133,8 @@ public class MyIO {
         writer.flush();
         writer.close();
     }
-     public static void WriteToFile(String filename, String[][] arr) throws IOException {
+
+    public static void WriteToFile(String filename, String[][] arr) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
 
 
@@ -158,7 +163,7 @@ public class MyIO {
                     writer.write("\n");
                 }
             }
-            
+
         }
         writer.flush();
         writer.close();
@@ -193,7 +198,6 @@ public class MyIO {
         writer.flush();
         writer.close();
     }
-    
 
     public static ArrayList<String> ReadLines(String filename) throws FileNotFoundException, IOException {
         ArrayList<String> res = new ArrayList<String>();
@@ -310,6 +314,7 @@ public class MyIO {
         }
         return res;
     }
+
     public static double[][] ReadDSM(String filename) throws FileNotFoundException, IOException {
         FileInputStream fstream = new FileInputStream(filename);
         DataInputStream in = new DataInputStream(fstream);
@@ -339,28 +344,26 @@ public class MyIO {
         br.close();
         return tmp;
     }
-    
-    
-    
+
 //    public static void Write
 //    public static ArrayList<ColPair_Score> Read2ColPair(String path2file){
 //        
 //    }
-    public static HashSet<String> Read_GI_FromBLAST(String path2file) throws FileNotFoundException, IOException{
+    public static HashSet<String> Read_GI_FromBLAST(String path2file) throws FileNotFoundException, IOException {
         FileInputStream fstream = new FileInputStream(path2file);
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line = "";
         HashSet<String> res = new HashSet<>();
-        while(true){
+        while (true) {
             line = br.readLine();
-            if(line==null){
+            if (line == null) {
                 break;
             }
             line = line.trim();
-            if(line.startsWith(("gi|")) || line.startsWith((">gi|"))){
+            if (line.startsWith(("gi|")) || line.startsWith((">gi|"))) {
                 String[] arr = line.split(Pattern.quote("|"));
-               
+
                 String gi = arr[1];
                 int tmp = Integer.parseInt(gi);
                 res.add(String.valueOf(tmp));
@@ -377,36 +380,34 @@ public class MyIO {
 //            
 //        }
 //    }
-    
+
 //    public ArrayList<String> ReadUniprotIDFromMSA(String path2filename){
 //        FastaSequence f = new FastaSequence(path2filename);
 //        f.
 //    }
-    
-    public static HashMap<String, ArrayList<String>> ReadMapUniprotEMBL(String filename) throws FileNotFoundException, IOException{
+    public static HashMap<String, ArrayList<String>> ReadMapUniprotEMBL(String filename) throws FileNotFoundException, IOException {
         FileInputStream fstream = new FileInputStream(filename);
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line = "";
-        
+
         HashMap<String, ArrayList<String>> map = new HashMap<>();
-        while(true){
+        while (true) {
             line = br.readLine();
-            if(line==null){
+            if (line == null) {
                 break;
             }
             line = line.trim();
-            if(!line.isEmpty()){
+            if (!line.isEmpty()) {
                 String[] arr = line.split("\\s+");
-                if(arr[0].equalsIgnoreCase("from") && arr[1].equalsIgnoreCase("to")){
+                if (arr[0].equalsIgnoreCase("from") && arr[1].equalsIgnoreCase("to")) {
                     continue;
                 }
-                if(!map.containsKey(arr[0])){
+                if (!map.containsKey(arr[0])) {
                     ArrayList<String> vals = new ArrayList<>();
                     vals.add(arr[1]);
                     map.put(arr[0], vals);
-                }
-                else{
+                } else {
                     ArrayList<String> vals = map.get(arr[0]);
                     vals.add(arr[1]);
                     map.put(arr[0], vals);
@@ -416,42 +417,42 @@ public class MyIO {
         br.close();
         return map;
     }
-    public static void WriteFastaSequence2File(String filename, FastaSequence f) throws IOException{
+
+    public static void WriteFastaSequence2File(String filename, FastaSequence f) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
         String[] desc = f.getAllDescription();
-        String[] seq =  f.getSequences();
-        if(desc.length!=seq.length){
+        String[] seq = f.getSequences();
+        if (desc.length != seq.length) {
             System.err.println("Length od desc and seq not equal");
             System.exit(1);
         }
-        for(int i=0; i<desc.length; i++){
+        for (int i = 0; i < desc.length; i++) {
             String description;
-            if(desc[i].startsWith(">")){
+            if (desc[i].startsWith(">")) {
                 description = desc[i];
+            } else {
+                description = ">" + desc[i];
             }
-            else{
-                description = ">"+ desc[i];
-            }
-            writer.write(description+"\n");
-            writer.write(seq[i]+"\n");
+            writer.write(description + "\n");
+            writer.write(seq[i] + "\n");
         }
         writer.flush();
         writer.close();
     }
-    
-    public static ArrayList<ColPair_Score> read2ColPair(String path2file, String regex) throws FileNotFoundException, IOException{
+
+    public static ArrayList<ColPair_Score> read2ColPair(String path2file, String regex) throws FileNotFoundException, IOException {
         FileInputStream fstream = new FileInputStream(path2file);
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         ArrayList<ColPair_Score> res = new ArrayList<>();
         String line;
-        while(true){
+        while (true) {
             line = br.readLine();
-            if(line==null){
+            if (line == null) {
                 break;
             }
             line = line.trim();
-            if(!line.isEmpty()){
+            if (!line.isEmpty()) {
                 String[] arr = line.split(regex);
                 ColPair_Score p = new ColPair_Score(arr[0], arr[1], Double.parseDouble(arr[2]));
                 res.add(p);
@@ -460,39 +461,43 @@ public class MyIO {
         br.close();
         return res;
     }
-    
-    public static ArrayList<NewProteinComplexSkeleton> readComplexSkeleton(String Path2File, String regrex) throws FileNotFoundException, IOException{
+
+    public static ArrayList<NewProteinComplexSkeleton> readComplexSkeleton(String Path2File, String regrex) throws FileNotFoundException, IOException {
         FileInputStream fstream = new FileInputStream(Path2File);
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        
+
         ArrayList<NewProteinComplexSkeleton> res = new ArrayList<>();
-        while(true){
+        while (true) {
             String line = br.readLine();
-            if(line==null){
+            if (line == null) {
                 break;
             }
             line = line.trim();
-            if(line.isEmpty()){
+            if (line.isEmpty()) {
                 continue;
             }
             String[] arr = line.split(regrex);
+            if (arr[0].startsWith("//")) {
+                continue;
+            }
             res.add(new NewProteinComplexSkeleton(arr[0], arr[1], arr[2]));
         }
         return res;
     }
-    public static HashMap<String, Double> readRASAFile(String Path2File) throws FileNotFoundException, IOException{
+
+    public static HashMap<String, Double> readRASAFile(String Path2File) throws FileNotFoundException, IOException {
         HashMap<String, Double> map = new HashMap<>();
         FileInputStream fstream = new FileInputStream(Path2File);
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        while(true){
+        while (true) {
             String line = br.readLine();
-            if(line==null){
+            if (line == null) {
                 break;
             }
             line = line.trim();
-            if(!line.isEmpty()){
+            if (!line.isEmpty()) {
                 String[] arr = line.split("\\s+");
                 String Resnum = arr[0].split("_")[2];
                 double score = Double.parseDouble(arr[3]);
@@ -500,5 +505,53 @@ public class MyIO {
             }
         }
         return map;
+    }
+
+    public static HashSet<String> readInterfaceResidue(String Path2File, int chain, double thres, boolean isRealDistance) throws FileNotFoundException, IOException {
+        HashSet<String> res = new HashSet<>();
+        ArrayList<ColPair_Score> LstScore = MyIO.read2ColPair(Path2File, "\\s+");
+        // chain is 0 or 1
+        ArrayList<ColPair_Score> tmp = new ArrayList<>();
+        for (ColPair_Score col : LstScore) {
+            if (isRealDistance) {
+                if (col.getScore()<=thres) {
+                    tmp.add(col);
+                }
+            }
+            else{
+                if(col.getScore()>=thres){
+                    tmp.add(col);
+                }
+            }
+        }
+        for(ColPair_Score col: tmp){
+            if(chain==0){
+                res.add(col.getP1());
+            }
+            else if(chain==1){
+                res.add(col.getP2());
+            }
+        }
+        return res;
+    }
+    
+    public static HashSet<String> readPreditedInterfaceResidue(List<ColPair_Score> LstScore, int chain, int num, boolean isRealDistance) throws FileNotFoundException, IOException {
+        HashSet<String> res = new HashSet<>();
+        
+        Collections.sort(LstScore);
+        if(!isRealDistance){
+            Collections.reverse(LstScore);
+        }
+        List<ColPair_Score> tmp = LstScore.subList(0, num);
+        // chain is 0 or 1
+        for(ColPair_Score col: tmp){
+            if(chain==0){
+                res.add(col.getP1());
+            }
+            else if(chain==1){
+                res.add(col.getP2());
+            }
+        }
+        return res;
     }
 }

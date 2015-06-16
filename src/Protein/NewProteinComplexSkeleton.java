@@ -60,4 +60,22 @@ public class NewProteinComplexSkeleton {
         this.ChainID1 = c1;
         this.ChainID2 = c2;
     }
+    
+    public String getProteinChain(int i) { // i = 1 or 2
+        String res = ProtPDBID + "_";
+        if(i==1){
+            res = res+ChainID1;
+        }
+        else if(i==2){
+            res = res + ChainID2;
+        }
+        else{
+            System.err.println("Chain must be 1 or 2");
+            System.exit(1);
+        }
+        return res;
+    }
+    public String getProteinComplex(){
+        return (ProtPDBID+"_"+ChainID1 + ChainID2);
+    }
 }

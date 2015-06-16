@@ -61,7 +61,7 @@ public class H2rModified {
         }
 
         /*Abort if at least one column is conserved*/
-        if (Entropy.entropy(aminoCounterOne) < 0 || Entropy.entropy(aminoCounterTwo) < 0) {
+        if (Entropy.entropyDouble(aminoCounterOne) < 0 || Entropy.entropyDouble(aminoCounterTwo) < 0) {
             return -1.0;
         }
 
@@ -116,8 +116,8 @@ public class H2rModified {
             }
         }
 
-        double Hi = Entropy.entropy(aminoCounterOne);
-        double Hj = Entropy.entropy(aminoCounterTwo);
+        double Hi = Entropy.entropyDouble(aminoCounterOne);
+        double Hj = Entropy.entropyDouble(aminoCounterTwo);
 
         if (Hi < 0.0 || Hj < 0.0) {
             return -2.0;

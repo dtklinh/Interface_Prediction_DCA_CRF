@@ -6,9 +6,9 @@ package Statistic;
 
 import Common.ColPair_Score;
 import java.util.ArrayList;
-import org.apache.commons.math.linear.RealMatrix;
-import org.apache.commons.math.stat.correlation.Covariance;
-import org.apache.commons.math.stat.correlation.PearsonsCorrelation;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+
 
 /**
  *

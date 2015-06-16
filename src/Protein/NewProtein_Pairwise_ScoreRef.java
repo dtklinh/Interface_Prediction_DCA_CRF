@@ -4,18 +4,21 @@
  */
 package Protein;
 
+import Analysis.GeneralResult;
 import Common.ColPair_Score;
 import Common.Configuration;
 import Common.MyIO;
 import Common.StaticMethod;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import org.biojava.bio.structure.StructureException;
 
 /**
@@ -28,7 +31,7 @@ public class NewProtein_Pairwise_ScoreRef {
     private double InteracDistance;
     private ArrayList<ColPair_Score> Lst3DDistance;
     private HashMap<String, Double> LstRASAScore;
-    private final double Threshold = 0.15;
+    private final double RASAThreshold = 0.15;
 
     public NewProtein_Pairwise_ScoreRef(String Path2ThreeDimFile, double dis) throws FileNotFoundException, IOException {
         this.InteracDistance = dis;
@@ -73,7 +76,7 @@ public class NewProtein_Pairwise_ScoreRef {
         }
         String p1 = c.getP1();
         String p2 = c.getP2();
-        if (LstRASAScore.get(p1) > Threshold && LstRASAScore.get(p2) > Threshold) {
+        if (LstRASAScore.get(p1) > RASAThreshold && LstRASAScore.get(p2) > RASAThreshold) {
             return true;
         }
         return false;
@@ -86,11 +89,11 @@ public class NewProtein_Pairwise_ScoreRef {
         }
         String p1 = c.getP1();
         String p2 = c.getP2();
-        if (LstRASAScore.get(p1) > Threshold && LstRASAScore.get(p2) > Threshold) {
+        if (LstRASAScore.get(p1) > RASAThreshold && LstRASAScore.get(p2) > RASAThreshold) {
             return "Surf-Surf";
-        } else if (LstRASAScore.get(p1) > Threshold && LstRASAScore.get(p2) <= Threshold) {
+        } else if (LstRASAScore.get(p1) > RASAThreshold && LstRASAScore.get(p2) <= RASAThreshold) {
             return "Surf-Core";
-        } else if (LstRASAScore.get(p1) <= Threshold && LstRASAScore.get(p2) > Threshold) {
+        } else if (LstRASAScore.get(p1) <= RASAThreshold && LstRASAScore.get(p2) > RASAThreshold) {
             return "Surf-Core";
         } else {
             return "Core-Core";
@@ -285,5 +288,171 @@ public class NewProtein_Pairwise_ScoreRef {
 
         MyInterface.retainAll(MySet);
         return MyInterface.size();
+    }
+    
+    public GeneralResult getResultWithConnDeg(List<ColPair_Score> LstColPair_Scores){
+        ArrayList<Residue> LstResidue = StaticMethod.toLstResidue(LstColPair_Scores);
+        Collections.sort(LstResidue);
+        double percent = Configuration.Percent;
+        int len = LstResidue.size();
+        List<Residue> PredictedPostive = LstResidue.subList((int) (len * (1-percent)), len);
+        HashSet<String> MySet = new HashSet<>();
+        for (Residue r : PredictedPostive) {
+            MySet.add(r.getResidueNumber());
+        }
+        
+
+        HashSet<String> AllResidue = new HashSet<>();
+        HashSet<String> MyInterface = new HashSet<>();
+        for (ColPair_Score s : Lst3DDistance) {
+            AllResidue.add(s.getP1());
+            if (s.getScore() <= InteracDistance) {
+                MyInterface.add(s.getP1());
+            }
+        }
+        
+//        // proces
+//        Set<String> P = new HashSet<>();
+//        P.addAll(MyInterface);
+//        
+//        Set<String> N = new HashSet<>();
+//        N.addAll(AllResidue);
+//        N.removeAll(P);
+//        
+//        Set<String> PredP = new HashSet<>();
+//        PredP.addAll(MySet);
+//        
+//        Set<String> PredN = new HashSet<>();
+//        PredN.addAll(AllResidue);
+//        PredN.removeAll(PredP);
+//        
+//        // compute TP
+//        Set<String> tmp = new HashSet<>();
+//        tmp.addAll(P);
+//        tmp.retainAll(PredP);
+//        int TP = tmp.size();
+//        
+//        // compute TN
+//        tmp.clear();
+//        tmp.addAll(N);
+//        tmp.retainAll(PredN);
+//        int TN = tmp.size();
+//        
+//        // compute FP
+//        tmp.clear();
+//        tmp.addAll(PredP);
+//        tmp.retainAll(N);
+//        int FP = tmp.size();
+//        
+//        // compute FN
+//        tmp.clear();
+//        tmp.addAll(P);
+//        tmp.retainAll(PredN);
+//        int FN = tmp.size();
+        
+        return processResult(AllResidue, MyInterface, MySet);
+        
+    }
+    public GeneralResult getResultWithBestRASA(String path2pdb, String chain, int num) throws StructureException, IOException{
+        List<Residue> LstRes = new ArrayList<>();
+        HashMap<Integer, String> MapIdx2ResNum = StaticMethod.getMapIdx2ResNum(path2pdb, chain, 0);
+        for(int i=0; i <MapIdx2ResNum.size(); i++){
+            String str = MapIdx2ResNum.get(i);
+            int score = (int)(LstRASAScore.get(str)*1000);
+            LstRes.add(new Residue(str, score));
+        }
+
+
+        Collections.sort(LstRes);
+        LstRes = LstRes.subList(LstRes.size() - num, LstRes.size());
+
+        HashSet<String> MySet = new HashSet<>();
+        for (Residue r : LstRes) {
+            MySet.add(r.getResidueNumber());
+        }
+//        System.out.println();
+//        System.out.println("Best RASA Prediction");
+//        for (String s : MySet) {
+//            System.out.print(s + " ");
+//        }
+
+        HashSet<String> AllResidue = new HashSet<>();
+        HashSet<String> MyInterface = new HashSet<>();
+        for (ColPair_Score s : Lst3DDistance) {
+            AllResidue.add(s.getP1());
+            if (s.getScore() <= InteracDistance) {
+                MyInterface.add(s.getP1());
+            }
+        }
+        
+        return processResult(AllResidue, MyInterface, MySet);
+    }
+    
+    public static GeneralResult processResult(HashSet<String> AllResidue,HashSet<String> MyInterface, HashSet<String> MySet){
+        Set<String> P = new HashSet<>();
+        P.addAll(MyInterface);
+        
+        Set<String> N = new HashSet<>();
+        N.addAll(AllResidue);
+        N.removeAll(P);
+        
+        Set<String> PredP = new HashSet<>();
+        PredP.addAll(MySet);
+        
+        Set<String> PredN = new HashSet<>();
+        PredN.addAll(AllResidue);
+        PredN.removeAll(PredP);
+        // compute TP
+        Set<String> tmp = new HashSet<>();
+        tmp.addAll(P);
+        tmp.retainAll(PredP);
+        int TP = tmp.size();
+        
+        // compute TN
+        
+        tmp.clear();
+        tmp.addAll(N);
+        tmp.retainAll(PredN);
+        int TN = tmp.size();
+        
+        // compute FP
+        tmp.clear();
+        tmp.addAll(PredP);
+        tmp.retainAll(N);
+        int FP = tmp.size();
+        
+        // compute FN
+        tmp.clear();
+        tmp.addAll(P);
+        tmp.retainAll(PredN);
+        int FN = tmp.size();
+        
+        return new GeneralResult(TP, TN, FP, FN);
+    }
+//    public double calculateTotalScoreForCandidate(){
+//        
+//    }
+    public boolean isOnInterface(Residue r){
+        String ResNum = r.getResidueNumber();
+        for(ColPair_Score col: Lst3DDistance){
+            if(col.getP1().equalsIgnoreCase(ResNum) || col.getP2().equalsIgnoreCase(ResNum)){
+                if(col.getScore()<= InteracDistance){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public int countTPContactPair(List<ColPair_Score> Candidates){
+        int TP = 0;
+        for(ColPair_Score col: Candidates){
+            for(ColPair_Score a: this.Lst3DDistance){
+                if(a.getP1().equalsIgnoreCase(col.getP1()) &&
+                        a.getP2().equalsIgnoreCase(col.getP2()) && a.getScore()<=this.InteracDistance){
+                    TP++;
+                }
+            }
+        }
+        return TP;
     }
 }

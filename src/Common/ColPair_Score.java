@@ -57,6 +57,9 @@ public class ColPair_Score implements Comparable<ColPair_Score> {
     public double getScore() {
         return Score;
     }
+    public String getInfo(){
+        return P1+"\t"+P2+":\t"+Score;
+    }
 
     /**
      * @param Score the Score to set

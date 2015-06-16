@@ -8,6 +8,7 @@ import Common.ColPair_Score;
 import Common.Configuration;
 import LinearAlgebra.MyOwnFloatMatrix;
 import LinearAlgebra.SuperFloatMatrix;
+import NMI.Entropy;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.lang.Math;
@@ -209,13 +210,23 @@ public class DCA {
         res.add(mu2);
         return res;
     }
-    private float CalculateDI(int i, int j, MyOwnFloatMatrix W, MyOwnFloatMatrix mu1, MyOwnFloatMatrix mu2, MyOwnFloatMatrix Pia) {
+    private float calculateDI(int i, int j, MyOwnFloatMatrix W, MyOwnFloatMatrix mu1, MyOwnFloatMatrix mu2, MyOwnFloatMatrix Pia) {
         MyOwnFloatMatrix Pdir = W.timesElementWise(mu1.transpose().times(mu2));
         Pdir = Pdir.times(1f / Pdir.sum());
 
         MyOwnFloatMatrix Pfac = Pia.getRow(i).transpose().times(Pia.getRow(j));
         MyOwnFloatMatrix DI = Pdir.transpose().times(Pdir.divideElementWise(Pfac).logElementWise());
         return DI.trace();
+    }
+    private float calculateNormalizedDI(int i, int j, MyOwnFloatMatrix W, MyOwnFloatMatrix mu1, MyOwnFloatMatrix mu2, MyOwnFloatMatrix Pia) {
+        MyOwnFloatMatrix Pdir = W.timesElementWise(mu1.transpose().times(mu2));
+        Pdir = Pdir.times(1f / Pdir.sum());
+
+        MyOwnFloatMatrix Pfac = Pia.getRow(i).transpose().times(Pia.getRow(j));
+        MyOwnFloatMatrix DI = Pdir.transpose().times(Pdir.divideElementWise(Pfac).logElementWise());
+        float[] X = Pia.getRow(i).getArrayCopy()[0];
+        float[] Y = Pia.getRow(j).getArrayCopy()[0];
+        return DI.trace()*2/(Entropy.entropy(X)+Entropy.entropy(Y));
     }
 
     public float[][] GetResult() throws IOException {
@@ -250,7 +261,11 @@ public class DCA {
 
 //        System.exit(0);
 
+        
         MyOwnFloatMatrix invC = C.inverseMyOwnMatrix();
+              
+        
+        
 //        MyIO.WriteToFile(str + ".invC", invC.getArrayCopy());
 //        System.out.println("Finish write to invC");
 //        System.exit(0);
@@ -259,13 +274,20 @@ public class DCA {
         int count = 0;
         for (int i = 0; i < N - 1; i++) {
             for (int j = i + 1; j < N; j++) {
+                // naive mean field approximation
                 MyOwnFloatMatrix W_mf = this.Return_W(invC, i, j);
+                // Bethe approximation
+//                MyOwnFloatMatrix W_mf = this.Compute_JBA(i, j, invC, Pi);
+                // TAP
+//                MyOwnFloatMatrix W_mf = this.Compute_JTAP(i, j, invC, Pi);
+                
 //                if(i==0 && j==1){
 //                    MyIO.WriteToFile(str+".0_1.W_mf", W_mf.getArrayCopy());
 //                }
 
                 ArrayList<MyOwnFloatMatrix> mu = this.Compute_mu(i, j, W_mf, Pi);
-                float di = this.CalculateDI(i, j, W_mf, mu.get(0), mu.get(1), Pi);
+//                float di = this.calculateDI(i, j, W_mf, mu.get(0), mu.get(1), Pi);
+                float di = this.calculateNormalizedDI(i, j, W_mf, mu.get(0), mu.get(1), Pi);
                 res[count][0] = i; 
                 res[count][1] = j;
                 res[count][2] = di;

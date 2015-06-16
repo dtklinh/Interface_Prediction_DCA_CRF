@@ -28,10 +28,10 @@ public class NewCalculateDCA {
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, StructureException {
         // TODO code application logic here
-        String Path2List = "Input/Zellner_Homodimer_5/List.txt";
-        String Dir2MSA = "Input/Zellner_Homodimer_5/MSAMethod/HHblits/MSA/";
-        String Dir2DCAOut = "Input/Zellner_Homodimer_5/MSAMethod/HHblits/DCA/";
-        String Dir2PDB = "Input/Zellner_Homodimer_5/PDB/";
+        String Path2List = "Input/Zellner_Homodimer/List.txt";
+        String Dir2MSA = "Input/Zellner_Homodimer/MSAMethod/HHblits/MSA/";
+        String Dir2DCAOut = "Input/Zellner_Homodimer/MSAMethod/HHblits/NormalizedDCA/";
+        String Dir2PDB = "Input/Zellner_Homodimer/PDB/";
         String EndFileMSA = StaticMethod.FindEndName(Dir2MSA);
         String EndFilePDB = StaticMethod.FindEndName(Dir2PDB);
         
@@ -46,7 +46,8 @@ public class NewCalculateDCA {
             DCA d = new DCA(MxA);
             HashMap<Integer, String> MapIdx2ResNum = StaticMethod.getMapIdx2ResNum(Path2ThreeDimFile, chain1, 0);
             ArrayList<ColPair_Score> lstScore = d.GetResult(MapIdx2ResNum);
-            MyIO.WriteLstToFile(Dir2DCAOut+protID+".dca", lstScore);
+            MyIO.WriteLstToFile(Dir2DCAOut+protID+".Normalized_dca", lstScore);
+            System.out.println("Finish "+protID);
         }
     }
 }

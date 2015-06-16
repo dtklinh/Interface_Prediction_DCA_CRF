@@ -6,7 +6,7 @@ package Statistic;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 /**
  *

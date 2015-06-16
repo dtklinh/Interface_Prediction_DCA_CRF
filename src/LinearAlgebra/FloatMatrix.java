@@ -1083,7 +1083,15 @@ public class FloatMatrix implements Cloneable, Serializable {
     public ArrayList<ColPair_Score> convert2ColPairsSqrtMx(int startIdx){
         if(!isSymmetric()){
             System.err.println("Matrix is not symmetric: "+m+":"+n);
-            System.exit(1);
+//            System.exit(1);
+            for(int i=0; i<m-1;i++){
+            for(int j=i+1; j< m; j++){
+                if(A[i][j]!=A[j][i]){
+                    A[i][j] = (A[i][j]+ A[j][i])/2;
+                    A[j][i] = A[i][j];
+                }
+            }
+        }
         }
         ArrayList<ColPair_Score> res = new ArrayList<>();
         for(int i=0;i<m-1; i++){

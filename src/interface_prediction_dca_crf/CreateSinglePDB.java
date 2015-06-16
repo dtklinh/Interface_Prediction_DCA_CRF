@@ -23,14 +23,14 @@ public class CreateSinglePDB {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        String Dir2PDB_Org = "Test/Hetedima/PDBComplex/";
-        String Dir2PDB_Single = "Test/Hetedima/PDBSingleChain/";
-        List<String> lst = utils.Utils.dir2list(Dir2PDB_Org);
+        String Dir2PDB_Original = "Input/Zellner_Homodimer/PDB/";
+        String Dir2PDB_Single = "Input/Zellner_Homodimer/PDB_SingleChain/";
+        List<String> lst = utils.Utils.dir2list(Dir2PDB_Original);
 
         for (String s : lst) {
             s = s.trim();
             String ProteinID = s.substring(0, 4);
-            Structure struc = (new PDBFileReader()).getStructure(Dir2PDB_Org + s);
+            Structure struc = (new PDBFileReader()).getStructure(Dir2PDB_Original + s);
             String ChainID = null;
 
             Chain c = null;
@@ -42,12 +42,12 @@ public class CreateSinglePDB {
                 }
                 if (ProteinID != null && ChainID != null) {
                 RefineProteinChain rf = new RefineProteinChain(ProteinID, ChainID);
-                rf.PrintFileOffLine(Dir2PDB_Org+s, Dir2PDB_Single+ProteinID+"_"+ChainID+".pdb");
+                rf.PrintFileOffLine(Dir2PDB_Original+s, Dir2PDB_Single+ProteinID+"_"+ChainID+".pdb");
             }
             }
 //            if (ProteinID != null && ChainID != null) {
 //                RefineProteinChain rf = new RefineProteinChain(ProteinID, ChainID);
-//                rf.PrintFileOffLine(Dir2PDB_Org+s, Dir2PDB_Single+ProteinID+"_"+ChainID+".pdb");
+//                rf.PrintFileOffLine(Dir2PDB_Original+s, Dir2PDB_Single+ProteinID+"_"+ChainID+".pdb");
 //            }
         }
     }

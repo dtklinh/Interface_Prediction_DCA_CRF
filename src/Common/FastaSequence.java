@@ -125,6 +125,13 @@ public final class FastaSequence {
         return desc;
     }
 
+    public ArrayList<String> getAllDescription2List(){
+        ArrayList<String> res = new ArrayList<>();
+        for(int i=0; i<description.length; i++){
+            res.add(description[i]);
+        }
+        return res;
+    }
     public int size() {
         return sequence.length;
     }
