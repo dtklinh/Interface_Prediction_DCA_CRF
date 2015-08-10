@@ -6,6 +6,8 @@ package Common;
 
 import java.util.Collections;
 import java.util.Comparator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  *
@@ -127,6 +129,20 @@ public class ColPair_Score implements Comparable<ColPair_Score> {
              && other.P2.equalsIgnoreCase(P2))
             return true;
         return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(13, 29).append(P1).append(P2).toHashCode();
+    }
+    @Override
+    public boolean equals(Object obj){
+        if (!(obj instanceof ColPair_Score))
+            return false;
+        if (obj == this)
+            return true;
+        ColPair_Score rhs = (ColPair_Score) obj;
+        return new EqualsBuilder().append(P1, rhs.P1).append(P2, rhs.P2).isEquals();
     }
     
 }

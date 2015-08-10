@@ -618,4 +618,11 @@ public class StaticMethod {
         }
         return res;
     }
+    public static HashSet<ColPair> convertColPair_Score2ColPair(HashSet<ColPair_Score> lst){
+        HashSet<ColPair> res = new HashSet<>();
+        for(ColPair_Score c: lst){
+            res.add(new ColPair(c.getP1(), c.getP2()));
+        }
+        return res;
+    }
 }

@@ -9,6 +9,7 @@ import Protein.NewProteinComplexSkeleton;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
@@ -461,6 +463,30 @@ public class MyIO {
         br.close();
         return res;
     }
+    public static ArrayList<ColPair_Score> read2ColPair(String path2file, 
+            HashMap<Integer,String> MapIdx2ResNum, String regex) throws FileNotFoundException, IOException {
+        FileInputStream fstream = new FileInputStream(path2file);
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        ArrayList<ColPair_Score> res = new ArrayList<>();
+        String line;
+        while (true) {
+            line = br.readLine();
+            if (line == null) {
+                break;
+            }
+            line = line.trim();
+            if (!line.isEmpty()) {
+                String[] arr = line.split(regex);
+                String p1 = MapIdx2ResNum.get(Integer.parseInt(arr[0]));
+                String p2 = MapIdx2ResNum.get(Integer.parseInt(arr[1]));
+                ColPair_Score p = new ColPair_Score(p1, p2, Double.parseDouble(arr[2]));
+                res.add(p);
+            }
+        }
+        br.close();
+        return res;
+    }
 
     public static ArrayList<NewProteinComplexSkeleton> readComplexSkeleton(String Path2File, String regrex) throws FileNotFoundException, IOException {
         FileInputStream fstream = new FileInputStream(Path2File);
@@ -514,42 +540,90 @@ public class MyIO {
         ArrayList<ColPair_Score> tmp = new ArrayList<>();
         for (ColPair_Score col : LstScore) {
             if (isRealDistance) {
-                if (col.getScore()<=thres) {
+                if (col.getScore() <= thres) {
                     tmp.add(col);
                 }
-            }
-            else{
-                if(col.getScore()>=thres){
+            } else {
+                if (col.getScore() >= thres) {
                     tmp.add(col);
                 }
             }
         }
-        for(ColPair_Score col: tmp){
-            if(chain==0){
+        for (ColPair_Score col : tmp) {
+            if (chain == 0) {
                 res.add(col.getP1());
-            }
-            else if(chain==1){
+            } else if (chain == 1) {
                 res.add(col.getP2());
             }
         }
         return res;
     }
-    
+
     public static HashSet<String> readPreditedInterfaceResidue(List<ColPair_Score> LstScore, int chain, int num, boolean isRealDistance) throws FileNotFoundException, IOException {
         HashSet<String> res = new HashSet<>();
-        
+
         Collections.sort(LstScore);
-        if(!isRealDistance){
+        if (!isRealDistance) {
             Collections.reverse(LstScore);
         }
         List<ColPair_Score> tmp = LstScore.subList(0, num);
         // chain is 0 or 1
-        for(ColPair_Score col: tmp){
-            if(chain==0){
+        for (ColPair_Score col : tmp) {
+            if (chain == 0) {
                 res.add(col.getP1());
-            }
-            else if(chain==1){
+            } else if (chain == 1) {
                 res.add(col.getP2());
+            }
+        }
+        return res;
+    }
+
+    public static double[][] readMatrix(String filename) throws FileNotFoundException, IOException {
+        FileInputStream fstream = new FileInputStream(filename);
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String line;
+        ArrayList<ArrayList<Double>> tmp = new ArrayList<>();
+        while (true) {
+            line = br.readLine();
+            if (line == null) {
+                break;
+            }
+            line = line.trim();
+            if (!line.isEmpty()) {
+                String[] arr = line.split("\\s+");
+                ArrayList<Double> X = new ArrayList<>();
+                for(int i=0; i<arr.length; i++){
+                    X.add(Double.parseDouble(arr[i]));
+                }
+                tmp.add(X);
+            }
+
+        }
+        double[][] A = new double[tmp.size()][tmp.get(0).size()];
+        for(int i=0; i<A.length; i++){
+            ArrayList<Double> X = tmp.get(i);
+            for(int j=0; j<A[0].length; j++){
+                A[i][j] = X.get(j);
+            }
+        }
+        return A;
+    }
+
+    public static HashSet<ColPair_Score> readMat2ColLst(String filename,
+            HashMap<Integer, String> MapIdx2ResNum) throws FileNotFoundException, IOException {
+        HashSet<ColPair_Score> res = new HashSet<>();
+        double[][] A = MyIO.readMatrix(filename);
+        if (A.length != A[0].length) {
+            System.err.println("Not square matrix");
+            System.exit(1);
+        }
+        int N = A.length;
+        for (int i = 0; i < N - 1; i++) {
+            String p1 = MapIdx2ResNum.get(i);
+            for (int j = i + 1; j < N; j++) {
+                String p2 = MapIdx2ResNum.get(j);
+                res.add(new ColPair_Score(p1, p2, A[i][j]));
             }
         }
         return res;

@@ -5,6 +5,7 @@
 package test;
 
 import Analysis.GeneralResult;
+import Common.ColPair;
 import Common.ColPair_Score;
 import Common.MyIO;
 import Common.StaticMethod;
@@ -218,5 +219,27 @@ public class RunHonHop {
             
         }
         //*/ 
+        
+        HashSet<ColPair> Set1 = new HashSet<>();
+        HashSet<ColPair> Set2 = new HashSet<>();
+        for(int i=1; i<5; i++){
+            for(int j=i+1; j<6; j++){
+                Set1.add(new ColPair(String.valueOf(i), String.valueOf(j)));
+//                System.out.println("Add to Set1: "+ i + "\t"+ j);
+            }
+        }
+        
+       
+        for(int i=0; i<7; i++){
+            for(int j=i+1; j<8; j++){
+                Set2.add(new ColPair(String.valueOf(i), String.valueOf(j)));
+//                System.out.println("Add to Set2: "+ i + "\t"+ j);
+            }
+        }
+        System.out.println("Set1: "+ Set1.size());
+        System.out.println("Set2: "+ Set2.size());
+        Set1.retainAll(Set2);
+        System.out.println("Intersection: "+ Set1.size());
+        
     }
 }
