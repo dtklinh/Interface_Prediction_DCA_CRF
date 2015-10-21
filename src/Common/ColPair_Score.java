@@ -13,16 +13,24 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *
  * @author t.dang
  */
-public class ColPair_Score implements Comparable<ColPair_Score> {
+public class ColPair_Score extends ColPair implements Comparable<ColPair_Score> {
 //    private String ProteinChain;
-    private String P1;
-    private String P2;
+//    private String P1;
+//    private String P2;
     private double Score;
-    public ColPair_Score(String p1, String p2, double s){
-//        this.ProteinChain = str;
-        this.P1 = p1;
-        this.P2 = p2;
-        this.Score = s;
+//    public ColPair_Score(String p1, String p2, double s){
+////        this.ProteinChain = str;
+//        this.P1 = p1;
+//        this.P2 = p2;
+//        this.Score = s;
+//    }
+    public ColPair_Score(String s1, String s2){
+        super(s1,s2);
+        Score = 0;
+    }
+    public ColPair_Score(String s1, String s2, double s){
+        super(s1,s2);
+        Score = s;
     }
 
     /**
@@ -107,42 +115,44 @@ public class ColPair_Score implements Comparable<ColPair_Score> {
     public void Print2Screen(){
         System.out.println(P1+"\t"+P2+":\t"+Score);
     }
-    public boolean IsNeighbor(int n){
-        int p1, p2;
-        if(Character.isDigit(P1.charAt(P1.length()-1))){
-         p1 = Integer.parseInt(P1);
-        } else{
-            p1 = Integer.parseInt(P1.substring(0, P1.length()-1));
-        }
-         if(Character.isDigit(P2.charAt(P2.length()-1))){
-         p2 = Integer.parseInt(P2);
-        } else{
-            p2 = Integer.parseInt(P2.substring(0, P2.length()-1));
-        }
-        if(Math.abs(p1-p2)<=n){
-            return true;
-        }
-        return false;
-    }
-    public boolean IsSameIndex(ColPair_Score other){
-        if(other.P1.equalsIgnoreCase(P1)
-             && other.P2.equalsIgnoreCase(P2))
-            return true;
-        return false;
-    }
+//    public boolean IsNeighbor(int n){
+//        int p1, p2;
+//        if(Character.isDigit(P1.charAt(P1.length()-1))){
+//         p1 = Integer.parseInt(P1);
+//        } else{
+//            p1 = Integer.parseInt(P1.substring(0, P1.length()-1));
+//        }
+//         if(Character.isDigit(P2.charAt(P2.length()-1))){
+//         p2 = Integer.parseInt(P2);
+//        } else{
+//            p2 = Integer.parseInt(P2.substring(0, P2.length()-1));
+//        }
+//        if(Math.abs(p1-p2)<=n){
+//            return true;
+//        }
+//        return false;
+//    }
+//    public boolean IsSameIndex(ColPair_Score other){
+//        if(other.P1.equalsIgnoreCase(P1)
+//             && other.P2.equalsIgnoreCase(P2))
+//            return true;
+//        return false;
+//    }
     
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(13, 29).append(P1).append(P2).toHashCode();
-    }
-    @Override
-    public boolean equals(Object obj){
-        if (!(obj instanceof ColPair_Score))
-            return false;
-        if (obj == this)
-            return true;
-        ColPair_Score rhs = (ColPair_Score) obj;
-        return new EqualsBuilder().append(P1, rhs.P1).append(P2, rhs.P2).isEquals();
-    }
+//    @Override
+//    public int hashCode() {
+//        return new HashCodeBuilder(13, 29).append(P1).append(P2).toHashCode();
+//    }
+//    @Override
+//    public boolean equals(Object obj){
+//        if (!(obj instanceof ColPair_Score))
+//            return false;
+//        if (obj == this)
+//            return true;
+//        ColPair_Score rhs = (ColPair_Score) obj;
+//        return new EqualsBuilder().append(P1, rhs.P1).append(P2, rhs.P2).isEquals();
+//    }
+    
+    
     
 }

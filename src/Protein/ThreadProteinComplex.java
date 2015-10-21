@@ -8,6 +8,7 @@ package Protein;
 import Common.ColPair_Score;
 import Common.MyIO;
 import MultipleCore.MyObject;
+import StaticMethods.ProteinIO;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class ThreadProteinComplex extends MyObject{
             utils.Utils.tic();
                        
             ArrayList<ColPair_Score> d = s.DistancePairwise();
-            MyIO.WriteLstToFile(Dir2ScoreFile+s.getProteinID()+"_"+s.getChain1_ID()+"_"+s.getChain2_ID()+".3d", d);
+            ProteinIO.writeColPairScore2File(Dir2ScoreFile+s.getProteinID()+"_"+s.getChain1_ID()+"_"+s.getChain2_ID()+".3d", d);
             utils.Utils.tac();
         }
     }

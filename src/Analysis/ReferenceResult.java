@@ -7,6 +7,7 @@ package Analysis;
 import Common.ColPair;
 import Common.ColPair_Score;
 import Common.StaticMethod;
+import StaticMethods.ProteinCalc;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,14 +43,14 @@ public class ReferenceResult {
         // compute AllPair, RealPairContact
         HashSet<ColPair> RealPairContact = new HashSet<>();
         HashSet<ColPair> AllPair = new HashSet<>();
-        AllPair.addAll(StaticMethod.convertColPair_Score2ColPair(LstRef));
+        AllPair.addAll(ProteinCalc.convertColPair_Score2ColPair(LstRef));
         for(ColPair_Score c: this.LstRef){
             if(c.getScore()<=this.PairContactDef){
                 RealPairContact.add(new ColPair(c.getP1(), c.getP2()));
             }
         }
         HashSet<ColPair> MySet = new HashSet<>();
-        MySet.addAll(StaticMethod.convertColPair_Score2ColPair(MyPrediction));
+        MySet.addAll(ProteinCalc.convertColPair_Score2ColPair(MyPrediction));
         
         ///////////////////////////////////////////
         Set<ColPair> P = new HashSet<>();

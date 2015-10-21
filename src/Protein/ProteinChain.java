@@ -6,6 +6,7 @@ package Protein;
 
 import Common.StaticMethod;
 import Common.ColPair_Score;
+import StaticMethods.DistanceCalc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,7 +110,7 @@ public class ProteinChain {
                 AminoAcid a;
                 Group g1 = LstAmino.get(i);
                 Group g2 = LstAmino.get(j);
-                double d = StaticMethod.DistanceBtwGroups(g1, g2);
+                double d = DistanceCalc.DistanceBtwGroups_CarbonAlpha(g1, g2);
                 
                 res.add(new ColPair_Score(g1.getResidueNumber().toString(), g2.getResidueNumber().toString(), d));
 

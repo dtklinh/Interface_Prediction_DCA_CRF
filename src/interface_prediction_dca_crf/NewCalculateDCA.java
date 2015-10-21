@@ -11,6 +11,8 @@ import DCA.DCA;
 import DCA.MyIO_DCA;
 import DCA.StaticMethod_DCA;
 import Protein.NewProteinComplexSkeleton;
+import StaticMethods.ProteinCalc;
+import StaticMethods.ProteinIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,9 +46,9 @@ public class NewCalculateDCA {
             String Path2ThreeDimFile = Dir2PDB + protID + EndFilePDB;
             int[][] MxA = MyIO_DCA.ReturnAlignment(Path2MSAFile);
             DCA d = new DCA(MxA);
-            HashMap<Integer, String> MapIdx2ResNum = StaticMethod.getMapIdx2ResNum(Path2ThreeDimFile, chain1, 0);
+            HashMap<Integer, String> MapIdx2ResNum = ProteinCalc.getMapIdx2ResNum(Path2ThreeDimFile, chain1, 0);
             ArrayList<ColPair_Score> lstScore = d.GetResult(MapIdx2ResNum);
-            MyIO.WriteLstToFile(Dir2DCAOut+protID+".Normalized_dca", lstScore);
+            ProteinIO.writeColPairScore2File(Dir2DCAOut+protID+".Normalized_dca", lstScore);
             System.out.println("Finish "+protID);
         }
     }

@@ -12,8 +12,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @author t.dang
  */
 public class ColPair {
-    private String P1;
-    private String P2;
+    protected String P1;
+    protected String P2;
 
     /**
      * @return the P1
@@ -57,6 +57,33 @@ public class ColPair {
         if (obj == this)
             return true;
         ColPair rhs = (ColPair) obj;
-        return new EqualsBuilder().append(P1, rhs.P1).append(P2, rhs.P2).isEquals();
+        return isSameIndex(rhs);
+//        return new EqualsBuilder().append(P1, rhs.P1).append(P2, rhs.P2).isEquals();
+    }
+    public boolean isSameIndex(ColPair other){
+        if(this.P1.equalsIgnoreCase(other.getP1()) && this.P2.equalsIgnoreCase(other.getP2())){
+            return true;
+        }
+        if(this.P1.equalsIgnoreCase(other.getP2()) && this.P2.equalsIgnoreCase(other.getP1())){
+            return true;
+        }
+        return false;
+    }
+    public boolean isNeighbor(int n){
+        int p1, p2;
+        if(Character.isDigit(P1.charAt(P1.length()-1))){
+         p1 = Integer.parseInt(P1);
+        } else{
+            p1 = Integer.parseInt(P1.substring(0, getP1().length()-1));
+        }
+         if(Character.isDigit(P2.charAt(P2.length()-1))){
+         p2 = Integer.parseInt(getP2());
+        } else{
+            p2 = Integer.parseInt(P2.substring(0, P2.length()-1));
+        }
+        if(Math.abs(p1-p2)<=n){
+            return true;
+        }
+        return false;
     }
 }

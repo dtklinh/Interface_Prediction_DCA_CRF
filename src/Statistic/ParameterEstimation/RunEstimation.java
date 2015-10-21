@@ -9,6 +9,8 @@ import Common.MyIO;
 import Common.StaticMethod;
 import DCA.MyIO_DCA;
 import Protein.NewProteinComplexSkeleton;
+import StaticMethods.ProteinCalc;
+import StaticMethods.ProteinIO;
 import interface_prediction_dca_crf.AdjustIndex2ResNum;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -62,12 +64,12 @@ public class RunEstimation {
 //            RealMatrix mx = ml.estimateCovariance();
             RealMatrix mx = ml.estimateCorrelation();
             ArrayList<ColPair_Score> Lst_ColPair = StaticMethod.getLstColPairScore(mx.getData());
-            HashMap<Integer,String> MapIdx2ResNum = StaticMethod.getMapIdx2ResNum(Path2FilePDB, chain, 0);
+            HashMap<Integer,String> MapIdx2ResNum = ProteinCalc.getMapIdx2ResNum(Path2FilePDB, chain, 0);
             Lst_ColPair = AdjustIndex2ResNum.processSingle(Lst_ColPair, MapIdx2ResNum);
             Collections.sort(Lst_ColPair);
             Collections.reverse(Lst_ColPair);
             String Path2OutFile = Dir2Out + ProtID + "_" + chain + ".nML";
-            MyIO.WriteLstToFile(Path2OutFile, Lst_ColPair);
+            ProteinIO.writeColPairScore2File(Path2OutFile, Lst_ColPair);
         }
     }
 }

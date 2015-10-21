@@ -9,6 +9,8 @@ import Common.ColPair_Score;
 import Common.Configuration;
 import Common.MyIO;
 import Common.StaticMethod;
+import StaticMethods.ProteinCalc;
+import StaticMethods.ProteinIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.AbstractSet;
@@ -35,13 +37,13 @@ public class NewProtein_Pairwise_ScoreRef {
 
     public NewProtein_Pairwise_ScoreRef(String Path2ThreeDimFile, double dis) throws FileNotFoundException, IOException {
         this.InteracDistance = dis;
-        this.Lst3DDistance = MyIO.read2ColPair(Path2ThreeDimFile, "\\s+");
+        this.Lst3DDistance = ProteinIO.readColPairScore2ArrayList(Path2ThreeDimFile, "\\s+");
     }
 
     public NewProtein_Pairwise_ScoreRef(String Path2ThreeDimFile, String Path2RASA, double dis) throws FileNotFoundException, IOException {
         this.InteracDistance = dis;
-        this.Lst3DDistance = MyIO.read2ColPair(Path2ThreeDimFile, "\\s+");
-        this.LstRASAScore = MyIO.readRASAFile(Path2RASA);
+        this.Lst3DDistance = ProteinIO.readColPairScore2ArrayList(Path2ThreeDimFile, "\\s+");
+        this.LstRASAScore = ProteinIO.readRASAFile(Path2RASA);
     }
 
     public boolean isPairOnInterfaceOrContact(ColPair_Score c) {
@@ -143,7 +145,7 @@ public class NewProtein_Pairwise_ScoreRef {
     public int countPairContact(int NeighborDistance, boolean OnlyOnSurface) {
         int count = 0;
         for (ColPair_Score col : Lst3DDistance) {
-            if (!col.IsNeighbor(NeighborDistance) && col.getScore() <= InteracDistance) {
+            if (!col.isNeighbor(NeighborDistance) && col.getScore() <= InteracDistance) {
                 if (!OnlyOnSurface) {
                     count++;
                 } else {
@@ -159,7 +161,7 @@ public class NewProtein_Pairwise_ScoreRef {
     public int countPairContactOnSurface(int NeighborDistance) {
         int count = 0;
         for (ColPair_Score col : Lst3DDistance) {
-            if (!col.IsNeighbor(NeighborDistance) && col.getScore() <= InteracDistance
+            if (!col.isNeighbor(NeighborDistance) && col.getScore() <= InteracDistance
                     && isPairOnSurface(col)) {
                 count++;
             }
@@ -211,7 +213,7 @@ public class NewProtein_Pairwise_ScoreRef {
     }
 
     public int countTPwithConnDeg(List<ColPair_Score> LstCandidate) {
-        ArrayList<Residue> LstResidue = StaticMethod.toLstResidue(LstCandidate);
+        ArrayList<Residue> LstResidue = ProteinCalc.toLstResidue(LstCandidate);
         Collections.sort(LstResidue);
         double percent = Configuration.Percent;
         int len = LstResidue.size();
@@ -248,7 +250,7 @@ public class NewProtein_Pairwise_ScoreRef {
     }
 
     public static int countPredictedTPNumber(List<ColPair_Score> LstCandidate) {
-        ArrayList<Residue> LstResidue = StaticMethod.toLstResidue(LstCandidate);
+        ArrayList<Residue> LstResidue = ProteinCalc.toLstResidue(LstCandidate);
         Collections.sort(LstResidue);
         double percent = Configuration.Percent;
         int len = LstResidue.size();
@@ -258,7 +260,7 @@ public class NewProtein_Pairwise_ScoreRef {
 
     public int countTPwithBestRASA(String path2pdb, String chain, int num) throws StructureException, IOException {
         List<Residue> LstRes = new ArrayList<>();
-        HashMap<Integer, String> MapIdx2ResNum = StaticMethod.getMapIdx2ResNum(path2pdb, chain, 0);
+        HashMap<Integer, String> MapIdx2ResNum = ProteinCalc.getMapIdx2ResNum(path2pdb, chain, 0);
         for(int i=0; i <MapIdx2ResNum.size(); i++){
             String str = MapIdx2ResNum.get(i);
             int score = (int)(LstRASAScore.get(str)*1000);
@@ -291,7 +293,7 @@ public class NewProtein_Pairwise_ScoreRef {
     }
     
     public GeneralResult getResultWithConnDeg(List<ColPair_Score> LstColPair_Scores){
-        ArrayList<Residue> LstResidue = StaticMethod.toLstResidue(LstColPair_Scores);
+        ArrayList<Residue> LstResidue = ProteinCalc.toLstResidue(LstColPair_Scores);
         Collections.sort(LstResidue);
         double percent = Configuration.Percent;
         int len = LstResidue.size();
@@ -355,7 +357,7 @@ public class NewProtein_Pairwise_ScoreRef {
     }
     public GeneralResult getResultWithBestRASA(String path2pdb, String chain, int num) throws StructureException, IOException{
         List<Residue> LstRes = new ArrayList<>();
-        HashMap<Integer, String> MapIdx2ResNum = StaticMethod.getMapIdx2ResNum(path2pdb, chain, 0);
+        HashMap<Integer, String> MapIdx2ResNum = ProteinCalc.getMapIdx2ResNum(path2pdb, chain, 0);
         for(int i=0; i <MapIdx2ResNum.size(); i++){
             String str = MapIdx2ResNum.get(i);
             int score = (int)(LstRASAScore.get(str)*1000);

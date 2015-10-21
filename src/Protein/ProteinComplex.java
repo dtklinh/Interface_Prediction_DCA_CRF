@@ -7,6 +7,7 @@ package Protein;
 
 import Common.StaticMethod;
 import Common.ColPair_Score;
+import StaticMethods.DistanceCalc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -158,7 +159,7 @@ public class ProteinComplex {
                 if(!g1.getType().equalsIgnoreCase("amino") || !g2.getType().equalsIgnoreCase("amino")){
                     continue;
                 }
-                double score = StaticMethod.DistanceBtwGroups(g1,g2);
+                double score = DistanceCalc.DistanceBtwGroups_CarbonAlpha(g1,g2);
                 arr.add(new ColPair_Score(g1.getResidueNumber().toString(), g2.getResidueNumber().toString(), score));
                 
             }

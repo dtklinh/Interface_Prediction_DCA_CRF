@@ -40,7 +40,9 @@ public class Configuration {
     public static final double VdW_Cl = 1.75;
     
     public static final boolean UseVanDerWaals = true;
-    public static final boolean UseCarbonAlpha = false;
+    public static final boolean UseCarbonAlpha = true;
     public static final int Neighbor = 7;
     public static final double RASA_Thres = 0.15;
+    // defined distance of neighbor amino acids in one chain (include Van der Vaal radius) with any atom
+    public static final double AA_Neighbor_Vdw = 4.0;
 }

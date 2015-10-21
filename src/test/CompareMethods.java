@@ -10,6 +10,8 @@ import Common.ColPair_Score;
 import Common.MyIO;
 import Common.StaticMethod;
 import Protein.NewProteinComplexSkeleton;
+import StaticMethods.ProteinCalc;
+import StaticMethods.ProteinIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class CompareMethods {
             String chain = p.getChainID1();
             
             String Path2PDB = Dir2PDB + ProtID  + Endfile_PDB;
-            HashMap<Integer,String> MapIdx2ResNum = StaticMethod.getMapIdx2ResNum(Path2PDB, chain, 0);
+            HashMap<Integer,String> MapIdx2ResNum = ProteinCalc.getMapIdx2ResNum(Path2PDB, chain, 0);
             int len = (int)(MapIdx2ResNum.size()*factor);
             String Path2Old = Dir2Old + ProtID + "_"+chain + Endfile_Old;
             String Path2New = Dir2New + ProtID + "_"+chain + Endfile_New;
@@ -65,7 +67,7 @@ public class CompareMethods {
             String Path2_PLM = Dir2PLM + ProtID + "_"+chain + Endfile_PLM;
             
             // read PLM
-            HashMap<Integer, String> MapIdx2ResMatlab = StaticMethod.getMapIdx2ResNum(Path2PDB, chain, 1);
+            HashMap<Integer, String> MapIdx2ResMatlab = ProteinCalc.getMapIdx2ResNum(Path2PDB, chain, 1);
             ArrayList<ColPair_Score> PLM = MyIO.read2ColPair(Path2_PLM, MapIdx2ResMatlab, ",");
             HashSet<ColPair_Score> LstPLM = new HashSet<>();
             LstPLM.addAll(PLM);
@@ -73,10 +75,10 @@ public class CompareMethods {
             
             ////////////////////////////////////
             
-//            ArrayList<ColPair_Score> LstAllPair = MyIO.read2ColPair(Path2_3D, "\\s+");
+//            ArrayList<ColPair_Score> LstAllPair = MyIO.readColPairScore2ArrayList(Path2_3D, "\\s+");
             // load all pair
             HashSet<ColPair_Score> LstAllPair = new HashSet<>();
-            LstAllPair.addAll(MyIO.read2ColPair(Path2_3D, "\\s+"));
+            LstAllPair.addAll(ProteinIO.readColPairScore2ArrayList(Path2_3D, "\\s+"));
             System.out.println("Read all pairs");
             // Load gremlin
             HashSet<ColPair_Score> LstMyOld = MyIO.readMat2ColLst(Path2Old, MapIdx2ResNum);

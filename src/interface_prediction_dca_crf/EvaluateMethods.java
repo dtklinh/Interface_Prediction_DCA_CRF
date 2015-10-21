@@ -13,6 +13,8 @@ import DCA.MyIO_DCA;
 import Protein.NewProteinComplexSkeleton;
 import Protein.NewProtein_PairwiseScore;
 import Protein.NewProtein_Pairwise_ScoreRef;
+import StaticMethods.ProteinCalc;
+import StaticMethods.ProteinIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -81,18 +83,18 @@ public class EvaluateMethods {
             String Path2_NMFA_NMI = Dir2_NMFA_NMI + ProtID + Endfile_NMFA_NMI;
             String Path2_plmdca = Dir2_plmdca + ProtID + Endfile_plmdca;
 
-            ArrayList<ColPair_Score> Lst3D = MyIO.read2ColPair(Path2_3D, "\\s+");
+            ArrayList<ColPair_Score> Lst3D = MyIO.readColPairScore2ArrayList(Path2_3D, "\\s+");
             ArrayList<ColPair_Score> LstRealContact = StaticMethod.getTopCol(Lst3D, ResContact, neighbor, true);
 
-            ArrayList<ColPair_Score> Lst_NMFA_Score = MyIO.read2ColPair(Path2_NMFA, "\\s+");
+            ArrayList<ColPair_Score> Lst_NMFA_Score = MyIO.readColPairScore2ArrayList(Path2_NMFA, "\\s+");
             ArrayList<ColPair_Score> Lst_NMFA_Candidate = StaticMethod.getTopCol(Lst_NMFA_Score,
                     NMFA_thres, neighbor, false);
 
-            ArrayList<ColPair_Score> Lst_NMFA_NMI_Score = MyIO.read2ColPair(Path2_NMFA_NMI, "\\s+");
+            ArrayList<ColPair_Score> Lst_NMFA_NMI_Score = MyIO.readColPairScore2ArrayList(Path2_NMFA_NMI, "\\s+");
             ArrayList<ColPair_Score> Lst_NMFA_NMI_Candidate = StaticMethod.getTopCol(Lst_NMFA_NMI_Score,
                     NMFA_NMI_thres, neighbor, false);
             
-            ArrayList<ColPair_Score> Lst_plmdca_Score = MyIO.read2ColPair(Path2_plmdca, "\\s+");
+            ArrayList<ColPair_Score> Lst_plmdca_Score = MyIO.readColPairScore2ArrayList(Path2_plmdca, "\\s+");
             ArrayList<ColPair_Score> Lst_plmdca_Candidate = StaticMethod.getTopCol(Lst_plmdca_Score,
                     PLM_thres, neighbor, false);
 
@@ -132,10 +134,10 @@ public class EvaluateMethods {
             String Path2PDB = Dir2PDB + ProtID + EndfilePDB;
             String Path2RASA = Dir2RASA + ProtID + "_" + chain1 + EndfileRASA;
             
-            ArrayList<ColPair_Score> Lst3D = MyIO.read2ColPair(Path2_3D, "\\s+");
+            ArrayList<ColPair_Score> Lst3D = MyIO.readColPairScore2ArrayList(Path2_3D, "\\s+");
             ArrayList<ColPair_Score> LstInterface = StaticMethod.getTopCol(Lst3D, InterfaceContact, neighbor, true);
             
-            ArrayList<ColPair_Score> Lst_plmdcaScore = MyIO.read2ColPair(Path2_plmdca, "\\s+");
+            ArrayList<ColPair_Score> Lst_plmdcaScore = MyIO.readColPairScore2ArrayList(Path2_plmdca, "\\s+");
             HashMap<String,Integer> MapFromResNum2IdxChain1 = StaticMethod.getMapResNum2Idx(Path2PDB, chain1, 0);
             HashMap<Integer, String> MapFromIdx2ResNumChain2 = StaticMethod.getMapIdx2ResNum(Path2PDB, chain2, 0);
             HashMap<String, Double> Map2RASA = MyIO.readRASAFile(Path2RASA);
@@ -163,12 +165,12 @@ public class EvaluateMethods {
             String Path2RASA = Dir2RASA + ProtID + "_" + chain1 + EndfileRASA;
             
             // load reference
-            ArrayList<ColPair_Score> Lst3D = MyIO.read2ColPair(Path2_3D, "\\s+");
+            ArrayList<ColPair_Score> Lst3D = MyIO.readColPairScore2ArrayList(Path2_3D, "\\s+");
             HashSet<String> All = StaticMethod.getInterfaceRes(Lst3D, 1, 10000);
             HashSet<String> Interfaces = StaticMethod.getInterfaceRes(Lst3D, 1, InterfaceContact);
             HashMap<String, Double> Map2RASA = MyIO.readRASAFile(Path2RASA);
             
-            ArrayList<ColPair_Score> Lst_plmdca_Score = MyIO.read2ColPair(Path2_plmdca, "\\s+");
+            ArrayList<ColPair_Score> Lst_plmdca_Score = MyIO.readColPairScore2ArrayList(Path2_plmdca, "\\s+");
             HashSet<String> Predictions = StaticMethod.getInterfaceRes(Lst_plmdca_Score, PLM_thres, Map2RASA, neighbor);
             System.err.println("Num predicted interface: "+ Predictions.size());
             HashSet<String> RndPredictions = StaticMethod.randomPickUp(All, Predictions.size(), Map2RASA);
@@ -194,13 +196,13 @@ public class EvaluateMethods {
             
             
             // load reference
-            ArrayList<ColPair_Score> Lst3D = MyIO.read2ColPair(Path2_3D, "\\s+");
-            HashSet<String> All = StaticMethod.getInterfaceRes(Lst3D, 1, 10000, true);
-            HashSet<String> Interfaces = StaticMethod.getInterfaceRes(Lst3D, 1, InterfaceContact, true);
+            ArrayList<ColPair_Score> Lst3D = ProteinIO.readColPairScore2ArrayList(Path2_3D, "\\s+");
+            HashSet<String> All = ProteinCalc.getInterfaceRes(Lst3D, 1, 10000, true);
+            HashSet<String> Interfaces = ProteinCalc.getInterfaceRes(Lst3D, 1, InterfaceContact, true);
 //            HashMap<String, Double> Map2RASA = MyIO.readRASAFile(Path2RASA);
             
-            ArrayList<ColPair_Score> Lst_gremlin_Score = MyIO.read2ColPair(Path2Gremlin, "\\s+");
-            HashSet<String> Predictions = StaticMethod.getInterfaceRes(Lst_gremlin_Score, 1, Gremlin_thres, false);
+            ArrayList<ColPair_Score> Lst_gremlin_Score = ProteinIO.readColPairScore2ArrayList(Path2Gremlin, "\\s+");
+            HashSet<String> Predictions = ProteinCalc.getInterfaceRes(Lst_gremlin_Score, 1, Gremlin_thres, false);
             
             GeneralResult tmp = NewProtein_Pairwise_ScoreRef.processResult(All, Interfaces, Predictions);
             tmp.PrintResult("Gremlin "+ ProtID);

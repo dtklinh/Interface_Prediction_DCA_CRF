@@ -9,6 +9,8 @@ import Common.Configuration;
 import Common.MyIO;
 import Common.StaticMethod;
 import Protein.NewProteinComplexSkeleton;
+import StaticMethods.ProteinCalc;
+import StaticMethods.ProteinIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,9 +50,9 @@ public class CalculateBestPairOnSurface {
             String Path2Rasa = Dir2Rasa + ProtID + "_" + chain1 + EndfileRasa;
             String Path2PDB = Dir2PDB + ProtID + EndfilePDB;
             
-            HashMap<String, Double> MapRasa = MyIO.readRASAFile(Path2Rasa);
-            ArrayList<ColPair_Score> Lst_Score = MyIO.read2ColPair(Path2_plmdca, "\\s+");
-            HashMap<String, Integer> MapFromRes2Idx = StaticMethod.getMapResNum2Idx(Path2PDB, chain1, 1);
+            HashMap<String, Double> MapRasa = ProteinIO.readRASAFile(Path2Rasa);
+            ArrayList<ColPair_Score> Lst_Score = ProteinIO.readColPairScore2ArrayList(Path2_plmdca, "\\s+");
+            HashMap<String, Integer> MapFromRes2Idx = ProteinCalc.getMapResNum2Idx(Path2PDB, chain1, 1);
             
             double Rasa_thres = Configuration.RASA_Thres;
             Iterator<ColPair_Score> iter = Lst_Score.iterator();

@@ -53,7 +53,7 @@ public class Protein_Pairwise_Reference extends Protein_PairwiseScore{
      public int CountNotNeighborProximity(){
          int sum = 0;
          for(ColPair_Score s: this.getLstScore()){
-             if(!s.IsNeighbor(this.getNeighborDistance()) && s.getScore()<=ContactDistance){
+             if(!s.isNeighbor(this.getNeighborDistance()) && s.getScore()<=ContactDistance){
                  sum++;
              }
          }
@@ -62,7 +62,7 @@ public class Protein_Pairwise_Reference extends Protein_PairwiseScore{
      public int CountNotNeighborNOTProximity(){
          int sum = 0;
          for(ColPair_Score s: this.getLstScore()){
-             if(!s.IsNeighbor(this.getNeighborDistance()) && s.getScore()>ContactDistance){
+             if(!s.isNeighbor(this.getNeighborDistance()) && s.getScore()>ContactDistance){
                  sum++;
              }
          }

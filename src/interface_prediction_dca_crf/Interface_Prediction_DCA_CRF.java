@@ -8,6 +8,7 @@ import Common.ColPair_Score;
 import Common.MyIO;
 import Common.StaticMethod;
 import Protein.NewProteinComplexSkeleton;
+import StaticMethods.ProteinIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,10 +62,10 @@ public class Interface_Prediction_DCA_CRF {
         for(NewProteinComplexSkeleton prot: lst){
             String ProtID = prot.getProtPDBID();
             String Path2ScoreFile = Dir2ScoreFile + ProtID + EndFileScore;
-            ArrayList<ColPair_Score> Scores = MyIO.read2ColPair(Path2ScoreFile, "\\s+");
+            ArrayList<ColPair_Score> Scores = ProteinIO.readColPairScore2ArrayList(Path2ScoreFile, "\\s+");
             Collections.sort(Scores);
             Collections.reverse(Scores);
-            MyIO.WriteLstToFile(Path2ScoreFile, Scores);
+            ProteinIO.writeColPairScore2File(Path2ScoreFile, Scores);
         }
     }
 }

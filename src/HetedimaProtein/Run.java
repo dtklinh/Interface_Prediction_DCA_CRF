@@ -10,6 +10,7 @@ import Common.FastaSequence;
 import Common.MyIO;
 import Common.StaticMethod;
 import Protein.ProteinChain;
+import StaticMethods.ProteinIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class Run {
             
             String filenamePlmdca = ProteinChainID1[i]+ProteinChainID2[i].substring(4, 6);
             String path2file = "Test/Hetedima/MSA-Methods/HHblits/ConcatResult/"+filenamePlmdca + endfilePlmdca;
-            ArrayList<ColPair_Score> arr = MyIO.read2ColPair(path2file, ",");
+            ArrayList<ColPair_Score> arr = ProteinIO.readColPairScore2ArrayList(path2file, ",");
             ProteinChain chain1 = new ProteinChain(Configuration.Dir2PDBSingleChain, ProteinChainID1[i]);
             ProteinChain chain2 = new ProteinChain(Configuration.Dir2PDBSingleChain, ProteinChainID2[i]);
             int len1 = chain1.getSequence().trim().length();
@@ -81,7 +82,7 @@ public class Run {
                     }
                 }
             }
-            MyIO.WriteLstToFile(Dir2Out+filenamePlmdca+".plmdca", Lst_filter);
+            ProteinIO.writeColPairScore2File(Dir2Out+filenamePlmdca+".plmdca", Lst_filter);
         }
         // end adjust
     }

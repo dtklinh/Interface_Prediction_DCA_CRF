@@ -162,7 +162,7 @@ public class Protein_PairwiseScore {
     public void EliminateNeighbor() {
         int len = this.getLstScore().size();
         for (int i = len - 1; i >= 0; i--) {
-            if (getLstScore().get(i).IsNeighbor(getNeighborDistance())) {
+            if (getLstScore().get(i).isNeighbor(getNeighborDistance())) {
                 getLstScore().remove(i);
             }
         }
@@ -278,7 +278,7 @@ public class Protein_PairwiseScore {
         int sum = 0;
         for (ColPair_Score s : other.getLstScore()) {
             for (ColPair_Score self : LstScore) {
-                if (self.IsSameIndex(s)) {
+                if (self.isSameIndex(s)) {
                     sum++;
                     break;
                 }

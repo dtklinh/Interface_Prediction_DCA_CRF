@@ -9,6 +9,8 @@ import Common.MyIO;
 import Common.StaticMethod;
 import LinearAlgebra.FloatMatrix;
 import Protein.NewProteinComplexSkeleton;
+import StaticMethods.ProteinCalc;
+import StaticMethods.ProteinIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ public class AdjustIndex2ResNum {
          String path2plmdca = Dir2RawFile + c.getProtPDBID()+endfile;
          String pdbFile = Dir2PDB + c.getProtPDBID() + ".pdb";
             
-         ArrayList<ColPair_Score> lstPair = MyIO.read2ColPair(path2plmdca, ",");
+         ArrayList<ColPair_Score> lstPair = MyIO.readColPairScore2ArrayList(path2plmdca, ",");
          HashMap<Integer, String> Idx2ResNum = StaticMethod.getMapIdx2ResNum(pdbFile, c.getChainID1(), 1);
 
          //        Iterator<ColPair_Score> iter = lstPair.iterator();
@@ -60,7 +62,7 @@ public class AdjustIndex2ResNum {
          //            col.setP2(Res2);
          //        }
          lstPair = processSingle(lstPair, Idx2ResNum);
-         MyIO.WriteLstToFile("Input/Zellner_Homodimer/MSAMethod/HHblits/DCA_NMI/" + c.getProtPDBID() + ".plmdca", lstPair);
+         MyIO.writeColPairScore2File("Input/Zellner_Homodimer/MSAMethod/HHblits/DCA_NMI/" + c.getProtPDBID() + ".plmdca", lstPair);
          }
          //*/
 
@@ -88,9 +90,9 @@ public class AdjustIndex2ResNum {
 
 
             int StartIdx = 0;
-//            ArrayList<ColPair_Score> lstPair = MyIO.read2ColPair(path2Complexdca, ",");
-            HashMap<Integer, String> Idx2ResNum_Chain1 = StaticMethod.getMapIdx2ResNum(Path2PDB, chain1, StartIdx);
-            HashMap<Integer, String> Idx2ResNum_Chain2 = StaticMethod.getMapIdx2ResNum(Path2PDB, chain2, StartIdx);
+//            ArrayList<ColPair_Score> lstPair = MyIO.readColPairScore2ArrayList(path2Complexdca, ",");
+            HashMap<Integer, String> Idx2ResNum_Chain1 = ProteinCalc.getMapIdx2ResNum(Path2PDB, chain1, StartIdx);
+            HashMap<Integer, String> Idx2ResNum_Chain2 = ProteinCalc.getMapIdx2ResNum(Path2PDB, chain2, StartIdx);
 
             int len1 = Idx2ResNum_Chain1.size();
             int len2 = Idx2ResNum_Chain2.size();
@@ -114,13 +116,13 @@ public class AdjustIndex2ResNum {
             lstC2 = processSingle(lstC2, Idx2ResNum_Chain2);
             lstComplex = processDouble(lstComplex, Idx2ResNum_Chain1, Idx2ResNum_Chain2);
 
-            MyIO.WriteLstToFile(Dir2DCAScore + ProtID + "_" + chain1 + EndfileDCAScore, lstC1);
-            MyIO.WriteLstToFile(Dir2DCAScore + ProtID + "_" + chain2 + EndfileDCAScore, lstC2);
-            MyIO.WriteLstToFile(Dir2DCAScore + s.getProteinComplex() + EndfileDCAScore, lstComplex);
+            ProteinIO.writeColPairScore2File(Dir2DCAScore + ProtID + "_" + chain1 + EndfileDCAScore, lstC1);
+            ProteinIO.writeColPairScore2File(Dir2DCAScore + ProtID + "_" + chain2 + EndfileDCAScore, lstC2);
+            ProteinIO.writeColPairScore2File(Dir2DCAScore + s.getProteinComplex() + EndfileDCAScore, lstComplex);
 
-//         MyIO.WriteLstToFile("Test2/gremlin/"+ProtID+"_"+chain1+".fromConcat.gremlin.score", lstC1);
-//         MyIO.WriteLstToFile("Test2/gremlin/"+ProtID+"_"+chain2+".fromConcat.gremlin.score", lstC2);
-//         MyIO.WriteLstToFile("Test2/gremlin/"+ProtID+".fromConcat.gremlin.score", lstComplex);
+//         MyIO.writeColPairScore2File("Test2/gremlin/"+ProtID+"_"+chain1+".fromConcat.gremlin.score", lstC1);
+//         MyIO.writeColPairScore2File("Test2/gremlin/"+ProtID+"_"+chain2+".fromConcat.gremlin.score", lstC2);
+//         MyIO.writeColPairScore2File("Test2/gremlin/"+ProtID+".fromConcat.gremlin.score", lstComplex);
         }
         //*/
 
@@ -156,7 +158,7 @@ public class AdjustIndex2ResNum {
          Arr.add(new ColPair_Score(p1, p2, score));
          }
          }
-         MyIO.WriteLstToFile(Dir2Debora_plmdca+ProtID+".plmdca", Arr);
+         MyIO.writeColPairScore2File(Dir2Debora_plmdca+ProtID+".plmdca", Arr);
          }
          //*/
     }

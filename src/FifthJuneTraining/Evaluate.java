@@ -17,6 +17,8 @@ import java.util.List;
 import org.biojava.bio.structure.StructureException;
 import InformationTheory.ITUtils;
 import Protein.NewProtein_Pairwise_ScoreRef;
+import StaticMethods.ProteinCalc;
+import StaticMethods.ProteinIO;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -53,7 +55,7 @@ public class Evaluate {
         ArrayList<DirectDistribution> Test = new ArrayList<>();
         for (NewProteinComplexSkeleton s : LstTrain) {
             String Path2PDB = Dir2PDB + s.getProtPDBID() + EndfilePDB;
-            HashMap<Integer, String> MapIdx2Res = StaticMethod.getMapIdx2ResNum(Path2PDB, s.getChainID1(), 1);
+            HashMap<Integer, String> MapIdx2Res = ProteinCalc.getMapIdx2ResNum(Path2PDB, s.getChainID1(), 1);
 
             String Path2DirDis = Dir2DirDis + s.getProtPDBID() + EndfileDirDis;
             ArrayList<String> arr = MyIO.ReadLines(Path2DirDis);
@@ -65,8 +67,8 @@ public class Evaluate {
             String Path2PDB = Dir2PDB + s.getProtPDBID() + EndfilePDB;
             String Path2_3D = Dir2_3D + s.getProteinComplex() + Endfile3D;
             String Path2Rasa = Dir2Rasa + s.getProteinChain(1) + EndfileRasa;
-            HashMap<String, Double> MapRasaChain1 = MyIO.readRASAFile(Path2Rasa);
-            HashMap<Integer, String> MapIdx2Res = StaticMethod.getMapIdx2ResNum(Path2PDB, s.getChainID1(), 1);
+            HashMap<String, Double> MapRasaChain1 = ProteinIO.readRASAFile(Path2Rasa);
+            HashMap<Integer, String> MapIdx2Res = ProteinCalc.getMapIdx2ResNum(Path2PDB, s.getChainID1(), 1);
 
             String Path2DirDis = Dir2DirDis + s.getProtPDBID() + EndfileDirDis;
             ArrayList<String> arr = MyIO.ReadLines(Path2DirDis);

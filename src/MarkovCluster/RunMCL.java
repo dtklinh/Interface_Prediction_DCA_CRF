@@ -7,6 +7,7 @@ package MarkovCluster;
 import Common.MyIO;
 import LinearAlgebra.MyOwnFloatMatrix;
 import Protein.Protein_PairwiseScore;
+import StaticMethods.ProteinIO;
 import java.io.IOException;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class RunMCL {
 //            }
             Protein_PairwiseScore p = new Protein_PairwiseScore(Dir2File,s,neighbor,m);
             p.AdjustIndex(Dir2PDB);
-            MyIO.WriteLstToFile(Dir2Output+p.getProteinChain()+".mcl", p.getLstScore());
+            ProteinIO.writeColPairScore2File(Dir2Output+p.getProteinChain()+".mcl", p.getLstScore());
         }
     }
 }

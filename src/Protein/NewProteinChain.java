@@ -7,6 +7,7 @@ package Protein;
 import Common.ColPair_Score;
 import Common.Configuration;
 import Common.StaticMethod;
+import StaticMethods.DistanceCalc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -92,10 +93,10 @@ public class NewProteinChain {
                 Group g2 = getLstAminoAcid().get(j);
                 double score = 0;
                 if(Configuration.UseCarbonAlpha){
-                 score = StaticMethod.DistanceBtwGroups(g1, g2);
+                 score = DistanceCalc.DistanceBtwGroups_CarbonAlpha(g1, g2);
                 }
                 else{
-                    score = StaticMethod.DistanceBtwGroupsAnyAtom(g1, g2);
+                    score = DistanceCalc.DistanceBtwGroupsAnyAtom(g1, g2);
                 }
                 ColPair_Score col = new ColPair_Score(g1.getResidueNumber().toString(), g2.getResidueNumber().toString(), score);
                 res.add(col);

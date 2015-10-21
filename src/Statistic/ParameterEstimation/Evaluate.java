@@ -9,6 +9,7 @@ import Common.Configuration;
 import Common.MyIO;
 import Common.StaticMethod;
 import Protein.*;
+import StaticMethods.ProteinIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,8 +47,8 @@ public class Evaluate {
             String Path2_3DFile = Dir2_3D + ProtID + "_" + chain + Endfile_3D;
             NewProtein_PairwiseScore p = new NewProtein_PairwiseScore(neighbor, ProtID, chain);
             
-//            ArrayList<ColPair_Score> Lst_Col = MyIO.read2ColPair(Path2_nML_ScoreFile, "\\s+");
-            ArrayList<ColPair_Score> Lst_Col = MyIO.read2ColPair(Path2DCAScore, "\\s+");
+//            ArrayList<ColPair_Score> Lst_Col = MyIO.readColPairScore2ArrayList(Path2_nML_ScoreFile, "\\s+");
+            ArrayList<ColPair_Score> Lst_Col = ProteinIO.readColPairScore2ArrayList(Path2DCAScore, "\\s+");
             
             List<ColPair_Score> Candidates = p.topOverThreshold(Lst_Col, 0.3, false);
             List<ColPair_Score> RndCandidates = p.randomPickUp(Lst_Col,Candidates.size() , false, null);

@@ -6,6 +6,7 @@ package Common;
 
 import MultipleCore.MyObject;
 import Protein.Protein_PairwiseScore;
+import StaticMethods.ProteinIO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class GeneralProgram extends MyObject {
         for(String s: Lst_str){
             Protein_PairwiseScore p = new Protein_PairwiseScore(Dir2NotAdjustFile, s, distance,3);
             p.AdjustIndex(Dir2PDB);
-            MyIO.WriteLstToFile(Dir2AdjustFile+s, p.getLstScore());
+            ProteinIO.writeColPairScore2File(Dir2AdjustFile+s, p.getLstScore());
         }
         //end
     }

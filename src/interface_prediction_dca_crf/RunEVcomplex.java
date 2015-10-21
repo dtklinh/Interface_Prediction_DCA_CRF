@@ -10,6 +10,7 @@ import Common.MyIO;
 import Common.StaticMethod;
 import DCA.MSA_FloatMatrix;
 import Protein.Protein_PairwiseScore;
+import StaticMethods.ProteinIO;
 import java.io.IOException;
 import java.util.List;
 import org.biojava.bio.structure.StructureException;
@@ -54,7 +55,7 @@ public class RunEVcomplex {
             MSA_FloatMatrix m = new MSA_FloatMatrix(Configuration.Dir2MSA, s.substring(0, 6));
             float Meff = m.Compute_M_eff();
             prot.ComputeEVcomplex(Meff);
-            MyIO.WriteLstToFile(Configuration.Dir2EVcomplex + s + ".cmplx", prot.getLstScore());
+            ProteinIO.writeColPairScore2File(Configuration.Dir2EVcomplex + s + ".cmplx", prot.getLstScore());
 
 
         }

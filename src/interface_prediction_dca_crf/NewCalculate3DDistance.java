@@ -8,6 +8,7 @@ import Common.MyIO;
 import Protein.NewProteinChain;
 import Protein.NewProteinComplex;
 import Protein.NewProteinComplexSkeleton;
+import StaticMethods.ProteinIO;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.biojava.bio.structure.StructureException;
@@ -38,9 +39,9 @@ public class NewCalculate3DDistance {
 //            NewProteinChain C2 = new NewProteinChain(path2PDbFile, ProtID, chain2);
 //            NewProteinComplex Cmpl = new NewProteinComplex(path2PDbFile, ProtID, chain1, chain2);
 
-            MyIO.WriteLstToFile("Input/SmallSet/3D/" + ProtID + "_" + chain1 + ".3d_Any_VdW", C1.pairwiseDistance());
-//            MyIO.WriteLstToFile("Input/Zellner_Homodimer/3D/" + ProtID + "_" + chain2 + ".3d_Any_VdW", C2.pairwiseDistance());
-//            MyIO.WriteLstToFile("Input/Zellner_Homodimer/3D/" + ProtID +"_" + chain1+chain2+ ".3d_Any_VdW", Cmpl.pairwiseDistance());
+            ProteinIO.writeColPairScore2File("Input/SmallSet/3D/" + ProtID + "_" + chain1 + ".3d_Any_VdW", C1.pairwiseDistance());
+//            MyIO.writeColPairScore2File("Input/Zellner_Homodimer/3D/" + ProtID + "_" + chain2 + ".3d_Any_VdW", C2.pairwiseDistance());
+//            MyIO.writeColPairScore2File("Input/Zellner_Homodimer/3D/" + ProtID +"_" + chain1+chain2+ ".3d_Any_VdW", Cmpl.pairwiseDistance());
         }
     }
 }

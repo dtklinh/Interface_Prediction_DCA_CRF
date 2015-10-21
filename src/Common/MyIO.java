@@ -6,6 +6,7 @@ package Common;
 
 import LinearAlgebra.FloatMatrix;
 import Protein.NewProteinComplexSkeleton;
+import StaticMethods.ProteinIO;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -19,10 +20,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.io.PDBFileReader;
 
 /**
  *
@@ -73,15 +80,7 @@ public class MyIO {
         writer.close();
     }
 
-    public static void WriteLstToFile(String filename, ArrayList<ColPair_Score> lst) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-//        String tmp = "";
-        for (ColPair_Score s : lst) {
-            writer.write(s.getP1() + "\t" + s.getP2() + "\t" + s.getScore() + "\n");
-        }
-        writer.flush();
-        writer.close();
-    }
+    
 
     public static void WriteToFile(String filename, LinkedHashSet<String> lst) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
@@ -442,27 +441,7 @@ public class MyIO {
         writer.close();
     }
 
-    public static ArrayList<ColPair_Score> read2ColPair(String path2file, String regex) throws FileNotFoundException, IOException {
-        FileInputStream fstream = new FileInputStream(path2file);
-        DataInputStream in = new DataInputStream(fstream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        ArrayList<ColPair_Score> res = new ArrayList<>();
-        String line;
-        while (true) {
-            line = br.readLine();
-            if (line == null) {
-                break;
-            }
-            line = line.trim();
-            if (!line.isEmpty()) {
-                String[] arr = line.split(regex);
-                ColPair_Score p = new ColPair_Score(arr[0], arr[1], Double.parseDouble(arr[2]));
-                res.add(p);
-            }
-        }
-        br.close();
-        return res;
-    }
+    
     public static ArrayList<ColPair_Score> read2ColPair(String path2file, 
             HashMap<Integer,String> MapIdx2ResNum, String regex) throws FileNotFoundException, IOException {
         FileInputStream fstream = new FileInputStream(path2file);
@@ -512,30 +491,11 @@ public class MyIO {
         return res;
     }
 
-    public static HashMap<String, Double> readRASAFile(String Path2File) throws FileNotFoundException, IOException {
-        HashMap<String, Double> map = new HashMap<>();
-        FileInputStream fstream = new FileInputStream(Path2File);
-        DataInputStream in = new DataInputStream(fstream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        while (true) {
-            String line = br.readLine();
-            if (line == null) {
-                break;
-            }
-            line = line.trim();
-            if (!line.isEmpty()) {
-                String[] arr = line.split("\\s+");
-                String Resnum = arr[0].split("_")[2];
-                double score = Double.parseDouble(arr[3]);
-                map.put(Resnum, score);
-            }
-        }
-        return map;
-    }
+    
 
     public static HashSet<String> readInterfaceResidue(String Path2File, int chain, double thres, boolean isRealDistance) throws FileNotFoundException, IOException {
         HashSet<String> res = new HashSet<>();
-        ArrayList<ColPair_Score> LstScore = MyIO.read2ColPair(Path2File, "\\s+");
+        ArrayList<ColPair_Score> LstScore = ProteinIO.readColPairScore2ArrayList(Path2File, "\\s+");
         // chain is 0 or 1
         ArrayList<ColPair_Score> tmp = new ArrayList<>();
         for (ColPair_Score col : LstScore) {
@@ -628,4 +588,5 @@ public class MyIO {
         }
         return res;
     }
+    
 }

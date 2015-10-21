@@ -9,6 +9,8 @@ import Common.Configuration;
 import Common.MyIO;
 import Common.StaticMethod;
 import Protein.NewProteinComplexSkeleton;
+import StaticMethods.ProteinCalc;
+import StaticMethods.ProteinIO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,12 +61,12 @@ public class FindBestIndxPairs {
             
 //            HashMap<String, String> MapC2ToC1 = StaticMethod.getMapChain1ToChain2(Path2PDB, chain2, chain1);
             
-            ArrayList<ColPair_Score> Lst_Score = MyIO.read2ColPair(Path2_plmdca, "\\s+");
-            ArrayList<ColPair_Score> Lst_3D = MyIO.read2ColPair(Path2_3D, "\\s+");
-            HashMap<String, Double> MapRasa1 = MyIO.readRASAFile(Path2Rasa1);
-            HashMap<String, Double> MapRasa2 = MyIO.readRASAFile(Path2Rasa2);
-            HashMap<String, Integer> MapRes2IdxChain1 = StaticMethod.getMapResNum2Idx(Path2PDB, chain1, 1);
-            HashMap<String, Integer> MapRes2IdxChain2 = StaticMethod.getMapResNum2Idx(Path2PDB, chain2, 1);
+            ArrayList<ColPair_Score> Lst_Score = ProteinIO.readColPairScore2ArrayList(Path2_plmdca, "\\s+");
+            ArrayList<ColPair_Score> Lst_3D = ProteinIO.readColPairScore2ArrayList(Path2_3D, "\\s+");
+            HashMap<String, Double> MapRasa1 = ProteinIO.readRASAFile(Path2Rasa1);
+            HashMap<String, Double> MapRasa2 = ProteinIO.readRASAFile(Path2Rasa2);
+            HashMap<String, Integer> MapRes2IdxChain1 = ProteinCalc.getMapResNum2Idx(Path2PDB, chain1, 1);
+            HashMap<String, Integer> MapRes2IdxChain2 = ProteinCalc.getMapResNum2Idx(Path2PDB, chain2, 1);
             
             ArrayList<ColPair_Score> tmp = filter(Lst_Score, Lst_3D, MapRasa1, MapRasa2,
                      InterfaceContact);

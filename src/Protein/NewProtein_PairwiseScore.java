@@ -47,7 +47,7 @@ public class NewProtein_PairwiseScore {
         if (UseNeighborDef) {
             for (int i = LstScore.size() - 1; i >= 0; i--) {
                 ColPair_Score c = LstScore.get(i);
-                if (c.IsNeighbor(this.NeighborDistance)) {
+                if (c.isNeighbor(this.NeighborDistance)) {
                     LstScore.remove(i);
                 }
             }
@@ -73,7 +73,7 @@ public class NewProtein_PairwiseScore {
 //                    LstScore.remove(i);
 //                    continue;
 //                }
-                if (c.IsNeighbor(this.NeighborDistance)) {
+                if (c.isNeighbor(this.NeighborDistance)) {
                     LstScore.remove(i);
                 }
             }
@@ -99,7 +99,7 @@ public class NewProtein_PairwiseScore {
 //                    LstScore.remove(i);
 //                    continue;
 //                }
-                if (c.IsNeighbor(this.NeighborDistance)) {
+                if (c.isNeighbor(this.NeighborDistance)) {
                     LstScore.remove(i);
                 }
             }
@@ -117,7 +117,7 @@ public class NewProtein_PairwiseScore {
                 res.add(col);
                 }
                 else{
-                    if(!col.IsNeighbor(Configuration.Neighbor)){
+                    if(!col.isNeighbor(Configuration.Neighbor)){
                         res.add(col);
                     }
                 }
