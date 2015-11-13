@@ -4,8 +4,9 @@
  */
 package StaticMethods;
 
-import Common.ColPair_MegaScore;
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_MegaScore;
+import Common.ColPairAndScores.ColPair_Score;
+import Common.ColPairAndScores.ScoreMetric;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -140,6 +141,7 @@ public class ProteinIO {
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
         List<ColPair_MegaScore> res = new ArrayList<>();
+        List<ScoreMetric> LstScores = new ArrayList<>();
         while(true){
             line = br.readLine();
             if(line==null){
@@ -150,26 +152,35 @@ public class ProteinIO {
                 String[] arr = line.split(regrex);
                 String P1 = arr[0];
                 String P2 = arr[1];
-                double d3=0, dca=0, gremlin=0, cmi=0;
+                double score=0;
                 for(int i=0; i<args.length;i++){
-                    if(args[i].indexOf("three")>=0){
-                        d3 = Double.parseDouble(arr[i+2]);
+                    score = Double.parseDouble(arr[i+2]);
+                    String token = args[i].toLowerCase();
+                    if(token.indexOf("three")>=0){
+                        
+                        LstScores.add(new ScoreMetric("three", score));
                     }
-                    else if(args[i].indexOf("dca")>=0){
-                        dca = Double.parseDouble(arr[i+2]);
+                    else if(token.indexOf("dca")>=0){
+//                        score = Double.parseDouble(arr[i+2]);
+                        LstScores.add(new ScoreMetric("dca", score));
                     }
-                    else if(args[i].indexOf("gremlin")>=0){
-                        gremlin = Double.parseDouble(arr[i+2]);
+                    else if(token.indexOf("gremlin")>=0){
+//                        score = Double.parseDouble(arr[i+2]);
+                        LstScores.add(new ScoreMetric("gremlin", score));
                     }
-                    else if(args[i].indexOf("mi")>=0){
-                        cmi = Double.parseDouble(arr[i+2]);
+                    else if(token.indexOf("cmi")>=0){
+//                        score = Double.parseDouble(arr[i+2]);
+                        LstScores.add(new ScoreMetric("cmi", score));
+                    }
+                    else if(token.indexOf("margin")>=0){
+                        LstScores.add(new ScoreMetric("margin", score));
                     }
                     else{
                         System.err.println("Do not recognize format");
                         System.exit(1);
                     }
                 }
-                res.add(new ColPair_MegaScore(P1, P2, d3, dca, gremlin, cmi));
+                res.add(new ColPair_MegaScore(P1, P2, LstScores));
             }
         }
         return res;

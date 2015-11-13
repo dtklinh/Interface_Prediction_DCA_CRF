@@ -5,7 +5,7 @@
  */
 package Protein;
 
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_Score;
 import Common.MyIO;
 import MultipleCore.MyObject;
 import StaticMethods.ProteinIO;

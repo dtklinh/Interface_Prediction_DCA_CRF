@@ -5,8 +5,8 @@
 package test;
 
 import Analysis.GeneralResult;
-import Common.ColPair;
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair;
+import Common.ColPairAndScores.ColPair_Score;
 import Common.MyIO;
 import Common.StaticMethod;
 import Protein.NewProteinComplexSkeleton;

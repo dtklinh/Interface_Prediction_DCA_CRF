@@ -4,7 +4,7 @@
  */
 package ExcerptProtein;
 
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_Score;
 import Common.MyIO;
 import StaticMethods.DistanceCalc;
 import StaticMethods.LookUpCollections;
@@ -32,13 +32,15 @@ public class CreateMegaFile {
         String ChainID = "A";
         String Path2CondMIScores = "Input/SmallSet/CMI/1A70_apc.cmi";
 //        String Path2PlmDCA = "Input/SmallSet/plmdca/1a70_A.plmdca";
-        String Path2PlmDCA = "Input/SmallSet/dcaSoeding/1A70_v2.dca";
+        String Path2PlmDCA = "Input/SmallSet/plmdca/1a70_A.plmdca";
         String Path2_3D = "Input/SmallSet/3D/1a70.3d_CA_Vdw";
         String Path2Gremlin = "Input/SmallSet/Gremlin/1a70_A_v2.txt";
+        String Path2LOM = "Input/SmallSet/LOM/1A70_LOM_2000.txt";
         ArrayList<ColPair_Score> LstCMI = ProteinIO.readColPairScore2ArrayList(Path2CondMIScores, "\\s+");
-        ArrayList<ColPair_Score> LstPlmdca = ProteinIO.readColPairScore2ArrayList(Path2PlmDCA, "\\s+");
+        ArrayList<ColPair_Score> LstPlmdca = ProteinIO.readColPairScore2ArrayList(Path2PlmDCA, ",");
         ArrayList<ColPair_Score> Lst3D = ProteinIO.readColPairScore2ArrayList(Path2_3D, "\\s+");
         ArrayList<ColPair_Score> LstGremlin = ProteinIO.readColPairScore2ArrayList(Path2Gremlin, "\\s+");
+        ArrayList<ColPair_Score> LstLOM = ProteinIO.readColPairScore2ArrayList(Path2LOM, ",");
         ArrayList<String> lst = new ArrayList<>();
         for(ColPair_Score c:LstPlmdca){
             if(c.isNeighbor(0)){
@@ -51,10 +53,11 @@ public class CreateMegaFile {
             double plmdca = c.getScore();//LookUpCollections.LookUpScoreInLstColPair_Score(LstPlmdca, P1, P2);
             double ThreeD = LookUpCollections.LookUpScoreInLstColPair_Score(Lst3D, P1, P2);
             double Gremlin = LookUpCollections.LookUpScoreInLstColPair_Score(LstGremlin, P1, P2);
-            String str = P1+"\t"+P2+"\t"+CMI + "\t"+plmdca+"\t"+ThreeD+ "\t"+Gremlin ;
+            double LOM = LookUpCollections.LookUpScoreInLstColPair_Score(LstLOM, P1, P2);
+            String str = P1+"\t"+P2+"\t"+CMI + "\t"+plmdca+"\t"+ThreeD+ "\t"+Gremlin + "\t"+LOM ;
             lst.add(str);
         }
-        MyIO.WriteToFile("Input/SmallSet/Mega/1A70_CMI_plm_3D_Gremlin.txt", lst);
+        MyIO.WriteToFile("Input/SmallSet/Mega/1A70_CMI_plm_3D_Gremlin_LOM.txt", lst);
 //        String IdCenter = "18";
 //        ExcerptProt e = new ExcerptProt(IdCenter, ProtID, ChainID, PDB_Path);
 //        List<Group> lst = e.makeExcerpt(2);

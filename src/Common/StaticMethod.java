@@ -4,6 +4,7 @@
  */
 package Common;
 
+import Common.ColPairAndScores.ColPair_Score;
 import Analysis.GeneralResult;
 import Protein.Residue;
 import java.io.BufferedReader;

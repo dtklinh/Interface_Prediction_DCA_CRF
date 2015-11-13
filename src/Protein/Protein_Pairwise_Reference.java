@@ -4,7 +4,7 @@
  */
 package Protein;
 
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_Score;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

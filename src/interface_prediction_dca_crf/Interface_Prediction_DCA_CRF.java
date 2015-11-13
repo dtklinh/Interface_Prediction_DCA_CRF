@@ -4,7 +4,7 @@
  */
 package interface_prediction_dca_crf;
 
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_Score;
 import Common.MyIO;
 import Common.StaticMethod;
 import Protein.NewProteinComplexSkeleton;
@@ -49,7 +49,7 @@ public class Interface_Prediction_DCA_CRF {
             ArrayList<String> arr = new ArrayList<>();
             arr.add(Des);
             arr.add(Seq);
-            MyIO.WriteToFile(Dir2Sequence+ProtID+".txt", arr);
+            MyIO.WriteToFileDouble(Dir2Sequence+ProtID+".txt", arr);
         }
         */
         

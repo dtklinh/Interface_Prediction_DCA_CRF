@@ -4,8 +4,8 @@
  */
 package StaticMethods;
 
-import Common.ColPair;
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair;
+import Common.ColPairAndScores.ColPair_Score;
 import Common.Configuration;
 import Protein.Residue;
 import java.io.IOException;

@@ -6,7 +6,7 @@ package DCA;
 
 //import MyJama.MyMatrix;
 //import MyJama.SuperFloatMatrix;
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_Score;
 import LinearAlgebra.MyOwnFloatMatrix;
 import LinearAlgebra.SuperFloatMatrix;
 import NMI.Compute;

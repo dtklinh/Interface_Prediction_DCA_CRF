@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Common;
+package Common.ColPairAndScores;
 
 import java.util.Collections;
 import java.util.Comparator;

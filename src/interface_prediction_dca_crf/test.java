@@ -4,7 +4,7 @@
  */
 package interface_prediction_dca_crf;
 
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_Score;
 import Common.Configuration;
 import Common.FastaSequence;
 import Common.MyIO;

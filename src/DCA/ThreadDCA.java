@@ -30,7 +30,7 @@ public class ThreadDCA extends MyObject {
             utils.Utils.tic();
             
             //print MSA_FloatMatrix
-//            MyIO.WriteToFile(Configuration.DirTest_DCA+m.getName()+".algn", m.getAlgnMx());
+//            MyIO.WriteToFileDouble(Configuration.DirTest_DCA+m.getName()+".algn", m.getAlgnMx());
             
             String[][] d = m.GetResult3(Configuration.Dir2PDBSingleChain);
             MyIO.WriteToFile(DirForOut+m.getName()+".dca", d);

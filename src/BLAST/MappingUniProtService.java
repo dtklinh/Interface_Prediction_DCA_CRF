@@ -41,7 +41,7 @@ public class MappingUniProtService {
         MyIO.WriteToFile("Test/Hetedima/MSA-Methods/HHblits/Uniprot.txt", Lst_GI);
 //        ArrayList<ArrayList<String>> lst_arr = StaticMethod.Divide(tmp, 32);
 //        for (int i = 0; i < 32; i++) {
-//            MyIO.WriteToFile(Configuration.Dir2DataBase + Configuration.MethodMakingMSA + "GI/GIs_"+i+".txt", lst_arr.get(i));
+//            MyIO.WriteToFileDouble(Configuration.Dir2DataBase + Configuration.MethodMakingMSA + "GI/GIs_"+i+".txt", lst_arr.get(i));
 //        }
         //*/
         // end
@@ -54,7 +54,7 @@ public class MappingUniProtService {
 //        ArrayList<ArrayList<String>> arr = StaticMethod.Divide(content, n);
 //        for(int i=0; i<n; i++){
 //            String filename = Configuration.TmpDir+"GI/"+i+".txt";
-//            MyIO.WriteToFile(filename, arr.get(i));
+//            MyIO.WriteToFileDouble(filename, arr.get(i));
 //            Thread.sleep(1000);
 //            String fullpath2GI = Configuration.HomeProject+filename;
 //            String fullpath2Map = Configuration.HomeProject + Configuration.TmpDir + "MAP/"+i + ".map";
@@ -96,7 +96,7 @@ public class MappingUniProtService {
 //            f.remove(0);
 //            lines.addAll(f);
 //        }
-//        MyIO.WriteToFile(Configuration.Dir2DataBase+Configuration.MethodMakingMSA+"GI_Uniprot.map", lines);
+//        MyIO.WriteToFileDouble(Configuration.Dir2DataBase+Configuration.MethodMakingMSA+"GI_Uniprot.map", lines);
         
     }
 }

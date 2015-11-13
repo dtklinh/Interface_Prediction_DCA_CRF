@@ -4,8 +4,8 @@
  */
 package Analysis;
 
-import Common.ColPair;
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair;
+import Common.ColPairAndScores.ColPair_Score;
 import Common.StaticMethod;
 import StaticMethods.ProteinCalc;
 import java.util.ArrayList;

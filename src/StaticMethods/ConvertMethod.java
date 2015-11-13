@@ -4,7 +4,7 @@
  */
 package StaticMethods;
 
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_Score;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;

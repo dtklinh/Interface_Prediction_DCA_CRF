@@ -4,7 +4,7 @@
  */
 package Statistic.ParameterEstimation;
 
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_Score;
 import Common.Configuration;
 import Common.MyIO;
 import Common.StaticMethod;

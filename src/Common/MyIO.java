@@ -4,32 +4,34 @@
  */
 package Common;
 
-import LinearAlgebra.FloatMatrix;
+import Common.ColPairAndScores.ColPair_Score;
+//import LinearAlgebra.FloatMatrix;
 import Protein.NewProteinComplexSkeleton;
 import StaticMethods.ProteinIO;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
-import java.io.File;
+//import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Scanner;
+//import java.util.Scanner;
 import java.util.regex.Pattern;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.io.PDBFileReader;
+//import org.biojava.bio.structure.Chain;
+//import org.biojava.bio.structure.Group;
+//import org.biojava.bio.structure.Structure;
+//import org.biojava.bio.structure.StructureException;
+//import org.biojava.bio.structure.io.PDBFileReader;
 
 /**
  *
@@ -38,6 +40,8 @@ import org.biojava.bio.structure.io.PDBFileReader;
 public class MyIO {
 
     public static void WriteToFile(String filename, ArrayList<String> lst) throws IOException {
+        
+        lst.removeAll(Arrays.asList("",null));
         BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
         String tmp = "";
         for (String s : lst) {
@@ -48,105 +52,88 @@ public class MyIO {
     }
 
     public static void WriteToFileDouble(String filename, ArrayList<Double> lst) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-        String tmp = "";
-        for (Double s : lst) {
-            writer.write(s + "\n");
+        ArrayList<String> arr = new ArrayList<>();
+        for(Double d:lst){
+            arr.add(String.valueOf(d));
         }
-        writer.flush();
-        writer.close();
+        WriteToFile(filename, arr);
     }
 
     public static void WriteToFile(String filename, List<String> lst) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-//        String tmp = "";
-        for (String s : lst) {
-            if (!s.trim().isEmpty()) {
-                writer.write(s + "\n");
-            }
-        }
-        writer.flush();
-        writer.close();
+        ArrayList<String> arr = new ArrayList<>();
+        arr.addAll(lst);
+        WriteToFile(filename, arr);
     }
 
     public static void WriteToFile(String filename, HashSet<String> lst) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-        for (String s : lst) {
-            if (!s.trim().isEmpty()) {
-                writer.write(s + "\n");
-            }
+        ArrayList<String> arr = new ArrayList<>();
+        for(String s: lst){
+            arr.add(s.trim());
         }
-        writer.flush();
-        writer.close();
+        WriteToFile(filename, arr);
     }
 
     
 
     public static void WriteToFile(String filename, LinkedHashSet<String> lst) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-        String tmp = "";
-        for (String s : lst) {
-            if (!s.trim().isEmpty()) {
-                writer.write(s + "\n");
-            }
+        ArrayList<String> arr = new ArrayList<>();
+        for(String s: lst){
+            arr.add(s.trim());
         }
-        writer.flush();
-        writer.close();
+        WriteToFile(filename, arr);
     }
 
     public static void WriteToFile(String filename, double[] lst) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-        String tmp = "";
-
-        for (double s : lst) {
-            writer.write(s + "\n");
+        ArrayList<String> arr = new ArrayList<>();
+        for(int i=0; i<lst.length; i++){
+            arr.add(String.valueOf(lst[i]));
         }
-        writer.flush();
-        writer.close();
+        WriteToFile(filename, arr);
     }
 
     public static void WriteToFile(String filename, double[][] arr) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-
-//        for (double s : lst) {
-//            writer.write(s + "\n");
-//        }
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                writer.write(arr[i][j] + "\t");
+        ArrayList<String> lst = new ArrayList<>();
+        int numRow = arr.length;
+        int numCol = arr[0].length;
+        for(int i=0; i<numRow; i++){
+            String tmp = "";
+            for(int j=0;j<numCol;j++){
+                tmp = tmp + String.valueOf(arr[i][j])+"\t";
             }
-            writer.write("\n");
+            tmp = tmp.trim();
+            lst.add(tmp);
         }
-        writer.flush();
-        writer.close();
+        WriteToFile(filename, lst);
     }
 
     public static void WriteToFile(String filename, float[][] arr) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-
-
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                writer.write(arr[i][j] + "\t");
+        ArrayList<String> lst = new ArrayList<>();
+        int numRow = arr.length;
+        int numCol = arr[0].length;
+        for(int i=0; i<numRow; i++){
+            String tmp = "";
+            for(int j=0;j<numCol;j++){
+                tmp = tmp + String.valueOf(arr[i][j])+"\t";
             }
-            writer.write("\n");
+            tmp = tmp.trim();
+            lst.add(tmp);
         }
-        writer.flush();
-        writer.close();
+        WriteToFile(filename, lst);
     }
 
     public static void WriteToFile(String filename, String[][] arr) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-
-
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                writer.write(arr[i][j] + "\t");
+        ArrayList<String> lst = new ArrayList<>();
+        int numRow = arr.length;
+        int numCol = arr[0].length;
+        for(int i=0; i<numRow; i++){
+            String tmp = "";
+            for(int j=0;j<numCol;j++){
+                tmp = tmp + arr[i][j]+"\t";
             }
-            writer.write("\n");
+            tmp = tmp.trim();
+            lst.add(tmp);
         }
-        writer.flush();
-        writer.close();
+        WriteToFile(filename, lst);
     }
 
     public static void WriteToFile(String filename, double[][][][] arr) throws IOException {
@@ -171,33 +158,26 @@ public class MyIO {
     }
 
     public static void WriteToFile(String filename, int[][] arr) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-
-//        for (double s : lst) {
-//            writer.write(s + "\n");
-//        }
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                writer.write(arr[i][j] + "\t");
+        ArrayList<String> lst = new ArrayList<>();
+        int numRow = arr.length;
+        int numCol = arr[0].length;
+        for(int i=0; i<numRow; i++){
+            String tmp = "";
+            for(int j=0;j<numCol;j++){
+                tmp = tmp + String.valueOf(arr[i][j])+"\t";
             }
-            writer.write("\n");
+            tmp = tmp.trim();
+            lst.add(tmp);
         }
-        writer.flush();
-        writer.close();
+        WriteToFile(filename, lst);
     }
 
-    public static void WriteToFile(String filename, int[] arr) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename), 32768);
-
-//        for (double s : lst) {
-//            writer.write(s + "\n");
-//        }
-        for (int i = 0; i < arr.length; i++) {
-            writer.write(arr[i] + "\t");
-            writer.write("\n");
+    public static void WriteToFile(String filename, int[] lst) throws IOException {
+      ArrayList<String> arr = new ArrayList<>();
+        for(int i=0; i<lst.length; i++){
+            arr.add(String.valueOf(lst[i]));
         }
-        writer.flush();
-        writer.close();
+        WriteToFile(filename, arr);
     }
 
     public static ArrayList<String> ReadLines(String filename) throws FileNotFoundException, IOException {
@@ -219,23 +199,10 @@ public class MyIO {
         return res;
     }
 
-    public static HashSet<String> ReadFile(String filename, String regex) throws FileNotFoundException, IOException {
-        ArrayList<String> res = new ArrayList<String>();
-        FileInputStream fstream = new FileInputStream(filename);
-        DataInputStream in = new DataInputStream(fstream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+    public static HashSet<String> ReadToken(String filename, String regex) throws FileNotFoundException, IOException {
+        ArrayList<String> res = ReadLines(filename);
         HashSet<String> arr = new HashSet<String>();
-        String tmp = "";
-        while (true) {
-            tmp = br.readLine();
-            if (tmp == null) {
-                break;
-            }
-            tmp = tmp.trim();
-            if (!tmp.isEmpty()) {
-                res.add(tmp);
-            }
-        }
+        
         for (String s : res) {
             String[] arr_str = s.split(regex);
             for (String ss : arr_str) {
@@ -256,65 +223,45 @@ public class MyIO {
 
     public static ArrayList<Double> ReadLines2Double(String filename) throws FileNotFoundException, IOException {
         ArrayList<Double> res = new ArrayList<Double>();
-        FileInputStream fstream = new FileInputStream(filename);
-        DataInputStream in = new DataInputStream(fstream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String tmp = "";
-        while (true) {
-            tmp = br.readLine();
-            if (tmp == null) {
-                break;
-            }
-            tmp = tmp.trim();
-            if (!tmp.isEmpty()) {
-                res.add(Double.parseDouble(tmp));
-            }
+        ArrayList<String> arr = ReadLines(filename);
+        for(String s:arr){
+            res.add(Double.parseDouble(s));
         }
         return res;
     }
 
     public static ArrayList<Integer> ReadLines2Integer(String filename) throws FileNotFoundException, IOException {
-        ArrayList<Integer> res = new ArrayList<Integer>();
-        FileInputStream fstream = new FileInputStream(filename);
-        DataInputStream in = new DataInputStream(fstream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String tmp = "";
-        while (true) {
-            tmp = br.readLine();
-            if (tmp == null) {
-                break;
-            }
-            tmp = tmp.trim();
-            if (!tmp.isEmpty()) {
-                res.add(Integer.parseInt(tmp));
-            }
+        ArrayList<Integer> res = new ArrayList<>();
+        ArrayList<String> arr = ReadLines(filename);
+        for(String s:arr){
+            res.add(Integer.parseInt(s));
         }
         return res;
     }
 
-    public static ArrayList<String> ReadPDBFile(String PDBID) throws FileNotFoundException, IOException {
-        ArrayList<String> res = new ArrayList<String>();
-        FileInputStream fstream;
-
-        String filepath = "PDB/";
-        try {
-            fstream = new FileInputStream(filepath + PDBID.toUpperCase() + ".pdb");
-        } catch (Exception e) {
-            fstream = new FileInputStream(filepath + "pdb" + PDBID.toLowerCase() + ".ent");
-        }
-        DataInputStream in = new DataInputStream(fstream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        while (true) {
-            String line = br.readLine();
-            if (line == null) {
-                break;
-            }
-            if (!line.isEmpty()) {
-                res.add(line);
-            }
-        }
-        return res;
-    }
+//    public static ArrayList<String> ReadPDBFile(String PDBID) throws FileNotFoundException, IOException {
+//        ArrayList<String> res = new ArrayList<String>();
+//        FileInputStream fstream;
+//
+//        String filepath = "PDB/";
+//        try {
+//            fstream = new FileInputStream(filepath + PDBID.toUpperCase() + ".pdb");
+//        } catch (Exception e) {
+//            fstream = new FileInputStream(filepath + "pdb" + PDBID.toLowerCase() + ".ent");
+//        }
+//        DataInputStream in = new DataInputStream(fstream);
+//        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+//        while (true) {
+//            String line = br.readLine();
+//            if (line == null) {
+//                break;
+//            }
+//            if (!line.isEmpty()) {
+//                res.add(line);
+//            }
+//        }
+//        return res;
+//    }
 
     public static double[][] ReadDSM(String filename) throws FileNotFoundException, IOException {
         FileInputStream fstream = new FileInputStream(filename);

@@ -4,8 +4,8 @@
  */
 package StaticMethods;
 
-import Common.ColPair_MegaScore;
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_MegaScore;
+import Common.ColPairAndScores.ColPair_Score;
 import java.util.ArrayList;
 import java.util.List;
 

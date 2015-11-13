@@ -4,7 +4,7 @@
  */
 package ExcerptProtein;
 
-import Common.ColPair_MegaScore;
+import Common.ColPairAndScores.ColPair_MegaScore;
 import StaticMethods.LookUpCollections;
 import StaticMethods.ProteinIO;
 import java.io.FileNotFoundException;

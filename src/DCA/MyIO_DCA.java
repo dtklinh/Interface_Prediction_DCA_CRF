@@ -5,7 +5,7 @@
 package DCA;
 
 //import MyJama.MyMatrix;
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_Score;
 import Common.FastaSequence;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -4,7 +4,7 @@
  */
 package Statistic;
 
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_Score;
 import java.util.ArrayList;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;

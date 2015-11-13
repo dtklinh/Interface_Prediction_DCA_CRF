@@ -1,6 +1,6 @@
 package LinearAlgebra;
 
-import Common.ColPair_Score;
+import Common.ColPairAndScores.ColPair_Score;
 import Jama.Matrix;
 import java.io.BufferedReader;
 import java.io.DataInputStream;

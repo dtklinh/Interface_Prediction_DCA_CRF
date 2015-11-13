@@ -5,7 +5,7 @@
 package ExcerptProtein;
 
 import Analysis.ThresholdClassifier;
-import Common.ColPair_MegaScore;
+import Common.ColPairAndScores.ColPair_MegaScore;
 import StaticMethods.LookUpCollections;
 import StaticMethods.ProteinCalc;
 import StaticMethods.ProteinIO;
@@ -29,12 +29,12 @@ public class CalcAUCMultipleVertex {
         // TODO code application logic here
 
 
-        String Path2MegaFile = "Input/SmallSet/Mega/1A70_CMI_plm_3D_Gremlin.txt";
+        String Path2MegaFile = "Input/SmallSet/Mega/1A70_CMI_plm_3D_Gremlin_LOM.txt";
         String Path2PDB = "Input/SmallSet/PDB/1a70.pdb";
         HashMap<Integer, String> MapIdx2ResNum = ProteinCalc.getMapIdx2ResNum(Path2PDB, "A", 0);
         String Vertex = null;
         List<ColPair_MegaScore> Lst = ProteinIO.readColPairMegaScore2List(Path2MegaFile, "\\s+",
-                "mi", "dca", "three", "gremlin");
+                "cmi", "dca", "three", "gremlin", "margin");
 
         double d3_thres = 4.0;
         List<Double> LstPos = new ArrayList<>();
@@ -48,13 +48,16 @@ public class CalcAUCMultipleVertex {
 
             for (ColPair_MegaScore c : OneVertex) {
                 if (c.getThreeDimDis() <= d3_thres) {
-                LstPos.add(c.getCondMIScore());
-//                LstPos.add(c.getPlmdcaScore());
+//                    LstPos.add(c.getCondMIScore());
+//                    LstPos.add(c.getPlmdcaScore());
 //                    LstPos.add(c.getGremlinScore());
+                    LstPos.add(c.getLargeOnlineMarginScore());
+
                 } else {
-                LstNeg.add(c.getCondMIScore());
-//                LstNeg.add(c.getPlmdcaScore());
+//                    LstNeg.add(c.getCondMIScore());
+//                    LstNeg.add(c.getPlmdcaScore());
 //                    LstNeg.add(c.getGremlinScore());
+                    LstNeg.add(c.getLargeOnlineMarginScore());
                 }
             }
             ThresholdClassifier cl = new ThresholdClassifier(LstPos, LstNeg);
@@ -64,18 +67,7 @@ public class CalcAUCMultipleVertex {
             LstNeg.clear();
             LstPos.clear();
         }
-        System.out.println("Average area: "+ AverageArea/MapIdx2ResNum.size());
-
-
-
-
-
-
-
-
-
-
-
+        System.out.println("Average area: " + AverageArea / MapIdx2ResNum.size());
 
 
         /*

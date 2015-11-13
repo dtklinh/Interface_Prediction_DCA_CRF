@@ -36,7 +36,7 @@ public class ThreadComplex extends MyObject{
             String[] id = StaticMethod.findChainID(lst, m.getName().substring(0, 4));
             Complex c = new Complex(m, Separate, id[0], id[1]);
             //print MSA_FloatMatrix
-//            MyIO.WriteToFile(Configuration.DirTest_DCA+m.getName()+".algn", m.getAlgnMx());
+//            MyIO.WriteToFileDouble(Configuration.DirTest_DCA+m.getName()+".algn", m.getAlgnMx());
 //            c.refineMSA();
             String[][] d = c.getResult();
             MyIO.WriteToFile(DirForOut+m.getName()+".cplx_dca", d);
